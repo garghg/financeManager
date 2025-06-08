@@ -1,5 +1,3 @@
-<!-- Track TIME!!!!! -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +14,12 @@
 
     <div class="goals">
         <h2><u>Goals</u></h2>
-        <input type="text" id="taskName" placeholder="Enter New Goal">
+        <input type="text" id="input" placeholder="Enter New Goal">
+        <select id="taskType">
+            <option value="Save">Save</option>
+            <option value="Habit">Habit</option>
+            <option value="Spend">Spend</option>
+        </select>
         <span onclick="addTask()" class="addBtn">Add Task</span>
         <br><br>
     </div>
@@ -26,6 +29,7 @@
         <li>Save $50 this month</li>
         <li>Buy a new guitar</li>
     </ul>
+    
 </body>
 <script src="home.js"></script>
 </html>

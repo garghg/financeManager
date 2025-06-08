@@ -30,10 +30,21 @@ list.addEventListener("click", function(ev){
 function addTask(){
     var newTask = document.createElement("li");
     var input = document.getElementById("input").value;
-    taskName = document.createTextNode(input);
+    var taskType = document.getElementById("taskType").value;
+    var coinVal;
+    if (taskType === "Habit"){
+        coinVal = 2
+    }
+    else if (taskType === "Save" || taskType === "Spend"){
+        coinVal = 5
+    }
+    else{
+        coinVal = 1
+    }
+    taskName = document.createTextNode(input+` (+${coinVal} coins)`);
     newTask.appendChild(taskName);
     if (input === ''){
-        alert("Empty Input");
+        alert("Please Enter a Task Name");
     }
     else {
         document.querySelector("ul").appendChild(newTask);

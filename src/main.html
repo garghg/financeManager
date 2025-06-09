@@ -7,10 +7,17 @@
     <title>Coin Quest</title>
 </head>
 <body>
-    <div id="navBar">
+    <header>
+        <div id="navBar">
+        </div>
+        <a href="main.html"><img src="..\img\CQ Logo.png" alt="CoinQuest" id="logo" draggable="false"></a>
+        <h1 id="pageTitle">Coin Quest</h1>
+    </header>
+
+    <div>
+        <h2 id="budgetH2"><u>Budget</u></h2>
+        <button class="Btn" id="budgetBtn">Create Budget</button>
     </div>
-    <a href="main.html"><img src="..\img\CQ Logo.png" alt="CoinQuest" id="logo" draggable="false"></a>
-    <h1 id="pageTitle">Coin Quest</h1>
 
     <div class="goals">
         <h2><u>Goals</u></h2>
@@ -24,7 +31,7 @@
             <option value="Spend">Spend (+5 coins)</option>
         </select>
 
-        <span onclick="addTask()" class="addBtn">Add Task</span>
+        <span onclick="addTask()" class="Btn">Add Task</span>
         <br><br>
     </div>
 

@@ -2,11 +2,13 @@ body{
     font-family: monospace;
     font-size: large;
     margin-left: 1%;
+    overflow: hidden;
 }
 
 ::selection{
     background-color: aquamarine;
 }
+
 
 * {
   box-sizing: border-box;
@@ -67,7 +69,7 @@ ul li.checked{
   color: white;
 }
 
-.addBtn{
+.Btn{
     padding: 10px;
     width: 5%;
     background-color: #d9d9d9;
@@ -79,8 +81,14 @@ ul li.checked{
     border-radius: 0%;
 }
 
-.addBtn:hover {
+.Btn:hover {
   background-color: #bbb;
+}
+
+#budgetBtn{
+    border: none;
+    width: 10%;
+    font-family: monospace;
 }
 
 #logo{
@@ -103,4 +111,3 @@ ul li.checked{
     background-color: rgb(138, 137, 137);
     overflow: hidden;
 }
-

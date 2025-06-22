@@ -68,5 +68,17 @@ function addTask(){
 
 
 function createBudget(){
-    
+    var budgetBtn = document.getElementById("budgetBtn");
+    budgetBtn.remove();
+    var budget = document.createElement("table");
+    budget.id = "budgetTable";
+    var bgtDiv = document.getElementById("budget");
+    bgtDiv.appendChild(budget);
+    var thead = document.createElement("thead");
+    budget.appendChild(thead);
+    var newHead = thead.insertRow();
+    var cell1 = newHead.insertCell();
+    var cell2 = newHead.insertCell();
+    cell1.textContent = "Item"
+    cell2.textContent = "Expense"
 }

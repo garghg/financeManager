@@ -1,3 +1,16 @@
+<!-- Note: This is my very first web design project from scratch... -->
+
+<!-- Notes to self:
+
+
+possible features:
+- change goals as follows:
+    select save/spend types and cross reference with entered budget
+    text field only appears when type task is selected
+    recurring task for habit type
+
+ -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,37 +20,45 @@
     <title>Coin Quest</title>
 </head>
 <body>
-    <header>
+    <header> 
         <div id="navBar">
         </div>
         <a href="main.html"><img src="..\img\CQ Logo.png" alt="CoinQuest" id="logo" draggable="false"></a>
         <h1 id="pageTitle">Coin Quest</h1>
     </header>
 
-    <div>
-        <h2 id="budgetH2"><u>Budget</u></h2>
-        <button class="Btn" id="budgetBtn">Create Budget</button>
+    <div id="container">
+
+        <div id="sect1">
+            <h2 id="budgetH2"><u>Budget</u></h2>
+            <div id="budget">
+                <button class="Btn" id="budgetBtn" onclick="createBudget()">Create Budget</button>
+            </div>
+        </div>
+
+
+        <div id="sect2">
+            <div class="goals">
+                <h2><u>Goals</u></h2>
+
+                <input type="text" id="input" placeholder="Enter New Goal">
+
+                <select id="taskType">
+                    <option value="Default">Task (+1 coins)</option>
+                    <option value="Save">Save (+5 coins)</option>
+                    <option value="Habit">Habit (+2 coins)</option>
+                    <option value="Spend">Spend (+5 coins)</option>
+                </select>
+
+                <span onclick="addTask()" class="Btn">Add Task</span>
+            </div>
+
+            <ul id="goalList">
+                <li>Create my first task (No coins)</li>
+            </ul>
+        </div>
     </div>
-
-    <div class="goals">
-        <h2><u>Goals</u></h2>
-
-        <input type="text" id="input" placeholder="Enter New Goal">
-
-        <select id="taskType">
-            <option value="Default">Task (+1 coins)</option>
-            <option value="Save">Save (+5 coins)</option>
-            <option value="Habit">Habit (+2 coins)</option>
-            <option value="Spend">Spend (+5 coins)</option>
-        </select>
-
-        <span onclick="addTask()" class="Btn">Add Task</span>
-        <br><br>
-    </div>
-
-    <ul id="goalList">
-        <li>Create my first task (No coins)</li>
-    </ul>
+    
     
 </body>
 <script src="home.js"></script>

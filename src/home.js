@@ -99,6 +99,11 @@ function createDropdown() {
 }
 
 
+function netCalc(table){
+
+}
+
+
 function createBudget(){
     var budgetBtn = document.getElementById("budgetBtn");
     budgetBtn.remove();

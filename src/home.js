@@ -66,6 +66,38 @@ function addTask(){
 }
 }
 
+function bgtItemName(){
+    var name = document.createElement("input");
+    name.setAttribute('type', 'text');
+    name.setAttribute('placeholder', 'Enter Budget Item Here');
+    name.style.width = '400px';
+    name.id = 'bgtItemName';
+    return name;
+}
+
+function bgtItemAmt(){
+    var amt = document.createElement("input");
+    amt.setAttribute('type', 'number');
+    amt.setAttribute('min', '0');
+    amt.setAttribute('oninput', 'validity.valid||(value=\'\'\)')
+    amt.setAttribute('placeholder', 'Enter Amount Here');
+    amt.id = 'bgtItemAmt';
+    return amt;
+}
+
+function createDropdown() {
+    var select = document.createElement('select');
+    select.id = "itemType"
+    var options = ["Income", "Expense"];
+    options.forEach(function(opt){
+        var option = document.createElement("option");
+        option.value = opt;
+        option.textContent = opt;
+        select.appendChild(option);
+    });
+    return select;
+}
+
 
 function createBudget(){
     var budgetBtn = document.getElementById("budgetBtn");
@@ -74,11 +106,36 @@ function createBudget(){
     budget.id = "budgetTable";
     var bgtDiv = document.getElementById("budget");
     bgtDiv.appendChild(budget);
+
     var thead = document.createElement("thead");
     budget.appendChild(thead);
     var newHead = thead.insertRow();
     var cell1 = newHead.insertCell();
     var cell2 = newHead.insertCell();
+    var cell3 = newHead.insertCell();
+    cell1.style.width = "55%"
     cell1.textContent = "Item"
-    cell2.textContent = "Expense"
+    cell2.textContent = "Amount"
+    cell3.textContent = "Type"
+
+
+    var newRow = budget.insertRow();
+    var cell1 = newRow.insertCell();
+    var cell2 = newRow.insertCell();
+    var cell3 = newRow.insertCell();
+    cell1.style.width = "55%";
+    cell1.appendChild(bgtItemName());
+    cell2.appendChild(bgtItemAmt());
+    cell3.appendChild(createDropdown());
+
+    
+    var tfoot = document.createElement("tfoot");
+    budget.appendChild(tfoot);
+    var newfoot = tfoot.insertRow();
+    var cell1 = newfoot.insertCell();
+    var cell2 = newfoot.insertCell();
+    cell1.style.width = "55%";
+    cell1.textContent = "Net Total: ";
+    cell2.textContent = "...";
+
 }

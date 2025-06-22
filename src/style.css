@@ -115,10 +115,11 @@ ul li.checked{
 #budgetTable, td{
     border-bottom: solid 1px;
     border-collapse: collapse;
+    padding: 7.5px;
 }
 
 tr:nth-child(even) {
-  background-color: #555;
+  background-color: #bebebe;
 }
 
 #container{
@@ -130,4 +131,10 @@ tr:nth-child(even) {
 
 #sect1, #sect2{
     width: 50%;
+}
+
+#itemType, #bgtItemName, #bgtItemAmt{
+    font-family: monospace;
+    background-color: transparent;
+    border: none;
 }

@@ -2,7 +2,7 @@ body{
     font-family: monospace;
     font-size: large;
     margin-left: 1%;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 ::selection{
@@ -110,7 +110,7 @@ ul li.checked{
 #navBar{
     margin: -1%;
     margin-bottom: -2.2%;
-    padding: 20px;
+    padding: 25px;
     background-color: rgb(138, 137, 137);
     overflow: hidden;
 }
@@ -125,6 +125,7 @@ ul li.checked{
     border-bottom: solid 1px;
     border-collapse: collapse;
     padding: 7.5px;
+    user-select: none;
 }
 
 tr:nth-child(even) {
@@ -146,8 +147,4 @@ tr:nth-child(even) {
     font-family: monospace;
     background-color: transparent;
     border: none;
-}
-
-table thead, table tfoot{
-    position: sticky;
 }

@@ -5,6 +5,7 @@ var budget;
 var netCell;
 var budgetBtn = document.getElementById("budgetBtn");
 var bgtDiv = document.getElementById("budget");
+var selectedRows = [];
 
 for (i = 0; i < goals.length; i++){
     var span = document.createElement("SPAN");
@@ -146,10 +147,49 @@ function addRow(table){
     cell1.appendChild(bgtItemName());
     cell2.appendChild(bgtItemAmt());
     cell3.appendChild(createDropdown());
+
+    var clickCount = 0;
+    var savedColor;
+
+    
+    // Add click event listener to new row
+    newRow.addEventListener('dblclick', function(){
+        clickCount++;
+        if (clickCount == 1){
+            console.log('counter went up to 1')
+            savedColor = newRow.style.backgroundColor;
+            this.style.backgroundColor = 'aquamarine';
+            selectedRows.push(this.rowIndex);
+            console.log(selectedRows);
+        } else if (clickCount == 2){
+            this.style.backgroundColor = savedColor;
+            clickCount = 0;
+            var index = selectedRows.indexOf(this.rowIndex);
+            selectedRows.splice(index, 1)
+            console.log(selectedRows);
+        }
+    });
+
+    // document.addEventListener('click', function(event){
+    //     if (!table.contains(event.target)) {
+    //         for (i = 0; i <= selectedRows.length; i++){
+    //             table.rows[i].style.backgroundColor = savedColor;
+    //             var index = selectedRows.indexOf(i.rowIndex);
+    //             selectedRows.splice(index, 1)
+    //             console.log(selectedRows);
+    //         }
+    //     }
+    // });
+
+}
+
+function deleteRows(){
+
 }
 
 function createBudget(){
     budgetBtn.remove();
+    deleteRows();
     var budget = document.createElement("table");
     budget.id = "budgetTable";
     bgtDiv.appendChild(budget);
@@ -173,16 +213,17 @@ function createBudget(){
     netCell = newfoot.insertCell();
     var cell3 = newfoot.insertCell();
     cell1.textContent = "Net Total: ";
-    netCell.textContent = "";
+    netCell.textContent = "0";
     cell3.textContent = "";
 
     
     addRowBtn = document.createElement('button');
     addRowBtn.textContent = "Add Row";
     addRowBtn.className = 'Btn';
-    addRowBtn.id = "addRowBtn";
+    addRowBtn.id = "addRowBtn"; 
     addRowBtn.onclick = function(){
         addRow(budget);
     };
     document.getElementById('sect1').appendChild(addRowBtn);
+
 }

@@ -76,7 +76,7 @@ function bgtItemName(){
     name.setAttribute('placeholder', 'Enter Budget Item Here');
     name.style.width = '400px';
     name.id = 'bgtItemName';
-    console.log(name.textContent)
+    name.addEventListener('blur', getTableVal);
     return name;
 }
 
@@ -87,7 +87,7 @@ function bgtItemAmt(){
     amt.setAttribute('oninput', 'validity.valid||(value=\'\'\)')
     amt.setAttribute('placeholder', 'Enter Amount Here');
     amt.id = 'bgtItemAmt';
-    console.log(amt.textContent);
+    amt.addEventListener('blur', getTableVal);
     return amt;
 }
 
@@ -104,8 +104,17 @@ function createDropdown() {
     return select;
 }
 
-function netCalc(table) {
-    //console.log("netCalc: "+ document.querySelectorAll('input[type="text"]').value);
+function getTableVal() {
+    var myArray = []
+    var nodeList = document.querySelectorAll('input[type="text"], input[type="number"]')
+
+    for (let i = 0; i < nodeList.length; i++) {
+    if (nodeList[i].value.trim() !== "" && i % 2 !== 0) {
+        myArray.push(nodeList[i].value);
+        }
+    }
+
+    console.log("getTableVal: "+ myArray);
 }
 
 
@@ -118,7 +127,6 @@ function addRow(table){
     cell1.appendChild(bgtItemName());
     cell2.appendChild(bgtItemAmt());
     cell3.appendChild(createDropdown());
-    netCalc(table);
 }
 
 function createBudget(){

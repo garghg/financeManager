@@ -135,7 +135,7 @@ function getTableVal() {
         return accumulator + currentValue
     },0);
 
-}
+} 
 
 
 function addRow(table){
@@ -146,10 +146,13 @@ function addRow(table){
     cell1.style.width = "55%";
     cell1.appendChild(bgtItemName());
     cell2.appendChild(bgtItemAmt());
-    cell3.appendChild(createDropdown());
+    cell3.appendChild(createDropdown()); 
 
     var clickCount = 0;
     var savedColor;
+    var savedColorRGB;
+
+    var selectedRowsMap = new Map();
 
     
     // Add click event listener to new row
@@ -158,28 +161,26 @@ function addRow(table){
         if (clickCount == 1){
             console.log('counter went up to 1')
             savedColor = newRow.style.backgroundColor;
-            this.style.backgroundColor = 'aquamarine';
+            savedColorRGB = window.getComputedStyle(this, null).getPropertyValue("background-color"); //savecolorRGB here now go below to eventlisterner and set back to original
             selectedRows.push(this.rowIndex);
+            this.style.backgroundColor = 'aquamarine';
+            selectedRowsMap.set(this.rowIndex, savedColorRGB);
             console.log(selectedRows);
         } else if (clickCount == 2){
             this.style.backgroundColor = savedColor;
             clickCount = 0;
             var index = selectedRows.indexOf(this.rowIndex);
             selectedRows.splice(index, 1)
+            selectedRowsMap.delete(this.rowIndex)
             console.log(selectedRows);
         }
     });
 
-    // document.addEventListener('click', function(event){
-    //     if (!table.contains(event.target)) {
-    //         for (i = 0; i <= selectedRows.length; i++){
-    //             table.rows[i].style.backgroundColor = savedColor;
-    //             var index = selectedRows.indexOf(i.rowIndex);
-    //             selectedRows.splice(index, 1)
-    //             console.log(selectedRows);
-    //         }
-    //     }
-    // });
+    document.addEventListener('click', function(event){
+        if (!table.contains(event.target)) {
+            console.log(selectedRowsMap)
+        }
+    });
 
 }
 

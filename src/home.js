@@ -76,7 +76,6 @@ function bgtItemName(){
     name.setAttribute('placeholder', 'Enter Budget Item Here');
     name.style.width = '400px';
     name.id = 'bgtItemName';
-    name.addEventListener('blur', getTableVal);
     return name;
 }
 
@@ -100,22 +99,44 @@ function createDropdown() {
         option.value = opt;
         option.textContent = opt;
         select.appendChild(option);
+        select.addEventListener('blur', getTableVal);
     });
     return select;
 }
 
 function getTableVal() {
-    var myArray = []
-    var nodeList = document.querySelectorAll('input[type="text"], input[type="number"]')
+    var tblArray = [];
+    var nodeList = document.querySelectorAll('input[type="number"]');
+
+    var typeArray = [];
+    var selectList = document.querySelectorAll('select');
+    for (let i = 0; i < selectList.length - 1; i++) {
+        typeArray.push(selectList[i].value);
+    }
 
     for (let i = 0; i < nodeList.length; i++) {
-    if (nodeList[i].value.trim() !== "" && i % 2 !== 0) {
-        myArray.push(nodeList[i].value);
+        var value = nodeList[i].value.trim();
+        if (value !== "") {
+            tblArray.push(Number(value));
         }
     }
 
-    console.log("getTableVal: "+ myArray);
+    for (let i = 0; i < tblArray.length; i++) {
+        if (typeArray[i] === "Expense") {
+            tblArray[i] = -Math.abs(tblArray[i]);
+        } else if (typeArray[i] === "Income") {
+            tblArray[i] = Math.abs(tblArray[i]);
+        }
+    }
+
+    var sum = tblArray.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue
+    },0);
+
+    console.log(sum);
+
 }
+
 
 
 function addRow(table){

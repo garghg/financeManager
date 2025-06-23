@@ -2,6 +2,7 @@ var goals = document.getElementsByTagName("LI");
 var i;
 var addRowBtn;
 var budget;
+var netCell;
 var budgetBtn = document.getElementById("budgetBtn");
 var bgtDiv = document.getElementById("budget");
 
@@ -129,14 +130,11 @@ function getTableVal() {
         }
     }
 
-    var sum = tblArray.reduce((accumulator, currentValue) => {
+    netCell.textContent = tblArray.reduce((accumulator, currentValue) => {
         return accumulator + currentValue
     },0);
 
-    console.log(sum);
-
 }
-
 
 
 function addRow(table){
@@ -172,10 +170,10 @@ function createBudget(){
     budget.appendChild(tfoot);
     var newfoot = tfoot.insertRow();
     var cell1 = newfoot.insertCell();
-    var cell2 = newfoot.insertCell();
+    netCell = newfoot.insertCell();
     var cell3 = newfoot.insertCell();
     cell1.textContent = "Net Total: ";
-    cell2.textContent = "";
+    netCell.textContent = "";
     cell3.textContent = "";
 
     
@@ -187,5 +185,4 @@ function createBudget(){
         addRow(budget);
     };
     document.getElementById('sect1').appendChild(addRowBtn);
-
 }

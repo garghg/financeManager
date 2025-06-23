@@ -1,5 +1,9 @@
 var goals = document.getElementsByTagName("LI");
 var i;
+var addRowBtn;
+var budget;
+var budgetBtn = document.getElementById("budgetBtn");
+var bgtDiv = document.getElementById("budget");
 
 for (i = 0; i < goals.length; i++){
     var span = document.createElement("SPAN");
@@ -72,6 +76,7 @@ function bgtItemName(){
     name.setAttribute('placeholder', 'Enter Budget Item Here');
     name.style.width = '400px';
     name.id = 'bgtItemName';
+    console.log(name.textContent)
     return name;
 }
 
@@ -82,6 +87,7 @@ function bgtItemAmt(){
     amt.setAttribute('oninput', 'validity.valid||(value=\'\'\)')
     amt.setAttribute('placeholder', 'Enter Amount Here');
     amt.id = 'bgtItemAmt';
+    console.log(amt.textContent);
     return amt;
 }
 
@@ -98,18 +104,27 @@ function createDropdown() {
     return select;
 }
 
-
-function netCalc(table){
-
+function netCalc(table) {
+    //console.log("netCalc: "+ document.querySelectorAll('input[type="text"]').value);
 }
 
 
+function addRow(table){
+    var newRow = table.insertRow(table.rows.length-1);
+    var cell1 = newRow.insertCell();
+    var cell2 = newRow.insertCell();
+    var cell3 = newRow.insertCell();
+    cell1.style.width = "55%";
+    cell1.appendChild(bgtItemName());
+    cell2.appendChild(bgtItemAmt());
+    cell3.appendChild(createDropdown());
+    netCalc(table);
+}
+
 function createBudget(){
-    var budgetBtn = document.getElementById("budgetBtn");
     budgetBtn.remove();
     var budget = document.createElement("table");
     budget.id = "budgetTable";
-    var bgtDiv = document.getElementById("budget");
     bgtDiv.appendChild(budget);
 
     var thead = document.createElement("thead");
@@ -119,28 +134,29 @@ function createBudget(){
     var cell2 = newHead.insertCell();
     var cell3 = newHead.insertCell();
     cell1.style.width = "55%"
+    cell2.style.width = "25%"
     cell1.textContent = "Item"
     cell2.textContent = "Amount"
     cell3.textContent = "Type"
 
-
-    var newRow = budget.insertRow();
-    var cell1 = newRow.insertCell();
-    var cell2 = newRow.insertCell();
-    var cell3 = newRow.insertCell();
-    cell1.style.width = "55%";
-    cell1.appendChild(bgtItemName());
-    cell2.appendChild(bgtItemAmt());
-    cell3.appendChild(createDropdown());
-
-    
     var tfoot = document.createElement("tfoot");
     budget.appendChild(tfoot);
     var newfoot = tfoot.insertRow();
     var cell1 = newfoot.insertCell();
     var cell2 = newfoot.insertCell();
-    cell1.style.width = "55%";
+    var cell3 = newfoot.insertCell();
     cell1.textContent = "Net Total: ";
-    cell2.textContent = "...";
+    cell2.textContent = "";
+    cell3.textContent = "";
+
+    
+    addRowBtn = document.createElement('button');
+    addRowBtn.textContent = "Add Row";
+    addRowBtn.className = 'Btn';
+    addRowBtn.id = "addRowBtn";
+    addRowBtn.onclick = function(){
+        addRow(budget);
+    };
+    document.getElementById('sect1').appendChild(addRowBtn);
 
 }

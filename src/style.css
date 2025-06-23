@@ -85,6 +85,15 @@ ul li.checked{
     font-family: monospace;
 }
 
+#addRowBtn{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
+    border: none;
+    font-family: monospace;
+}
+
 #logo{
     margin-top: 1%;
     height: 50px;
@@ -137,4 +146,8 @@ tr:nth-child(even) {
     font-family: monospace;
     background-color: transparent;
     border: none;
+}
+
+table thead, table tfoot{
+    position: sticky;
 }

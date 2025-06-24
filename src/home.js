@@ -159,38 +159,53 @@ function addRow(table){
     newRow.addEventListener('dblclick', function(){
         clickCount++;
         if (clickCount == 1){
-            console.log('counter went up to 1')
             savedColor = newRow.style.backgroundColor;
             savedColorRGB = window.getComputedStyle(this, null).getPropertyValue("background-color"); //savecolorRGB here now go below to eventlisterner and set back to original
             selectedRows.push(this.rowIndex);
             this.style.backgroundColor = 'aquamarine';
             selectedRowsMap.set(this.rowIndex, savedColorRGB);
-            console.log(selectedRows);
         } else if (clickCount == 2){
             this.style.backgroundColor = savedColor;
             clickCount = 0;
             var index = selectedRows.indexOf(this.rowIndex);
             selectedRows.splice(index, 1)
-            selectedRowsMap.delete(this.rowIndex)
-            console.log(selectedRows);
+            selectedRowsMap.delete(this.rowIndex);
         }
     });
 
     document.addEventListener('click', function(event){
         if (!table.contains(event.target)) {
-            console.log(selectedRowsMap)
+            clickCount = 0;
+            for (let [key, currentColor] of selectedRowsMap){
+                for (i = 0; i < table.rows.length; i++){
+                    var currentRow = table.rows[i];
+                    if (key === i){
+                        currentRow.style.backgroundColor = currentColor;
+                    }
+                    selectedRows.splice(currentRow, 1);
+                    selectedRowsMap.delete(currentRow.rowIndex);
+                }
+            }
         }
     });
 
 }
 
-function deleteRows(){
-
-}
+document.addEventListener('keydown', function(event) {
+    if ((event.key === "Delete" || event.key === "Backspace") && selectedRows.length > 0) {
+        const table = document.getElementById("budgetTable");
+        selectedRows.sort((a, b) => b - a);
+        selectedRows.forEach(index => {
+            if (table.rows[index]) {
+                table.deleteRow(index);
+            }
+        });
+        selectedRows.length = 0;
+    }
+});
 
 function createBudget(){
     budgetBtn.remove();
-    deleteRows();
     var budget = document.createElement("table");
     budget.id = "budgetTable";
     bgtDiv.appendChild(budget);

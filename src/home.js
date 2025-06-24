@@ -94,7 +94,7 @@ function bgtItemAmt(){
 
 function createDropdown() {
     var select = document.createElement('select');
-    select.id = "itemType"
+    select.classList.add("itemType");
     var options = ["Income", "Expense"];
     options.forEach(function(opt){
         var option = document.createElement("option");
@@ -242,4 +242,9 @@ function createBudget(){
     };
     document.getElementById('sect1').appendChild(addRowBtn);
 
+}
+
+function darkMode(){
+    var body = document.body;
+    body.classList.toggle("darkMode");
 }

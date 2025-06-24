@@ -51,7 +51,9 @@ ul li.checked{
     font-family: monospace;
 }
 
-
+#input{
+    width: 50%;
+}
 
 .close {
   position: absolute;
@@ -129,7 +131,7 @@ ul li.checked{
     user-select: none;
 }
 
-tr:nth-child(even) {
+tr:nth-child(even):not(:last-child){
   background-color: #bebebe;
 }
 
@@ -192,14 +194,14 @@ tr:nth-child(even) {
 
 
 .darkMode .Btn{
-    border: solid wheat 1px;
+    border: solid #8C8C8C 1px;
     font-family: monospace;
     background-color: #191517;
     color: #A9AAA9;
 }
 
 .darkMode #budgetBtn, .darkMode #addRowBtn{
-    border: solid wheat 1px;
+    border: solid #8C8C8C 1px;
 }
 
 .darkMode .Btn:hover {
@@ -215,7 +217,10 @@ tr:nth-child(even) {
     color: white;
 }
 
-
+.darkMode .itemType:open > option{
+   background-color: #4d4d4d;
+   color: white;
+}
  
 .darkMode tr:nth-child(even){
   & .itemType, #bgtItemAmt, #bgtItemName{
@@ -223,4 +228,24 @@ tr:nth-child(even) {
   }
 }
 
-/* make tbody tags arounds rows to exclude tfoot and thead from being changed when even */
+.darkMode #input, .darkMode #taskType, .darkMode ul li{
+    background-color: #191517;
+    border: solid 1px #8C8C8C;
+    color: white;
+}
+
+
+.darkMode ul li:nth-child(odd){
+    background-color: #4d4d4d;
+    color: white
+}
+
+.darkMode ul li:hover{
+    background-color: #0F5B4E;
+}
+
+.darkMode ul li.checked{
+    background-color: #bebebe;
+    color: black;
+    text-decoration: line-through;
+}

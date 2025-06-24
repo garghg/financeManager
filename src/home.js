@@ -32,6 +32,11 @@ list.addEventListener("click", function(ev){
 })
 
 
+function saveTask(input){
+     
+}
+
+
 
 function addTask(){
     var newTask = document.createElement("li");
@@ -39,14 +44,15 @@ function addTask(){
     var taskType = document.getElementById("taskType").value;
     var coinVal;
     if (taskType === "Habit"){
-        coinVal = 2
+        coinVal = 2;
     }
     else if (taskType === "Save" || taskType === "Spend"){
-        coinVal = 5
+        coinVal = 5;
+        saveTask(input);
     }
     else{
         coinVal = 1
-    }
+    }   
     taskName = document.createTextNode(input+` (+${coinVal} coins)`);
     newTask.appendChild(taskName);
     if (input === ''){
@@ -223,6 +229,7 @@ function createBudget(){
     cell3.textContent = "Type"
 
     var tfoot = document.createElement("tfoot");
+    tfoot.id = 'tfoot'
     budget.appendChild(tfoot);
     var newfoot = tfoot.insertRow();
     var cell1 = newfoot.insertCell();

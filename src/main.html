@@ -5,7 +5,6 @@
 Today:
     - create a coin counter
     - create CUSTOM POPUPS!! (https://youtu.be/MBaw_6cPmAw?t=36)
-    - add a row to table when a goal is set to subract that amount from budget
     - if goal is bigger than budget, offer long term "projects" option
     - create a XP bar
     - create an avatar (separate page? animation?)
@@ -32,7 +31,7 @@ possible features:
     <link rel="stylesheet" href="style.css">
     <title>Coin Quest</title>
 </head>
-<body>
+<body class="darkMode">
     <header>
         <div id="navBar">
             <div id="navBaricon">
@@ -61,10 +60,10 @@ possible features:
                         <h2><u>Goals</u></h2>
 
                         <select id="taskType">
-                            <option  value="Default">Select Goal Type</option>
+                            <option  value="Default" selected disabled hidden>Select Goal Type</option>
                             <option value="Save">Save</option>
                             <option value="Invest">Invest</option>
-                            <option value="Custom">Other goals</option>
+                            <option value="Other goal for">Other goals</option>
                         </select>
 
                         <input type="number" id="input" placeholder="Enter Amount" min="0" oninput="validity.valid||(value='')">
@@ -75,6 +74,12 @@ possible features:
 
                     <ul id="goalList">
                     </ul>
+
+                    <div id="projects">
+                        <h2><u>Projects</u></h2>
+                        <button class="Btn" id="projectBtn" onclick="startProj()"> Start a project</button>
+                    </div>
+
                 </div>
             </div>
 

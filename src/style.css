@@ -79,6 +79,7 @@ ul li.checked{
 }
 
 .Btn{
+    font-family: monospace;
     padding: 10px;
     background-color: #d9d9d9;
     color: #555;
@@ -87,6 +88,8 @@ ul li.checked{
     cursor: pointer;
     transition: 0.3s;
     border-radius: 0%;
+    user-select: none;
+    border: none;
 }
 
 .Btn:hover {
@@ -109,6 +112,11 @@ ul li.checked{
     margin-top: 10px;
     border: none;
     font-family: monospace;
+}
+
+#projectBtn{
+    width: 100%;
+    text-align: center;
 }
 
 #logo{
@@ -188,6 +196,7 @@ tr:nth-child(even):not(:last-child){
 }
 
 #coinCounter{
+    user-select: none;
     width: fit-content;
     height: 150px;
     display: flex;
@@ -204,10 +213,12 @@ tr:nth-child(even):not(:last-child){
 
 #sect1{
     width: 65%;
+    user-select: none;
 }
 
 #sect2{
     width: 50%;
+    user-select: none;
 }
 
 .itemType, #bgtItemName, #bgtItemAmt{

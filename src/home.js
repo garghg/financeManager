@@ -10,7 +10,8 @@ var selectedRows = [];
 var coinNum = document.getElementById('coinNum');
 var coinsShown = 0;
 var coinVal;
-var taskType = document.getElementById("taskType").value;
+var options = ["Income", "Expense"];
+var budget = document.createElement("table");
 
 for (i = 0; i < goals.length; i++){
     var span = document.createElement("SPAN");
@@ -33,13 +34,19 @@ var list = document.querySelector("ul");
 list.addEventListener("click", function(ev){
     if (ev.target.tagName === 'LI'){
         ev.target.classList.toggle('checked');
+        var taskText = ev.target.textContent;
+        if (taskText.includes("5 coins")){
+            coinVal = 5;
+        } else if (taskText.includes("10 coins")){
+            coinVal = 10;
+        } else{
+            coinVal = 1;
+        }
 
         if (ev.target.classList.contains('checked')){
-            console.log('adding coins')
             coinsShown += coinVal;
             coinNum.textContent = `${coinsShown} coins`
         }else{
-            console.log('removing coins')
             coinsShown -= coinVal;
             coinNum.textContent = `${coinsShown} coins`
         }
@@ -51,22 +58,36 @@ list.addEventListener("click", function(ev){
 function addTask(){
     var newTask = document.createElement("li");
     var input = document.getElementById("input").value;
+    var taskType = document.getElementById("taskType").value;
+    var addCoin;
 
     if (taskType === "Default"){
         alert('Please select a valid task type.');
         document.getElementById("input").value = "";
         return;
+    } else if (taskType === "Save"){
+        addCoin = 5;
+    } else if (taskType === "Invest"){
+        addCoin = 10;
+    } else{
+        addCoin = 1;
     }
     
-    if(bgtCreated && netCell.textContent > 0){
-        var taskName = document.createTextNode(taskType +" $" +input+` (+${coinVal} coins)`);
-        newTask.appendChild(taskName);
-    }else if (!bgtCreated){
+    if (!bgtCreated){
         alert("You must have a budget to set goals.");
         return;
-    }else if (input > netCell.textContent){
-        alert("You do not have enough money to set this goal.");
+    } else if (input > netCell.textContent){
+        confirm("You do not have enough money to set this goal.\nWould you like to start a project for this goal? ");
+        if (confirm){
+            startProj();
+        }
         return;
+    } else if(bgtCreated && netCell.textContent > 0){
+        var taskName = document.createTextNode(taskType +" $" +input+` (+${addCoin} coins)`);
+        newTask.appendChild(taskName);
+        var rowTaskName = taskName.textContent.replace(` (+${addCoin} coins)`, "") 
+        addRow(budget, rowTaskName, input, 'Expense');
+        getTableVal(budget);
     }
 
     if (input === ''){
@@ -92,43 +113,50 @@ function addTask(){
     }
 }
 
-function bgtItemName(){
+function bgtItemName(nameVal = ''){
     var name = document.createElement("input");
     name.setAttribute('type', 'text');
     name.setAttribute('placeholder', 'Enter Budget Item Here');
     name.style.width = '400px';
     name.id = 'bgtItemName';
+    name.value = nameVal;
     return name;
 }
 
-function bgtItemAmt(){
+function bgtItemAmt(table, amtVal = ''){
     var amt = document.createElement("input");
     amt.setAttribute('type', 'number');
     amt.setAttribute('min', '0');
     amt.setAttribute('oninput', 'validity.valid||(value=\'\'\)')
     amt.setAttribute('placeholder', 'Enter Amount Here');
     amt.id = 'bgtItemAmt';
-    amt.addEventListener('blur', getTableVal);
+    amt.value = amtVal;
+    amt.addEventListener('blur', function() {
+    getTableVal(table);
+    });
+
     return amt;
 }
 
-function createDropdown() {
+function createDropdown(table, dropdownVal = '') {
     var select = document.createElement('select');
     select.classList.add("itemType");
-    var options = ["Income", "Expense"];
     options.forEach(function(opt){
         var option = document.createElement("option");
         option.value = opt;
         option.textContent = opt;
+        option.selected = dropdownVal;
         select.appendChild(option);
-        select.addEventListener('blur', getTableVal);
+        select.addEventListener('blur', function() {
+            getTableVal(table);
+        });
     });
     return select;
 }
 
-function getTableVal() {
+function getTableVal(table) {
     var tblArray = [];
-    var nodeList = document.querySelectorAll('input[type="number"]');
+    var nodeList = table.querySelectorAll('input[type="number"]');
 
     var typeArray = [];
     var selectList = document.querySelectorAll('select');
@@ -158,15 +186,21 @@ function getTableVal() {
 } 
 
 
-function addRow(table){
+function addRow(table, nameVal = '', amtVal = '', dropdownVal = '') {
     var newRow = table.insertRow(table.rows.length-1);
+
     var cell1 = newRow.insertCell();
     var cell2 = newRow.insertCell();
     var cell3 = newRow.insertCell();
-    cell1.style.width = "55%";
-    cell1.appendChild(bgtItemName());
-    cell2.appendChild(bgtItemAmt());
-    cell3.appendChild(createDropdown()); 
+    cell1.style.width = '55%';
+
+    var nameInput = bgtItemName(nameVal);
+    var amtInput = bgtItemAmt(table, amtVal);
+    var dropdown = createDropdown(table, dropdownVal);
+
+    cell1.appendChild(nameInput);
+    cell2.appendChild(amtInput);
+    cell3.appendChild(dropdown);
 
     var clickCount = 0;
     var savedColor;
@@ -227,7 +261,6 @@ document.addEventListener('keydown', function(event) {
 function createBudget(){
     bgtCreated = true;
     budgetBtn.remove();
-    var budget = document.createElement("table");
     budget.id = "budgetTable";
     bgtDiv.appendChild(budget);
 
@@ -269,4 +302,8 @@ function createBudget(){
 function darkMode(){
     var body = document.body;
     body.classList.toggle("darkMode");
+}
+
+function startProj(){
+    alert("Starting a project");
 }

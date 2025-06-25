@@ -3,23 +3,24 @@
 <!-- Notes to self:
 
 Today:
-    
-    - change goals as follows:
-        select save/spend types and cross reference with entered budget
-        text field only appears 
-    - when type task is selected recurring task for habit type
     - create a coin counter
+    - create CUSTOM POPUPS!! (https://youtu.be/MBaw_6cPmAw?t=36)
+    - add a row to table when a goal is set to subract that amount from budget
+    - if goal is bigger than budget, offer long term "projects" option
     - create a XP bar
     - create an avatar (separate page? animation?)
+    - create a start screen
+        - make a mascot
 
 possible features:
     - custom cursor + animation effect
-    - suggestions on where to save if net loss budget
+    - suggestions? like on where to save if net loss budget or where to invest etc...
     - compiled resources online
     - make app educational
     - add an intro avatar
     - target to university students
-    - save data even after refresh
+    *-   save data even after refresh*
+    *-   create a welcome tutorial*
 
  -->
 
@@ -34,48 +35,60 @@ possible features:
 <body>
     <header>
         <div id="navBar">
+            <div id="navBaricon">
+                <button  id="darkModeIcon" onclick="darkMode()"><img src="../img/lightMode.png" alt="Dark Mode" width="27px" height="27px" id="drkBtnImg"></button>
+            </div>
         </div>
         <a href="main.html"><img src="..\img\CQLogo.png" alt="CoinQuest" id="logo" draggable="false"></a>
-        <button  id="darkModeIcon" onclick="darkMode()"><img src="../img/lightMode.png" alt="Dark Mode" width="27px" height="27px" id="drkBtnImg"></button>
-        <h1 id="pageTitle">Coin Quest</h1>
     </header>
 
-    <div id="customMenu">
+    <div id="sect0">
+        <div id="container">
+                <h1 id="pageTitle">Coin Quest</h1>
+
+                <div id="subContainer">
+
+                <div id="sect1">
+                    <h2 id="budgetH2"><u>Budget</u></h2>
+                    <div id="budget">
+                        <button class="Btn" id="budgetBtn" onclick="createBudget()">Create Budget</button>
+                    </div>
+                </div>
+
+
+                <div id="sect2">
+                    <div class="goals">
+                        <h2><u>Goals</u></h2>
+
+                        <select id="taskType">
+                            <option  value="Default">Select Goal Type</option>
+                            <option value="Save">Save</option>
+                            <option value="Invest">Invest</option>
+                            <option value="Custom">Other goals</option>
+                        </select>
+
+                        <input type="number" id="input" placeholder="Enter Amount" min="0" oninput="validity.valid||(value='')">
+
+                        <span onclick="addTask()" class="Btn" id="addTaskBtn">Add Task</span>
+
+                    </div>
+
+                    <ul id="goalList">
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="coinCounter">
+            <h2 id="coinNum">0 coins</h2>
+        </div>
 
     </div>
 
-    <div id="container">
+    
 
-        <div id="sect1">
-            <h2 id="budgetH2"><u>Budget</u></h2>
-            <div id="budget">
-                <button class="Btn" id="budgetBtn" onclick="createBudget()">Create Budget</button>
-            </div>
-        </div>
-
-
-        <div id="sect2">
-            <div class="goals">
-                <h2><u>Goals</u></h2>
-
-                <input type="text" id="input" placeholder="Enter New Goal">
-
-                <select id="taskType">
-                    <option value="Default">Task (+1 coins)</option>
-                    <option value="Save">Save (+5 coins)</option>
-                    <option value="Habit">Habit (+2 coins)</option>
-                    <option value="Spend">Spend (+5 coins)</option>
-                </select>
-
-                <span onclick="addTask()" class="Btn">Add Task</span>
-            </div>
-
-            <ul id="goalList">
-                <li>Create my first task (No coins)</li>
-            </ul>
-        </div>
-    </div>
+    
 </body>
-    <div></div>
     <script src="home.js"></script>
 </html>

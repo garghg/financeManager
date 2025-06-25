@@ -1,11 +1,16 @@
 var goals = document.getElementsByTagName("LI");
 var i;
 var addRowBtn;
+var bgtCreated = false;
 var budget;
 var netCell;
 var budgetBtn = document.getElementById("budgetBtn");
 var bgtDiv = document.getElementById("budget");
 var selectedRows = [];
+var coinNum = document.getElementById('coinNum');
+var coinsShown = 0;
+var coinVal;
+var taskType = document.getElementById("taskType").value;
 
 for (i = 0; i < goals.length; i++){
     var span = document.createElement("SPAN");
@@ -28,35 +33,44 @@ var list = document.querySelector("ul");
 list.addEventListener("click", function(ev){
     if (ev.target.tagName === 'LI'){
         ev.target.classList.toggle('checked');
+
+        if (ev.target.classList.contains('checked')){
+            console.log('adding coins')
+            coinsShown += coinVal;
+            coinNum.textContent = `${coinsShown} coins`
+        }else{
+            console.log('removing coins')
+            coinsShown -= coinVal;
+            coinNum.textContent = `${coinsShown} coins`
+        }
+
     }
 })
-
-
-function saveTask(input){
-     
-}
-
 
 
 function addTask(){
     var newTask = document.createElement("li");
     var input = document.getElementById("input").value;
-    var taskType = document.getElementById("taskType").value;
-    var coinVal;
-    if (taskType === "Habit"){
-        coinVal = 2;
+
+    if (taskType === "Default"){
+        alert('Please select a valid task type.');
+        document.getElementById("input").value = "";
+        return;
     }
-    else if (taskType === "Save" || taskType === "Spend"){
-        coinVal = 5;
-        saveTask(input);
+    
+    if(bgtCreated && netCell.textContent > 0){
+        var taskName = document.createTextNode(taskType +" $" +input+` (+${coinVal} coins)`);
+        newTask.appendChild(taskName);
+    }else if (!bgtCreated){
+        alert("You must have a budget to set goals.");
+        return;
+    }else if (input > netCell.textContent){
+        alert("You do not have enough money to set this goal.");
+        return;
     }
-    else{
-        coinVal = 1
-    }   
-    taskName = document.createTextNode(input+` (+${coinVal} coins)`);
-    newTask.appendChild(taskName);
+
     if (input === ''){
-        alert("Please Enter a Task Name");
+        alert("Please Enter an amount.");
     }
     else {
         document.querySelector("ul").appendChild(newTask);
@@ -74,8 +88,8 @@ function addTask(){
     close[i].onclick = function() {
         var div = this.parentElement;
         div.style.display = "none";
+        }
     }
-}
 }
 
 function bgtItemName(){
@@ -211,6 +225,7 @@ document.addEventListener('keydown', function(event) {
 });
 
 function createBudget(){
+    bgtCreated = true;
     budgetBtn.remove();
     var budget = document.createElement("table");
     budget.id = "budgetTable";

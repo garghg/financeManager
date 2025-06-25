@@ -5,6 +5,12 @@ body{
     overflow-x: hidden;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 ::selection{
     background-color: aquamarine;
 }
@@ -52,7 +58,11 @@ ul li.checked{
 }
 
 #input{
-    width: 50%;
+    width: 45%;
+}
+
+#taskType{
+    width: 30%;
 }
 
 .close {
@@ -81,6 +91,10 @@ ul li.checked{
 
 .Btn:hover {
   background-color: #bbb;
+}
+
+#addTaskBtn{
+    padding: 11px;
 }
 
 #budgetBtn{
@@ -113,7 +127,7 @@ ul li.checked{
 #navBar{
     margin: -1%;
     margin-bottom: -2.2%;
-    padding: 25px;
+    padding: 10px;
     background-color: rgb(138, 137, 137);
     overflow: hidden;
 }
@@ -135,14 +149,64 @@ tr:nth-child(even):not(:last-child){
   background-color: #bebebe;
 }
 
+#navBaricon{
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
+
+#darkModeIcon{
+    background-color: transparent;
+    border: none;
+    margin-right: 0.6%;
+    margin-top: 0.1%;
+    margin-bottom: -0.5%;
+    padding-top: 7px;
+    padding-bottom: 5px;
+}
+
+#sect0{
+    margin-top: 0.5%;
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+}
+
+
 #container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width:90%;
+}
+
+#subContainer{
     padding: 10px;
     display: flex;
     flex-direction: row;
     gap: 50px;
 }
 
-#sect1, #sect2{
+#coinCounter{
+    width: fit-content;
+    height: 150px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: end;
+    background-color: #d9d9d9;
+    border-radius: 10%;
+    padding-inline: 50px;
+    margin-right: 1%;
+    text-wrap: nowrap;
+    font-weight: lighter;
+}
+
+#sect1{
+    width: 65%;
+}
+
+#sect2{
     width: 50%;
 }
 
@@ -151,17 +215,6 @@ tr:nth-child(even):not(:last-child){
     background-color: transparent;
     border: none;
     color: black;
-}
-
-#darkModeIcon{
-    background-color: transparent;
-    border: none;
-    margin-right: 0.3%;
-    margin-top: 0.1%;
-    float: right;
-    padding: 5px;
-    padding-top: 7px;
-    padding-bottom: 3px;
 }
 
 #darkModeIcon:hover{
@@ -248,4 +301,9 @@ tr:nth-child(even):not(:last-child){
     background-color: #bebebe;
     color: black;
     text-decoration: line-through;
+}
+
+.darkMode #coinCounter{
+    background-color:#191517;
+    border: solid 1px white;
 }

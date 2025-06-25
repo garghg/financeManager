@@ -31,7 +31,7 @@ possible features:
     <link rel="stylesheet" href="style.css">
     <title>Coin Quest</title>
 </head>
-<body class="darkMode">
+<body class="darkMode" onload="coinAnimate()">
     <header>
         <div id="navBar">
             <div id="navBaricon">
@@ -86,6 +86,7 @@ possible features:
         </div>
 
         <div id="coinCounter">
+            <div id="coinImg" draggable="false"></div>
             <h2 id="coinNum">0 coins</h2>
         </div>
 

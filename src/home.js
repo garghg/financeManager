@@ -13,6 +13,23 @@ var coinVal;
 var options = ["Income", "Expense"];
 var budget = document.createElement("table");
 
+
+function coinAnimate() {
+    i = 1;
+    var coinDiv = document.getElementById("coinImg");
+    setInterval(() => {
+        coinDiv.innerHTML = '';
+        var coinImg = document.createElement('img');
+        coinImg.src = `../img/${i}.png`;
+        coinDiv.appendChild(coinImg);
+        i++;
+        if (i > 8){
+            i = 1;
+        }
+    }, 250);
+}
+
+
 for (i = 0; i < goals.length; i++){
     var span = document.createElement("SPAN");
     var cross = document.createTextNode("x");

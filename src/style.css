@@ -198,13 +198,14 @@ tr:nth-child(even):not(:last-child){
 #coinCounter{
     user-select: none;
     width: fit-content;
-    height: 150px;
+    height: 175px;
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: end;
+    flex-direction: column;
+    justify-content: space-between;
     background-color: #d9d9d9;
     border-radius: 10%;
+    padding-top: 10px;
+    gap: 50%;
     padding-inline: 50px;
     margin-right: 1%;
     text-wrap: nowrap;
@@ -317,4 +318,11 @@ tr:nth-child(even):not(:last-child){
 .darkMode #coinCounter{
     background-color:#191517;
     border: solid 1px white;
+}
+
+#coinImg{
+    width: 20px;
+    height: 20px;
+    scale: 50%;
+    translate: 40%;
 }

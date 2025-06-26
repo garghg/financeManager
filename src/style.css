@@ -50,12 +50,16 @@ ul li.checked{
     text-decoration: line-through;
 }
 
-#input, #taskType, #projectName, #projectDate{
+#input, #taskType, #projectName, #dueDate, #startDate{
     border: solid 1px;
     border-radius: 0;
     padding: 10px;
     font-size: 16px;
     font-family: monospace;
+}
+
+#projectName{
+    width: 91%;
 }
 
 #input{
@@ -112,7 +116,8 @@ ul li.checked{
     font-family: monospace;
 }
 
-#projectBtn{
+#projectBtn, #addProjBtn{
+    width: 91%;
     text-align: center;
 }
 
@@ -290,7 +295,7 @@ tr:nth-child(even):not(:last-child){
   }
 }
 
-.darkMode #input, .darkMode #taskType, .darkMode ul li, .darkMode #projectName, .darkMode #projectDate{
+.darkMode #input, .darkMode #taskType, .darkMode ul li, .darkMode #projectName, .darkMode #dueDate, .darkMode #startDate{
     background-color: #191517;
     border: solid 1px #8C8C8C;
     color: white;
@@ -329,8 +334,15 @@ tr:nth-child(even):not(:last-child){
 }
 
 
-#project{
-    display: flex; 
+#dateDiv{
+    display: flex;
     flex-direction: row;
+    gap: 15px;
+}
+
+#projects{
+    display: flex; 
+    flex-direction: column;
     justify-content: space-between;
+    gap: 20px;
 }

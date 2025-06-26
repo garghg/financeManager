@@ -13,7 +13,6 @@ var coinVal;
 var options = ["Income", "Expense"];
 var budget = document.createElement("table");
 
-
 function coinAnimate() {
     i = 1;
     var coinDiv = document.getElementById("coinImg");
@@ -97,7 +96,7 @@ function addTask(){
     } else if (input > netCell.textContent){
         confirm("You do not have enough money to set this goal.\nWould you like to start a project for this goal? ");
         if (confirm){
-            startProj();
+            document.getElementById('projectName').focus();
         }
         return;
     } else if(bgtCreated && netCell.textContent > 0){
@@ -323,4 +322,41 @@ function darkMode(){
 }
 
 function startProj(){
+    var project = document.getElementById('projects')
+    document.getElementById('projectBtn').remove();
+    var projectName = document.createElement('input');
+    projectName.id = 'projectName';
+    projectName.setAttribute('type', 'text');
+    projectName.setAttribute('placeholder', 'Enter Project Name')
+    project.appendChild(projectName);
+
+    var dateDiv = document.createElement('div');
+    dateDiv.id = 'dateDiv'
+    project.appendChild(dateDiv);
+
+    var startDate = document.createElement('input');
+    var startTitle = document.createElement('p')
+    startTitle.textContent = 'Enter Start Date: '
+    startDate.setAttribute('type', 'date');
+    startDate.id = 'startDate';
+    dateDiv.appendChild(startTitle);
+    dateDiv.appendChild(startDate);
+
+    var dueDate = document.createElement('input');
+    var dueTitle = document.createElement('p')
+    dueTitle.textContent = 'Enter Due Date: '
+    dueDate.setAttribute('type', 'date');
+    dueDate.id = 'dueDate';
+    dateDiv.appendChild(dueTitle);
+    dateDiv.appendChild(dueDate);
+
+    var addProj = document.createElement('button');
+    addProj.id = 'addProjBtn'
+    addProj.textContent = 'Add Project';
+    addProj.classList.add('Btn');
+    project.appendChild(addProj);
+
+
+    //create a button for each project added and use custom modals to display progress with a progress bar, add photo feature, etc...
+
 }

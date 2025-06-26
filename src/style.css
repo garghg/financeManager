@@ -11,6 +11,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+
 ::selection{
     background-color: aquamarine;
 }
@@ -49,7 +50,7 @@ ul li.checked{
     text-decoration: line-through;
 }
 
-#input, #taskType{
+#input, #taskType, #projectName, #projectDate{
     border: solid 1px;
     border-radius: 0;
     padding: 10px;
@@ -80,7 +81,7 @@ ul li.checked{
 
 .Btn{
     font-family: monospace;
-    padding: 10px;
+    padding: 11px;
     background-color: #d9d9d9;
     color: #555;
     text-align: center;
@@ -96,9 +97,6 @@ ul li.checked{
   background-color: #bbb;
 }
 
-#addTaskBtn{
-    padding: 11px;
-}
 
 #budgetBtn{
     border: none;
@@ -115,7 +113,6 @@ ul li.checked{
 }
 
 #projectBtn{
-    width: 100%;
     text-align: center;
 }
 
@@ -293,7 +290,7 @@ tr:nth-child(even):not(:last-child){
   }
 }
 
-.darkMode #input, .darkMode #taskType, .darkMode ul li{
+.darkMode #input, .darkMode #taskType, .darkMode ul li, .darkMode #projectName, .darkMode #projectDate{
     background-color: #191517;
     border: solid 1px #8C8C8C;
     color: white;
@@ -320,9 +317,20 @@ tr:nth-child(even):not(:last-child){
     border: solid 1px white;
 }
 
+.darkMode [type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(100%);
+}
+
 #coinImg{
     width: 20px;
     height: 20px;
     scale: 50%;
     translate: 40%;
+}
+
+
+#project{
+    display: flex; 
+    flex-direction: row;
+    justify-content: space-between;
 }

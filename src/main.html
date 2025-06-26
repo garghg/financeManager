@@ -3,7 +3,6 @@
 <!-- Notes to self:
 
 Today:
-    - create a coin counter
     - create CUSTOM POPUPS!! (https://youtu.be/MBaw_6cPmAw?t=36)
     - if goal is bigger than budget, offer long term "projects" option
     - create a XP bar
@@ -20,7 +19,6 @@ possible features:
     - target to university students
     *-   save data even after refresh*
     *-   create a welcome tutorial*
-
  -->
 
 <!DOCTYPE html>
@@ -31,7 +29,7 @@ possible features:
     <link rel="stylesheet" href="style.css">
     <title>Coin Quest</title>
 </head>
-<body class="darkMode" onload="coinAnimate()">
+<body onload="coinAnimate()">
     <header>
         <div id="navBar">
             <div id="navBaricon">
@@ -75,9 +73,11 @@ possible features:
                     <ul id="goalList">
                     </ul>
 
+                    <h2><u>Projects</u></h2>
                     <div id="projects">
-                        <h2><u>Projects</u></h2>
-                        <button class="Btn" id="projectBtn" onclick="startProj()"> Start a project</button>
+                        <input type="text" id="projectName" placeholder="Enter Project Name">  
+                        Enter Due Date: <input type="date" id="projectDate" placeholder="Enter Due Date">
+                        <button class="Btn" id="projectBtn" onclick="startProj()"> Start a project </button>
                     </div>
 
                 </div>
@@ -86,7 +86,7 @@ possible features:
         </div>
 
         <div id="coinCounter">
-            <div id="coinImg" draggable="false"></div>
+            <div id="coinImg"></div>
             <h2 id="coinNum">0 coins</h2>
         </div>
 

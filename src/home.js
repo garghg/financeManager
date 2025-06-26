@@ -20,6 +20,7 @@ function coinAnimate() {
     setInterval(() => {
         coinDiv.innerHTML = '';
         var coinImg = document.createElement('img');
+        coinImg.draggable = false;
         coinImg.src = `../img/${i}.png`;
         coinDiv.appendChild(coinImg);
         i++;
@@ -322,5 +323,4 @@ function darkMode(){
 }
 
 function startProj(){
-    alert("Starting a project");
 }

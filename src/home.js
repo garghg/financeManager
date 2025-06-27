@@ -369,13 +369,29 @@ function darkMode(){
     body.classList.toggle("darkMode");
 }
 
+function addProject(name, dueDate, startDate){
+    var project = document.getElementById('projects');
+    var projectView = document.createElement('div');
+    projectView.id = 'projectView';
+    project.appendChild(projectView);
+    var heading = document.createElement('h2');
+    heading.textContent = 'Created Projects';
+    heading.style.textDecoration = 'underline';
+    projectView.appendChild(heading);
+    var viewBtn = document.createElement('button');
+    viewBtn.textContent = name;
+    viewBtn.classList.add('Btn');
+    viewBtn.classList.add('viewBtn');
+    projectView.appendChild(viewBtn);
+}
+
 function startProj(){
-    var project = document.getElementById('projects')
+    var project = document.getElementById('projects');
     document.getElementById('projectBtn').remove();
     var projectName = document.createElement('input');
     projectName.id = 'projectName';
     projectName.setAttribute('type', 'text');
-    projectName.setAttribute('placeholder', 'Enter Project Name')
+    projectName.setAttribute('placeholder', 'Enter Project Name');
     project.appendChild(projectName);
 
     var dateDiv = document.createElement('div');
@@ -383,7 +399,7 @@ function startProj(){
     project.appendChild(dateDiv);
 
     var startDate = document.createElement('input');
-    var startTitle = document.createElement('p')
+    var startTitle = document.createElement('p'); 
     startTitle.textContent = 'Enter Start Date: '
     startDate.setAttribute('type', 'date');
     startDate.id = 'startDate';
@@ -403,7 +419,11 @@ function startProj(){
     addProj.textContent = 'Add Project';
     addProj.classList.add('Btn');
     addProj.addEventListener('click', () => {
-        console.log('Let\'s add you project');
+        if (projectName.value !== '' && dueDate.value !== ''){
+            addProject(projectName.value, dueDate.value, startDate.value);
+        }else{
+            createModal('Invalid Input', 'Please enter a valid project name and date.');
+        }
     })
 
     project.appendChild(addProj);

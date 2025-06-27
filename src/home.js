@@ -13,6 +13,54 @@ var coinVal;
 var options = ["Income", "Expense"];
 var budget = document.createElement("table");
 
+
+function createModal(head, string, b1_text='OK', b2_text=''){
+    var modalDiv = document.createElement('div');
+    modalDiv.classList.add('modal-container');
+    modalDiv.id = 'modal-container';
+    document.body.appendChild(modalDiv);
+
+    var modal = document.createElement('div');
+    modal.classList.add('modal');
+    modalDiv.appendChild(modal);
+
+    var heading = document.createElement('h2');
+    heading.textContent = head;
+    modal.appendChild(heading);
+    var content = document.createElement('p');
+    content.innerText = string;
+    modal.appendChild(content);
+
+    var btnDiv = document.createElement('div');
+    btnDiv.id = 'btnDiv'
+    modal.appendChild(btnDiv);
+
+    var button1 = document.createElement('button');
+    button1.textContent = b1_text;
+    btnDiv.appendChild(button1);
+    button1.classList.add('Btn');
+    button1.id = 'confirm';
+
+    var button2 = document.createElement('button');
+    b2_text = 'Cancel'
+    button2.textContent = b2_text;
+    if (b2_text !== ''){
+        btnDiv.appendChild(button2);
+    }
+    button2.classList.add('Btn');
+    button2.id = 'cancel';
+
+    modalDiv.classList.toggle('show') //open modal
+    button2.addEventListener('click', () => {
+        modalDiv.classList.toggle('show'); //close modal
+        document.body.removeChild(modalDiv);
+    })
+    button1.addEventListener('click', () => {
+        modalDiv.classList.toggle('show');
+        document.body.removeChild(modalDiv);
+    })
+}
+
 function coinAnimate() {
     i = 1;
     var coinDiv = document.getElementById("coinImg");
@@ -94,7 +142,7 @@ function addTask(){
         alert("You must have a budget to set goals.");
         return;
     } else if (input > netCell.textContent){
-        confirm("You do not have enough money to set this goal.\nWould you like to start a project for this goal? ");
+        createModal('Invalid Input', 'You do not have enough money to set this goal.\nWould you like to start a project for this goal? ');
         if (confirm){
             document.getElementById('projectName').focus();
         }
@@ -331,7 +379,7 @@ function startProj(){
     project.appendChild(projectName);
 
     var dateDiv = document.createElement('div');
-    dateDiv.id = 'dateDiv'
+    dateDiv.id = 'dateDiv';
     project.appendChild(dateDiv);
 
     var startDate = document.createElement('input');
@@ -354,9 +402,10 @@ function startProj(){
     addProj.id = 'addProjBtn'
     addProj.textContent = 'Add Project';
     addProj.classList.add('Btn');
+    addProj.addEventListener('click', () => {
+        console.log('Let\'s add you project');
+    })
+
     project.appendChild(addProj);
-
-
-    //create a button for each project added and use custom modals to display progress with a progress bar, add photo feature, etc...
 
 }

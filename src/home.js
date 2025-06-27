@@ -14,7 +14,7 @@ var options = ["Income", "Expense"];
 var budget = document.createElement("table");
 
 
-function createModal(head, string, b1_text='OK', b2_text=''){
+function createModal(head, string, b1_text='OK', b2_text='Cancel'){
     var modalDiv = document.createElement('div');
     modalDiv.classList.add('modal-container');
     modalDiv.id = 'modal-container';
@@ -37,12 +37,13 @@ function createModal(head, string, b1_text='OK', b2_text=''){
 
     var button1 = document.createElement('button');
     button1.textContent = b1_text;
-    btnDiv.appendChild(button1);
+    if (b1_text !== ''){
+        btnDiv.appendChild(button1);
+    }
     button1.classList.add('Btn');
     button1.id = 'confirm';
 
     var button2 = document.createElement('button');
-    b2_text = 'Cancel'
     button2.textContent = b2_text;
     if (b2_text !== ''){
         btnDiv.appendChild(button2);
@@ -127,7 +128,7 @@ function addTask(){
     var addCoin;
 
     if (taskType === "Default"){
-        alert('Please select a valid task type.');
+        createModal('Hang on‼️', 'Looks like you missed picking a task type. Let\'s select one to move forward.', 'Select Task Type', 'Nevermind');
         document.getElementById("input").value = "";
         return;
     } else if (taskType === "Save"){
@@ -139,10 +140,15 @@ function addTask(){
     }
     
     if (!bgtCreated){
-        alert("You must have a budget to set goals.");
+        createModal("Just a heads-up 👋", "You'll need to set a budget before creating your goals.", "Make a Budget", "Maybe Later");
         return;
     } else if (input > netCell.textContent){
-        createModal('Invalid Input', 'You do not have enough money to set this goal.\nWould you like to start a project for this goal? ');
+        createModal(
+        'Almost There 🚩',
+        "You're a little short on funds for this goal.\nWant to kick off a project to help make it happen?",
+        'Start a project',
+        'Not Now'
+        );
         if (confirm){
             document.getElementById('projectName').focus();
         }
@@ -156,7 +162,7 @@ function addTask(){
     }
 
     if (input === ''){
-        alert("Please Enter an amount.");
+        createModal("Oops 💲", "Looks like you forgot to enter an amount. Let\'s enter that in, shall we?", "Enter Amount", 'I\'ll do it later');
     }
     else {
         document.querySelector("ul").appendChild(newTask);
@@ -347,6 +353,7 @@ function createBudget(){
     var newfoot = tfoot.insertRow();
     var cell1 = newfoot.insertCell();
     netCell = newfoot.insertCell();
+    netCell.id = 'netCell'
     var cell3 = newfoot.insertCell();
     cell1.textContent = "Net Total: ";
     netCell.textContent = "0";
@@ -369,30 +376,51 @@ function darkMode(){
     body.classList.toggle("darkMode");
 }
 
-function addProject(name, dueDate, startDate){
+function addProject(name, dueDate, startDate, monthsLeft, saveAmt, saveMonth){
     var project = document.getElementById('projects');
     var projectView = document.createElement('div');
     projectView.id = 'projectView';
     project.appendChild(projectView);
-    var heading = document.createElement('h2');
-    heading.textContent = 'Created Projects';
-    heading.style.textDecoration = 'underline';
-    projectView.appendChild(heading);
+
+    
     var viewBtn = document.createElement('button');
     viewBtn.textContent = name;
     viewBtn.classList.add('Btn');
     viewBtn.classList.add('viewBtn');
     projectView.appendChild(viewBtn);
+
+    viewBtn.addEventListener('click', ()=>{
+        createModal(name, `
+            Savings Goal: $${saveAmt}
+            Start Date: ${startDate}
+            Due Date: ${dueDate}
+            Time Left: ${monthsLeft} months
+            Save Per month: $${saveMonth}
+            `, 'Close', '')
+    });
 }
 
 function startProj(){
     var project = document.getElementById('projects');
     document.getElementById('projectBtn').remove();
+
+    var projDetails = document.createElement('div');
+    projDetails.id = 'projDetails'
+    project.appendChild(projDetails);
+
     var projectName = document.createElement('input');
     projectName.id = 'projectName';
     projectName.setAttribute('type', 'text');
     projectName.setAttribute('placeholder', 'Enter Project Name');
-    project.appendChild(projectName);
+    projDetails.appendChild(projectName);
+    
+    var projectAmt = document.createElement('input');
+    projectAmt.id = 'projectAmt';
+    projectAmt.setAttribute('type', 'number');
+    projectAmt.setAttribute('min', '1');
+    projectAmt.setAttribute('oninput', 'validity.valid||(value=\'\'\)');
+    projectAmt.setAttribute('placeholder', 'Enter Amount');
+    projDetails.appendChild(projectAmt);
 
     var dateDiv = document.createElement('div');
     dateDiv.id = 'dateDiv';
@@ -404,13 +432,20 @@ function startProj(){
     startDate.setAttribute('type', 'date');
     startDate.id = 'startDate';
     dateDiv.appendChild(startTitle);
+    var today = new Date().toISOString().split("T")[0];
+    startDate.value = today;
+    startDate.setAttribute('min', today);
     dateDiv.appendChild(startDate);
+    startDate.addEventListener('blur', () =>{
+        dueDate.setAttribute('min', startDate.value);
+    });
 
     var dueDate = document.createElement('input');
     var dueTitle = document.createElement('p')
     dueTitle.textContent = 'Enter Due Date: '
     dueDate.setAttribute('type', 'date');
     dueDate.id = 'dueDate';
+    dueDate.setAttribute('min', today);
     dateDiv.appendChild(dueTitle);
     dateDiv.appendChild(dueDate);
 
@@ -419,13 +454,54 @@ function startProj(){
     addProj.textContent = 'Add Project';
     addProj.classList.add('Btn');
     addProj.addEventListener('click', () => {
-        if (projectName.value !== '' && dueDate.value !== ''){
-            addProject(projectName.value, dueDate.value, startDate.value);
-        }else{
-            createModal('Invalid Input', 'Please enter a valid project name and date.');
+        var daysLeft = (new Date(dueDate.value) - new Date(startDate.value)) / (1000 * 3600 * 24);
+        var monthsLeft = Math.floor(daysLeft/30);
+        var saveMonth = Math.ceil(projectAmt.value/monthsLeft);
+        if(!document.getElementById('netCell')){
+            createModal(
+                'Please Add A Budget First 🧾',
+                'You\'ll need to set a budget before creating a long-term project.',
+                'Got It',
+                'Close'
+            );
+        } else if (saveMonth > netCell.textContent){
+            createModal(
+                'Need More Time 🕛',
+                'Your calculated per month savings goal is over your current budget. Try a later due date.',
+                'Set A Later Due Date',
+                'Close'
+            );
+        } else if(daysLeft < 0){
+            createModal('Oops ⏳', 'Can\'t end a project before it even starts. Start Date must be later than Due Date.', 'Let\'s get time flowing forwards again', 'Close');
+        } else if(daysLeft < 30){
+            createModal(
+                'Longer Projects Please 🗓️',
+                'This feature is meant for goals that take over a month to finish.',
+                'Set a Goal',
+                'Close'
+            );
+
+        } else if (projectName.value === ''){
+            createModal('Just a Quick Fix 🛠️', 'Let\'s enter a project name to proceed.', 'Got it', 'I\'ll come back to it');
+        } else if (projectAmt.value === ''){
+            createModal('Just a Quick Fix 🛠️', 'Let\'s double check the amount for this project.', 'Will do', 'I\'ll come back to it');
+        } else if (dueDate.value === '' || startDate.value === ''){
+            createModal('Just a Quick Fix 🛠️', 'Let\'s double check the project dates before moving forward.', 'Got it', 'I\'ll come back to it');
+        } else if (projectName.value !== '' && dueDate.value !== '' && startDate.value !== '' && daysLeft > 0 && projectAmt.value > 0){
+            addProject(projectName.value, dueDate.value, startDate.value, monthsLeft, projectAmt.value, saveMonth);
+            addRow(budget, projectName.value, saveMonth, 'Expense');
+            getTableVal(budget);
+            projectAmt.value = '';
+            projectName.value = '';
+            dueDate.value = '';
+            startDate.value = today;
         }
     })
 
     project.appendChild(addProj);
+    var heading = document.createElement('h2');
+    heading.textContent = 'Ongoing Projects';
+    heading.style.textDecoration = 'underline';
+    project.appendChild(heading);
 
 }

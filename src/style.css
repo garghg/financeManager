@@ -51,16 +51,12 @@ ul li.checked{
     text-decoration: line-through;
 }
 
-#input, #taskType, #projectName, #dueDate, #startDate{
+#input, #taskType, #projectName, #dueDate, #startDate, #projectAmt{
     border: solid 1px;
     border-radius: 0;
     padding: 10px;
     font-size: 16px;
     font-family: monospace;
-}
-
-#projectName{
-    width: 91%;
 }
 
 #input{
@@ -298,7 +294,7 @@ tr:nth-child(even):not(:last-child){
   }
 }
 
-.darkMode #input, .darkMode #taskType, .darkMode ul li, .darkMode #projectName, .darkMode #dueDate, .darkMode #startDate{
+.darkMode #input, .darkMode #taskType, .darkMode ul li, .darkMode #projectName, .darkMode #dueDate, .darkMode #startDate, .darkMode #projectAmt{
     background-color: #191517;
     border: solid 1px #8C8C8C;
     color: white;
@@ -362,6 +358,7 @@ tr:nth-child(even):not(:last-child){
     justify-content: center;
     opacity: 0;
     pointer-events: none;
+    user-select: none;
 }
 
 .darkMode .modal-container{
@@ -383,7 +380,7 @@ tr:nth-child(even):not(:last-child){
     padding: 50px 80px;
     text-align: center;
     align-items: center;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 }
 
 .darkMode .modal{
@@ -422,4 +419,18 @@ tr:nth-child(even):not(:last-child){
 
 .viewBtn{
     width: 91%;
+}
+
+#projDetails{
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+#projectName{
+    width: 60%;
+}
+
+#projectAmt{
+    width: 28.5%;
 }

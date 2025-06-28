@@ -14,7 +14,7 @@ var options = ["Income", "Expense"];
 var budget = document.createElement("table");
 var prevCoins; 
 var isAnimating = false;
-animateNum = 0;
+var animateNum = 0;
 var currentLvl = Number(document.getElementById('currentLvl').textContent);
 var nextLvl = Number(document.getElementById('nextLvl').textContent);
 

@@ -12,6 +12,8 @@ var coinsTotal = 0;
 var coinVal;
 var options = ["Income", "Expense"];
 var budget = document.createElement("table");
+var prevCoins; 
+var checkedGoals = [];
 
 
 function createModal(head, string, b1_text='OK', b2_text='Cancel'){
@@ -55,10 +57,12 @@ function createModal(head, string, b1_text='OK', b2_text='Cancel'){
     button2.addEventListener('click', () => {
         modalDiv.classList.toggle('show'); //close modal
         document.body.removeChild(modalDiv);
+        return false;
     })
     button1.addEventListener('click', () => {
         modalDiv.classList.toggle('show');
         document.body.removeChild(modalDiv);
+        return true;
     })
 }
 
@@ -100,6 +104,8 @@ var list = document.querySelector("ul");
 list.addEventListener("click", function(ev){
     if (ev.target.tagName === 'LI'){
         ev.target.classList.toggle('checked');
+        checkedGoals.push(ev.target);
+        console.log(checkedGoals);
         var taskText = ev.target.textContent;
         if (taskText.includes("5 coins")){
             coinVal = 5;
@@ -108,6 +114,8 @@ list.addEventListener("click", function(ev){
         } else{
             coinVal = 1;
         }
+
+        prevCoins = coinsTotal;
 
         if (ev.target.classList.contains('checked')){
             coinsTotal += coinVal;
@@ -122,24 +130,55 @@ list.addEventListener("click", function(ev){
     }
 })
 
-//fix logic for xp coins shown, progress bar, etc.
+function animateProgressChange(increment, increasing) {
+    var fill = document.getElementById('fill');
+    var currentWidth = parseFloat(fill.style.width) || 0;
+    var targetWidth = increasing ? currentWidth + increment : currentWidth - increment;
+
+    targetWidth = Math.max(0, Math.min(100, targetWidth)); // clamp between 0 and 100
+
+    var step = increasing ? 1 : -1;
+
+    var interval = setInterval(() => {
+        currentWidth += step;
+        fill.style.width = currentWidth + '%';
+
+        if ((increasing && currentWidth >= targetWidth) || (!increasing && currentWidth <= targetWidth)) {
+            clearInterval(interval);
+        }
+
+        if (currentWidth >= 100) {
+            createModal('Yay! You reached the next level 🪜', 'You have now reached the next level.');
+            setTimeout(() => {
+                fill.style.width = '0%';
+                for (i = 0; i < checkedGoals.length; i++){
+                    checkedGoals[i].style.display = 'none';
+                }
+            }, 1000);
+        }
+    }, 20);
+}
+
 
 function xp(coinVal){
     var currentLvl = Number(document.getElementById('currentLvl').textContent);
     var nextLvl = Number(document.getElementById('nextLvl').textContent);
 
-    var coinsNeeded = Math.round(10*Math.pow(currentLvl, 1.5));
+    var coinsNeeded = Math.round(10 * Math.pow(currentLvl, 1.5));
     var coinsLeft = coinsNeeded - coinsTotal;
     document.getElementById('coinstoNL').textContent = `${coinsLeft} coins to level ${nextLvl}`;
-    if (Number(coinsTotal) >= Number(coinsNeeded)){
+
+    if (coinsTotal >= coinsNeeded){
         currentLvl += 1;
         nextLvl += 1;
         document.getElementById('currentLvl').textContent = currentLvl;
         document.getElementById('nextLvl').textContent = nextLvl;
     }
 
-    var fill = document.getElementById('fill');
-    fill.style.width += (Number(coinVal)/Number(coinsNeeded))*100+'%';
+    var increment = (coinVal / coinsNeeded) * 100;
+    var increasing = prevCoins < coinsTotal;
+
+    animateProgressChange(increment, increasing);
 }
 
 
@@ -164,6 +203,9 @@ function addTask(){
     if (!bgtCreated){
         createModal("Just a heads-up 👋", "You'll need to set a budget before creating your goals.", "Make a Budget", "Maybe Later");
         return;
+    } else if (input === ''){
+        createModal("Oops 💲", "Looks like you forgot to enter an amount. Let\'s enter that in, shall we?", "Enter Amount", 'I\'ll do it later');
+        return;
     } else if (Number(input) > Number(netCell.textContent)){
         createModal(
         'Almost There 🚩',
@@ -183,12 +225,7 @@ function addTask(){
         getTableVal(budget);
     }
 
-    if (input === ''){
-        createModal("Oops 💲", "Looks like you forgot to enter an amount. Let\'s enter that in, shall we?", "Enter Amount", 'I\'ll do it later');
-    }
-    else {
-        document.querySelector("ul").appendChild(newTask);
-    }
+    document.querySelector("ul").appendChild(newTask);
 
     document.getElementById("input").value = "";
 

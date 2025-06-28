@@ -14,6 +14,14 @@ var options = ["Income", "Expense"];
 var budget = document.createElement("table");
 var prevCoins; 
 var checkedGoals = [];
+var isAnimating = false;
+var currentLvl = Number(document.getElementById('currentLvl').textContent);
+var nextLvl = Number(document.getElementById('nextLvl').textContent);
+
+var coinsLastlvl = Math.round(10 * Math.pow(currentLvl-1, 1.5));
+var coinsNeeded = coinsLastlvl+Math.round(10 * Math.pow(currentLvl, 1.5));
+var coinsLeft = coinsNeeded - coinsTotal;
+document.getElementById('coinstoNL').textContent = `${Math.max(0, coinsLeft)} coins to level ${nextLvl}`;
 
 
 function createModal(head, string, b1_text='OK', b2_text='Cancel'){
@@ -105,7 +113,6 @@ list.addEventListener("click", function(ev){
     if (ev.target.tagName === 'LI'){
         ev.target.classList.toggle('checked');
         checkedGoals.push(ev.target);
-        console.log(checkedGoals);
         var taskText = ev.target.textContent;
         if (taskText.includes("5 coins")){
             coinVal = 5;
@@ -130,12 +137,14 @@ list.addEventListener("click", function(ev){
     }
 })
 
-function animateProgressChange(increment, increasing, coinsNeeded, currentLvl, nextLvl) {
+
+function animateProgressChange(increment, increasing) {
+    
     var fill = document.getElementById('fill');
     var currentWidth = parseFloat(fill.style.width) || 0;
     var targetWidth = increasing ? currentWidth + increment : currentWidth - increment;
-
-    targetWidth = Math.max(0, Math.min(100, targetWidth)); // clamp between 0 and 100
+    console.log('did it even get here');
+    targetWidth = Math.max(0, Math.min(100, targetWidth));
 
     var step = increasing ? 1 : -1;
 
@@ -144,7 +153,9 @@ function animateProgressChange(increment, increasing, coinsNeeded, currentLvl, n
         fill.style.width = currentWidth + '%';
 
         if ((increasing && currentWidth >= targetWidth) || (!increasing && currentWidth <= targetWidth)) {
+            console.log('target reached');
             clearInterval(interval);
+            isAnimating = false;
         }
 
         if (currentWidth >= 100) {
@@ -166,28 +177,26 @@ function animateProgressChange(increment, increasing, coinsNeeded, currentLvl, n
 }
 
 
-
-
-//if you check off the goals too fast, progress bar gets screwed up and other features don't work then 
-
-
-
 function xp(coinVal){
-    var currentLvl = Number(document.getElementById('currentLvl').textContent);
-    var nextLvl = Number(document.getElementById('nextLvl').textContent);
+    currentLvl = Number(document.getElementById('currentLvl').textContent);
+    nextLvl = Number(document.getElementById('nextLvl').textContent);
 
-    var coinsLastlvl = Math.round(10 * Math.pow(currentLvl-1, 1.5));
-    var coinsNeeded = coinsLastlvl+Math.round(10 * Math.pow(currentLvl, 1.5));
-    var coinsLeft = coinsNeeded - coinsTotal;
+    coinsLastlvl = Math.round(10 * Math.pow(currentLvl-1, 1.5));
+    coinsNeeded = coinsLastlvl+Math.round(10 * Math.pow(currentLvl, 1.5));
+    coinsLeft = coinsNeeded - coinsTotal;
+    document.getElementById('coinstoNL').textContent = `${Math.max(0, coinsLeft)} coins to level ${nextLvl}`;
+
     if (coinsLeft < 0){
         coinsLeft = Math.abs(coinsLeft);
     }
-    document.getElementById('coinstoNL').textContent = `${Math.max(0, coinsLeft)} coins to level ${nextLvl}`;
 
     var increment = (coinVal / coinsNeeded) * 100;
     var increasing = prevCoins < coinsTotal;
 
-    animateProgressChange(increment, increasing, coinsNeeded, currentLvl, nextLvl);
+    if (!isAnimating){
+        isAnimating = true;
+        animateProgressChange(increment, increasing);
+    }
 }
 
 
@@ -222,10 +231,6 @@ function addTask(){
         'Start a project',
         'Not Now'
         );
-        if (confirm){
-            document.getElementById('projectName').focus();
-        }
-        return;
     } else if (bgtCreated && Number(netCell.textContent) > 0){
         var taskName = document.createTextNode(taskType +" $" +input+` (+${addCoin} coins)`);
         newTask.appendChild(taskName);

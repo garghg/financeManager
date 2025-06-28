@@ -21,6 +21,7 @@ var nextLvl = Number(document.getElementById('nextLvl').textContent);
 var coinsLastlvl = Math.round(10 * Math.pow(currentLvl-1, 1.5));
 var coinsNeeded = coinsLastlvl+Math.round(10 * Math.pow(currentLvl, 1.5));
 var coinsLeft = coinsNeeded - coinsTotal;
+var coinsOverflow = 0;
 document.getElementById('coinstoNL').textContent = `${coinsLeft} coins to level ${nextLvl}`;
 
 
@@ -154,9 +155,7 @@ list.addEventListener("click", handleClick);
 function animateProgressChange(increment, increasing) {
     var fill = document.getElementById('fill');
     var currentWidth = parseFloat(fill.style.width) || 0;
-    console.log(currentWidth)
     var targetWidth = increasing ? currentWidth + increment : currentWidth - increment;
-    console.log(targetWidth)
     targetWidth = Math.max(0, Math.min(100, targetWidth));
 
     var step = increasing ? 1 : -1;
@@ -171,12 +170,6 @@ function animateProgressChange(increment, increasing) {
         }
 
         if (currentWidth >= 100) {
-            if (coinsTotal >= coinsNeeded){
-                currentLvl += 1;
-                nextLvl += 1;
-                document.getElementById('currentLvl').textContent = currentLvl;
-                document.getElementById('nextLvl').textContent = nextLvl;
-            }
             createModal('Yay! You reached the next level 🪜', 'You have now reached the next level.');
             setTimeout(() => {
                 fill.style.width = '0%';
@@ -197,11 +190,19 @@ function xp(coinVal){
     if (coinsLeft < 0){
         coinsOverflow = Math.abs(coinsLeft);
     }
+
+    if (coinsTotal >= coinsNeeded){
+        currentLvl += 1;
+        nextLvl += 1;
+        document.getElementById('currentLvl').textContent = currentLvl;
+        document.getElementById('nextLvl').textContent = nextLvl;
+    }
+    
     console.log('coinsLastlvl '+coinsLastlvl)
     console.log('coinsNeeded '+coinsNeeded)
     console.log('currentLvl '+currentLvl)
     console.log('coinsLeft '+coinsLeft)
-    document.getElementById('coinstoNL').textContent = `${coinsLeft} coins to level ${nextLvl}`;
+    document.getElementById('coinstoNL').textContent = `${coinsLeft-coinsOverflow} coins to level ${nextLvl}`;
 
 
     var increment = (coinVal / coinsNeeded) * 100;

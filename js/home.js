@@ -13,15 +13,15 @@ var coinVal;
 var options = ["Income", "Expense"];
 var budget = document.createElement("table");
 var prevCoins; 
-var checkedGoals = [];
 var isAnimating = false;
+animateNum = 0;
 var currentLvl = Number(document.getElementById('currentLvl').textContent);
 var nextLvl = Number(document.getElementById('nextLvl').textContent);
 
 var coinsLastlvl = Math.round(10 * Math.pow(currentLvl-1, 1.5));
 var coinsNeeded = coinsLastlvl+Math.round(10 * Math.pow(currentLvl, 1.5));
 var coinsLeft = coinsNeeded - coinsTotal;
-document.getElementById('coinstoNL').textContent = `${Math.max(0, coinsLeft)} coins to level ${nextLvl}`;
+document.getElementById('coinstoNL').textContent = `${coinsLeft} coins to level ${nextLvl}`;
 
 
 function createModal(head, string, b1_text='OK', b2_text='Cancel'){
@@ -109,41 +109,54 @@ for (i = 0; i < close.length; i++){
 }
 
 var list = document.querySelector("ul");
-list.addEventListener("click", function(ev){
-    if (ev.target.tagName === 'LI'){
+
+function handleClick(ev) {
+    if (ev.target.tagName === 'LI') {
+        animateNum += 1;
         ev.target.classList.toggle('checked');
-        checkedGoals.push(ev.target);
         var taskText = ev.target.textContent;
-        if (taskText.includes("5 coins")){
+        var coinVal;
+
+        if (taskText.includes("5 coins")) {
             coinVal = 5;
-        } else if (taskText.includes("10 coins")){
+        } else if (taskText.includes("10 coins")) {
             coinVal = 10;
-        } else{
+        } else {
             coinVal = 1;
         }
 
         prevCoins = coinsTotal;
 
-        if (ev.target.classList.contains('checked')){
+        if (ev.target.classList.contains('checked')) {
             coinsTotal += coinVal;
-            coinNum.textContent = `${coinsTotal} coins`
-            xp(coinVal);
-        }else{
+            coinNum.textContent = `${coinsTotal} coins`;
+            for (i = 0; i <= animateNum; i++){
+                xp(coinVal);
+            }
+        } else {
             coinsTotal -= coinVal;
-            coinNum.textContent = `${coinsTotal} coins`
-            xp(coinVal);
+            coinNum.textContent = `${coinsTotal} coins`;
+            for (i = 0; i <= animateNum; i++){
+                xp(coinVal);
+            }
         }
 
+        ev.target.removeEventListener('click', handleClick);
+        setTimeout(() => {
+            ev.target.style.display = 'none';
+        }, 500);
     }
-})
+}
+
+list.addEventListener("click", handleClick);
 
 
 function animateProgressChange(increment, increasing) {
-    
     var fill = document.getElementById('fill');
     var currentWidth = parseFloat(fill.style.width) || 0;
+    console.log(currentWidth)
     var targetWidth = increasing ? currentWidth + increment : currentWidth - increment;
-    console.log('did it even get here');
+    console.log(targetWidth)
     targetWidth = Math.max(0, Math.min(100, targetWidth));
 
     var step = increasing ? 1 : -1;
@@ -153,24 +166,20 @@ function animateProgressChange(increment, increasing) {
         fill.style.width = currentWidth + '%';
 
         if ((increasing && currentWidth >= targetWidth) || (!increasing && currentWidth <= targetWidth)) {
-            console.log('target reached');
             clearInterval(interval);
             isAnimating = false;
         }
 
         if (currentWidth >= 100) {
-            createModal('Yay! You reached the next level 🪜', 'You have now reached the next level.');
             if (coinsTotal >= coinsNeeded){
                 currentLvl += 1;
                 nextLvl += 1;
                 document.getElementById('currentLvl').textContent = currentLvl;
                 document.getElementById('nextLvl').textContent = nextLvl;
             }
+            createModal('Yay! You reached the next level 🪜', 'You have now reached the next level.');
             setTimeout(() => {
                 fill.style.width = '0%';
-                for (i = 0; i < checkedGoals.length; i++){
-                    checkedGoals[i].style.display = 'none';
-                }
             }, 1000);
         }
     }, 20);
@@ -184,11 +193,16 @@ function xp(coinVal){
     coinsLastlvl = Math.round(10 * Math.pow(currentLvl-1, 1.5));
     coinsNeeded = coinsLastlvl+Math.round(10 * Math.pow(currentLvl, 1.5));
     coinsLeft = coinsNeeded - coinsTotal;
-    document.getElementById('coinstoNL').textContent = `${Math.max(0, coinsLeft)} coins to level ${nextLvl}`;
-
+    
     if (coinsLeft < 0){
-        coinsLeft = Math.abs(coinsLeft);
+        coinsOverflow = Math.abs(coinsLeft);
     }
+    console.log('coinsLastlvl '+coinsLastlvl)
+    console.log('coinsNeeded '+coinsNeeded)
+    console.log('currentLvl '+currentLvl)
+    console.log('coinsLeft '+coinsLeft)
+    document.getElementById('coinstoNL').textContent = `${coinsLeft} coins to level ${nextLvl}`;
+
 
     var increment = (coinVal / coinsNeeded) * 100;
     var increasing = prevCoins < coinsTotal;
@@ -219,7 +233,7 @@ function addTask(){
     }
     
     if (!bgtCreated){
-        createModal("Just a heads-up 👋", "You'll need to set a budget before creating your goals.", "Make a Budget", "Maybe Later");
+        createModal("Just a heads-up 👋", "You'll need to set a budget before creating your goals.", "Make a Budget", "Maybe Later"); 
         return;
     } else if (input === ''){
         createModal("Oops 💲", "Looks like you forgot to enter an amount. Let\'s enter that in, shall we?", "Enter Amount", 'I\'ll do it later');
@@ -231,6 +245,7 @@ function addTask(){
         'Start a project',
         'Not Now'
         );
+        return;
     } else if (bgtCreated && Number(netCell.textContent) > 0){
         var taskName = document.createTextNode(taskType +" $" +input+` (+${addCoin} coins)`);
         newTask.appendChild(taskName);

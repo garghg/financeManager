@@ -185,6 +185,7 @@ ul li .close:hover {
     height: 50px;
     width: 50px;
     user-select: none;
+    margin-left: 20%;
 }
 
 #pageTitle{

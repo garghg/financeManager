@@ -1,0 +1,34 @@
+body{
+    font-family: monospace;
+    user-select: none;
+    overflow: hidden;
+}
+
+#logo{
+    border-radius: 50%;
+    transition: 1s ease-in-out;
+}
+
+#logo:hover{
+    transform: scale(1.5);
+}
+
+#wlcmHead{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+}
+
+#wlcmHead h1{
+    opacity: 0.3;
+    animation: reappear 2.5s ease-in infinite;
+}
+
+@keyframes reappear{
+  25%  {opacity: 0.1;}
+  75%  {opacity: 0.5;}
+}

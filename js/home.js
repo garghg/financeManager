@@ -13,8 +13,6 @@ var coinVal;
 var options = ["Income", "Expense"];
 var budget = document.createElement("table");
 var prevCoins; 
-var isAnimating = false;
-var animateNum = 0;
 var currentLvl = Number(document.getElementById('currentLvl').textContent);
 var nextLvl = Number(document.getElementById('nextLvl').textContent);
 
@@ -113,7 +111,6 @@ var list = document.querySelector("ul");
 
 function handleClick(ev) {
     if (ev.target.tagName === 'LI') {
-        animateNum += 1;
         ev.target.classList.toggle('checked');
         var taskText = ev.target.textContent;
         var coinVal;
@@ -131,15 +128,11 @@ function handleClick(ev) {
         if (ev.target.classList.contains('checked')) {
             coinsTotal += coinVal;
             coinNum.textContent = `${coinsTotal} coins`;
-            for (i = 0; i <= animateNum; i++){
-                xp(coinVal);
-            }
+            runXp(coinVal);
         } else {
             coinsTotal -= coinVal;
             coinNum.textContent = `${coinsTotal} coins`;
-            for (i = 0; i <= animateNum; i++){
-                xp(coinVal);
-            }
+            runXp(coinVal);
         }
 
         ev.target.removeEventListener('click', handleClick);
@@ -151,35 +144,46 @@ function handleClick(ev) {
 
 list.addEventListener("click", handleClick);
 
+var xpQueue = Promise.resolve();
+
+function runXp(coinVal) {
+  xpQueue = xpQueue.then(() => xp(coinVal));
+  return xpQueue;
+}
 
 function animateProgressChange(increment, increasing) {
-    var fill = document.getElementById('fill');
-    var currentWidth = parseFloat(fill.style.width) || 0;
-    var targetWidth = increasing ? currentWidth + increment : currentWidth - increment;
-    targetWidth = Math.max(0, Math.min(100, targetWidth));
+    return new Promise((resolve) => {
+        var fill = document.getElementById('fill');
+        var currentWidth = parseFloat(fill.style.width) || 0;
+        var targetWidth = increasing ? currentWidth + increment : currentWidth - increment;
+        targetWidth = Math.max(0, Math.min(100, targetWidth));
 
-    var step = increasing ? 1 : -1;
+        var step = increasing ? 1 : -1;
 
-    var interval = setInterval(() => {
-        currentWidth += step;
-        fill.style.width = currentWidth + '%';
+        var interval = setInterval(() => {
+            currentWidth += step;
+            fill.style.width = currentWidth + '%';
 
-        if ((increasing && currentWidth >= targetWidth) || (!increasing && currentWidth <= targetWidth)) {
-            clearInterval(interval);
-            isAnimating = false;
-        }
+            if ((increasing && currentWidth >= targetWidth) || (!increasing && currentWidth <= targetWidth)) {
+                clearInterval(interval);
+                resolve();  // <-- this lets the queue continue
+            }
 
-        if (currentWidth >= 100) {
-            createModal('Yay! You reached the next level 🪜', 'You have now reached the next level.');
-            setTimeout(() => {
-                fill.style.width = '0%';
-            }, 1000);
-        }
-    }, 20);
+            if (currentWidth >= 100) {
+                createModal('Yay! You reached the next level 🪜', 'You have now reached the next level.');
+                resolve();
+                setTimeout(() => {
+                    fill.style.width = '0%';
+                }, 1000);
+            }
+        }, 20);
+    });
 }
 
 
-function xp(coinVal){
+
+async function xp(coinVal){
+
     currentLvl = Number(document.getElementById('currentLvl').textContent);
     nextLvl = Number(document.getElementById('nextLvl').textContent);
 
@@ -197,7 +201,7 @@ function xp(coinVal){
         document.getElementById('currentLvl').textContent = currentLvl;
         document.getElementById('nextLvl').textContent = nextLvl;
     }
-    
+
     console.log('coinsLastlvl '+coinsLastlvl)
     console.log('coinsNeeded '+coinsNeeded)
     console.log('currentLvl '+currentLvl)
@@ -208,10 +212,7 @@ function xp(coinVal){
     var increment = (coinVal / coinsNeeded) * 100;
     var increasing = prevCoins < coinsTotal;
 
-    if (!isAnimating){
-        isAnimating = true;
-        animateProgressChange(increment, increasing);
-    }
+    return animateProgressChange(increment, increasing);
 }
 
 

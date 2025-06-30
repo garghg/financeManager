@@ -20,8 +20,6 @@ var coinsNeeded = coinsLastlvl+Math.round(10 * Math.pow(currentLvl, 1.5));
 var coinsLeft = coinsNeeded - coinsTotal;
 var coinsOverflow = 0;
 document.getElementById('coinstoNL').textContent = `${coinsLeft} coins to level ${nextLvl}`;
-//this broke AGAIN fix it,the number display after next level goes to zero
-//issue is probably that current lvl is update after the first goal is check and coins are calculated late accordingly...
 
 
 function createModal(head, string, b1_text='OK', b2_text='Cancel'){
@@ -328,7 +326,6 @@ function bgtItemAmt(table, amtVal = ''){
     return amt;
 }
 
-
 function createDropdown(table, dropdownVal = '') {
     var select = document.createElement('select');
     select.classList.add("itemType");
@@ -360,6 +357,8 @@ function getTableVal(table) {
         var value = nodeList[i].value.trim();
         if (value !== "") {
             tblArray.push(Number(value));
+        } else {
+            tblArray.push(0);
         }
     }
 
@@ -480,7 +479,6 @@ function createBudget(){
     cell1.textContent = "Net Total: ";
     netCell.textContent = "0";
     cell3.textContent = "";
-
     
     addRowBtn = document.createElement('button');
     addRowBtn.textContent = "Add Row";

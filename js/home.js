@@ -160,7 +160,7 @@ function animateProgressChange(increment, increasing, overflowInc) {
         var currentWidth = parseFloat(fill.style.width) || 0;
         var targetWidth = increasing ? currentWidth + increment : currentWidth - increment;
         var barWidth = Math.max(0, Math.min(100, targetWidth));
-        document.getElementById('coinstoNL').textContent = `${coinsLeft - coinsOverflow} coins to level ${nextLvl}`;
+        document.getElementById('coinstoNL').textContent = `${coinsLeft} coins to level ${nextLvl}`;
 
         var step = increasing ? 1 : -1;
 
@@ -199,7 +199,6 @@ function animateProgressChange(increment, increasing, overflowInc) {
 }
 
 
-
 async function xp(coinVal){
     currentLvl = Number(document.getElementById('currentLvl').textContent);
     nextLvl = Number(document.getElementById('nextLvl').textContent);
@@ -222,13 +221,16 @@ async function xp(coinVal){
         document.getElementById('currentLvl').textContent = currentLvl;
         document.getElementById('nextLvl').textContent = nextLvl;
 
-        coinsLastlvl = Math.round(10 * Math.pow(currentLvl-1, 1.5));
-        coinsNeeded = coinsLastlvl + Math.round(10 * Math.pow(currentLvl, 1.5));
-        coinsLeft = coinsNeeded - coinsTotal;
-
         var overflowInc = (coinsOverflow / coinsNeeded) * 100;
     }
 
+    coinsLastlvl = Math.round(10 * Math.pow(currentLvl-1, 1.5));
+    coinsNeeded = coinsLastlvl + Math.round(10 * Math.pow(currentLvl, 1.5));
+    coinsLeft = coinsNeeded - coinsTotal;
+
+    if (coinsTotal >= coinsNeeded_before){
+        var overflowInc = (coinsOverflow / coinsNeeded) * 100;
+    }    
 
     document.getElementById('coinstoNL').textContent = `${Math.max(0, coinsLeft)} coins to level ${nextLvl}`;
 

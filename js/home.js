@@ -7,20 +7,21 @@ var netCell;
 var budgetBtn = document.getElementById("budgetBtn");
 var bgtDiv = document.getElementById("budget");
 var selectedRows = [];
+var options = ["Income", "Expense"];
+var budget = document.createElement("table");
 var coinNum = document.getElementById('coinNum');
 var coinsTotal = 0;
 var coinVal;
-var options = ["Income", "Expense"];
-var budget = document.createElement("table");
 var prevCoins; 
 var currentLvl = Number(document.getElementById('currentLvl').textContent);
 var nextLvl = Number(document.getElementById('nextLvl').textContent);
-
 var coinsLastlvl = Math.round(10 * Math.pow(currentLvl-1, 1.5));
 var coinsNeeded = coinsLastlvl+Math.round(10 * Math.pow(currentLvl, 1.5));
 var coinsLeft = coinsNeeded - coinsTotal;
 var coinsOverflow = 0;
 document.getElementById('coinstoNL').textContent = `${coinsLeft} coins to level ${nextLvl}`;
+//this broke AGAIN fix it,the number display after next level goes to zero
+//issue is probably that current lvl is update after the first goal is check and coins are calculated late accordingly...
 
 
 function createModal(head, string, b1_text='OK', b2_text='Cancel'){
@@ -98,6 +99,7 @@ for (i = 0; i < goals.length; i++){
     goals[i].appendChild(span);
 };
 
+
 var close = document.getElementsByClassName("close");
 var i;
 for (i = 0; i < close.length; i++){
@@ -106,6 +108,7 @@ for (i = 0; i < close.length; i++){
         div.style.display = "none";
     }
 }
+
 
 var list = document.querySelector("ul");
 
@@ -151,12 +154,13 @@ function runXp(coinVal) {
   return xpQueue;
 }
 
-function animateProgressChange(increment, increasing) {
+function animateProgressChange(increment, increasing, overflowInc) {
     return new Promise((resolve) => {
         var fill = document.getElementById('fill');
         var currentWidth = parseFloat(fill.style.width) || 0;
         var targetWidth = increasing ? currentWidth + increment : currentWidth - increment;
-        targetWidth = Math.max(0, Math.min(100, targetWidth));
+        var barWidth = Math.max(0, Math.min(100, targetWidth));
+        document.getElementById('coinstoNL').textContent = `${coinsLeft - coinsOverflow} coins to level ${nextLvl}`;
 
         var step = increasing ? 1 : -1;
 
@@ -164,17 +168,31 @@ function animateProgressChange(increment, increasing) {
             currentWidth += step;
             fill.style.width = currentWidth + '%';
 
-            if ((increasing && currentWidth >= targetWidth) || (!increasing && currentWidth <= targetWidth)) {
+            if ((increasing && currentWidth >= barWidth) || (!increasing && currentWidth <= barWidth)) {
                 clearInterval(interval);
-                resolve();  // <-- this lets the queue continue
-            }
 
-            if (currentWidth >= 100) {
-                createModal('Yay! You reached the next level 🪜', 'You have now reached the next level.');
-                resolve();
-                setTimeout(() => {
-                    fill.style.width = '0%';
-                }, 1000);
+                if (currentWidth >= 100) {
+                    createModal('Yay! You reached the next level 🪜', 'You have now reached the next level.');
+
+                    setTimeout(() => {
+                        fill.style.width = '0%';
+
+                        let overflowWidth = 0;
+                        let overflowStep = 1;
+
+                        var overflowInterval = setInterval(() => {
+                            overflowWidth += overflowStep;
+                            fill.style.width = `${overflowWidth}%`;
+
+                            if (overflowWidth >= overflowInc) {
+                                clearInterval(overflowInterval);
+                                resolve();
+                            }
+                        }, 20);
+                    }, 1000);
+                } else {
+                    resolve();
+                }
             }
         }, 20);
     });
@@ -183,37 +201,43 @@ function animateProgressChange(increment, increasing) {
 
 
 async function xp(coinVal){
-
     currentLvl = Number(document.getElementById('currentLvl').textContent);
     nextLvl = Number(document.getElementById('nextLvl').textContent);
 
-    coinsLastlvl = Math.round(10 * Math.pow(currentLvl-1, 1.5));
-    coinsNeeded = coinsLastlvl+Math.round(10 * Math.pow(currentLvl, 1.5));
-    coinsLeft = coinsNeeded - coinsTotal;
-    
-    if (coinsLeft < 0){
-        coinsOverflow = Math.abs(coinsLeft);
+    let coinsLastlvl_before = Math.round(10 * Math.pow(currentLvl-1, 1.5));
+    let coinsNeeded_before = coinsLastlvl_before + Math.round(10 * Math.pow(currentLvl, 1.5));
+
+    let coinsLeft_before = coinsNeeded_before - coinsTotal;
+
+    if (coinsLeft_before < 0){
+        coinsOverflow = Math.abs(coinsLeft_before);
+        console.log(coinsOverflow);
+    } else {
+        coinsOverflow = 0;
     }
 
-    if (coinsTotal >= coinsNeeded){
+    if (coinsTotal >= coinsNeeded_before){
         currentLvl += 1;
         nextLvl += 1;
         document.getElementById('currentLvl').textContent = currentLvl;
         document.getElementById('nextLvl').textContent = nextLvl;
+
+        coinsLastlvl = Math.round(10 * Math.pow(currentLvl-1, 1.5));
+        coinsNeeded = coinsLastlvl + Math.round(10 * Math.pow(currentLvl, 1.5));
+        coinsLeft = coinsNeeded - coinsTotal;
+
+        var overflowInc = (coinsOverflow / coinsNeeded) * 100;
     }
 
-    console.log('coinsLastlvl '+coinsLastlvl)
-    console.log('coinsNeeded '+coinsNeeded)
-    console.log('currentLvl '+currentLvl)
-    console.log('coinsLeft '+coinsLeft)
-    document.getElementById('coinstoNL').textContent = `${coinsLeft-coinsOverflow} coins to level ${nextLvl}`;
 
+    document.getElementById('coinstoNL').textContent = `${Math.max(0, coinsLeft)} coins to level ${nextLvl}`;
 
-    var increment = (coinVal / coinsNeeded) * 100;
+    var increment = (coinVal / coinsNeeded_before) * 100;
     var increasing = prevCoins < coinsTotal;
 
-    return animateProgressChange(increment, increasing);
+    return animateProgressChange(increment, increasing, overflowInc);
 }
+
 
 
 function addTask(){
@@ -275,6 +299,7 @@ function addTask(){
     }
 }
 
+
 function bgtItemName(nameVal = ''){
     var name = document.createElement("input");
     name.setAttribute('type', 'text');
@@ -284,6 +309,7 @@ function bgtItemName(nameVal = ''){
     name.value = nameVal;
     return name;
 }
+
 
 function bgtItemAmt(table, amtVal = ''){
     var amt = document.createElement("input");
@@ -300,6 +326,7 @@ function bgtItemAmt(table, amtVal = ''){
     return amt;
 }
 
+
 function createDropdown(table, dropdownVal = '') {
     var select = document.createElement('select');
     select.classList.add("itemType");
@@ -315,6 +342,7 @@ function createDropdown(table, dropdownVal = '') {
     });
     return select;
 }
+
 
 function getTableVal(table) {
     var tblArray = [];
@@ -420,6 +448,7 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+
 function createBudget(){
     bgtCreated = true;
     budgetBtn.remove();
@@ -462,10 +491,12 @@ function createBudget(){
 
 }
 
+
 function darkMode(){
     var body = document.body;
     body.classList.toggle("darkMode");
 }
+
 
 function addProject(name, dueDate, startDate, monthsLeft, saveAmt, saveMonth){
     var project = document.getElementById('projects');
@@ -490,6 +521,7 @@ function addProject(name, dueDate, startDate, monthsLeft, saveAmt, saveMonth){
             `, 'Close', '')
     });
 }
+
 
 function startProj(){
     var project = document.getElementById('projects');

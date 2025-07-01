@@ -20,6 +20,8 @@ var coinsNeeded = coinsLastlvl+Math.round(10 * Math.pow(currentLvl, 1.5));
 var coinsLeft = coinsNeeded - coinsTotal;
 var coinsOverflow = 0;
 document.getElementById('coinstoNL').textContent = `${coinsLeft} coins to level ${nextLvl}`;
+var avatars = [];
+var avatarsMap = new Map();
 
 
 function createModal(head, string, b1_text='OK', b2_text='Cancel'){
@@ -491,20 +493,146 @@ function createBudget(){
 
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-    if (sessionStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('darkMode');
+function unlockAvts(){
+    for (let i = 0; i < avatars.length; i++){
+        avatars[i].addEventListener('mouseover', () => {avatars[i].src = `../img/${avatarsMap.get(avatars[i])}.gif`;})
+        avatars[i].addEventListener('mouseout', () => {
+            setTimeout(() => {
+                avatars[i].src = `../img/${avatarsMap.get(avatars[i])}.png`;
+            }, 1000);
+        });
     }
-});
-
-
-function avatarPage() {
-    const isDarkMode = document.body.classList.contains('darkMode');
-    sessionStorage.setItem('darkMode', isDarkMode);
-
-    window.location.href = 'C:/Users/gargh/OneDrive/Documents/financeManager/html/avatar.html';
 }
 
+
+function avatarView() {
+    var modalDiv = document.createElement('div');
+    modalDiv.classList.add('modal-container');
+    modalDiv.id = 'modal-container';
+    document.body.appendChild(modalDiv);
+
+    var modal = document.createElement('div');
+    modal.classList.add('modal');
+    modal.id = 'avatar-modal'
+    modalDiv.appendChild(modal);
+
+    var btnDiv = document.createElement('div');
+    btnDiv.id = 'AvtBtnDiv'
+    modal.appendChild(btnDiv);
+
+    var heading = document.createElement('h2');
+    heading.textContent = 'Avatars';
+    modal.appendChild(heading);
+
+    var content = document.createElement('div');
+    content.id = 'avtContent'
+    modal.appendChild(content);
+
+    // ------------------ Starter -----------------
+    var starter = document.createElement('div');
+    starter.id = 'starter'
+    content.appendChild(starter);
+
+    var starterImg = document.createElement('img')
+    starterImg.id = 'starterImg'
+    starterImg.src = '../img/Starter.png'
+    starter.appendChild(starterImg);
+
+    avatars.push(starterImg);
+    avatarsMap.set(starterImg, 'Starter');
+
+    var starterDes = document.createElement('p');
+    starterDes.innerText = 'The Starter';
+    starter.appendChild(starterDes);
+
+    // ----------------- Planner -----------------
+
+    var planner = document.createElement('div');
+    planner.id = 'planner'
+    content.appendChild(planner);
+
+    var plannerImg = document.createElement('img')
+    plannerImg.src = '../img/planner.png'
+    planner.appendChild(plannerImg);
+
+    avatars.push(plannerImg);
+    avatarsMap.set(plannerImg, 'Planner');
+
+    var plannerDes = document.createElement('p');
+    plannerDes.innerText = 'The Planner';
+    planner.appendChild(plannerDes);
+
+    // ----------------- Strategist -----------------
+
+    var strategist = document.createElement('div');
+    strategist.id = 'strategist'
+    content.appendChild(strategist);
+
+    var strategistImg = document.createElement('img')
+    strategistImg.src = '../img/Strategist.png'
+    strategist.appendChild(strategistImg);
+
+    avatars.push(strategistImg);
+    avatarsMap.set(strategistImg, 'Strategist');
+
+    var strategistDes = document.createElement('p');
+    strategistDes.innerText = 'The Strategist';
+    strategist.appendChild(strategistDes);
+
+    // ----------------- Analyst -----------------
+
+    var analyst = document.createElement('div');
+    analyst.id = 'analyst'
+    content.appendChild(analyst);
+
+    var analystImg = document.createElement('img')
+    analystImg.src = '../img/analyst.png'
+    analyst.appendChild(analystImg);
+
+    avatars.push(analystImg);
+    avatarsMap.set(analystImg, 'Analyst');
+
+    var analystDes = document.createElement('p');
+    analystDes.innerText = 'The Analyst';
+    analyst.appendChild(analystDes);
+
+    // ----------------- Owner -----------------
+
+    var owner = document.createElement('div');
+    owner.id = 'owner'
+    content.appendChild(owner);
+
+    var ownerImg = document.createElement('img')
+    ownerImg.src = '../img/owner.png'
+    owner.appendChild(ownerImg)
+
+    avatars.push(ownerImg);
+    avatarsMap.set(ownerImg, 'Owner');
+
+    var ownerDes = document.createElement('p');
+    ownerDes.innerText = 'The Owner';
+    owner.appendChild(ownerDes);
+
+    // ------------------------------------------------
+
+
+    var button1 = document.createElement('button');
+    button1.textContent = 'X';
+    btnDiv.appendChild(button1);
+    button1.classList.add('Btn');
+    button1.id = 'X';
+
+    modalDiv.classList.toggle('show'); //open modal
+
+    button1.addEventListener('click', () => {
+        modalDiv.classList.toggle('show'); //close modal
+        document.body.removeChild(modalDiv);
+        return true;
+    });
+
+    unlockAvts();
+
+}
 
 
 function darkMode(){

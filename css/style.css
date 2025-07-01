@@ -472,6 +472,42 @@ tr:nth-child(even):not(:last-child){
     gap: 20px;
 }
 
+#avatar-modal{
+    width: calc(100vw - 75px);
+    height: calc(100vh - 200px);
+}
+
+#AvtBtnDiv{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+    gap: 20px;
+}
+
+#avtContent{
+    padding-top: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#avtContent img{
+    padding: 20px;
+    filter: grayscale(100%);
+    transition: 0.75s ease-in-out;
+}
+
+#avtContent img:hover{
+    filter: none;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+#avtContent #starterImg{
+    filter: none;
+}
+
 #confirm, #cancel{
     padding: 10px;
 }

@@ -3,8 +3,7 @@
 <!-- Notes to self:
 
 Today:
-    - create an avatar page
-    - create backend in python - Flask - sign in page
+    - create an avatar modal
     - create level upgrade gifts like crates etc...
     - create shop to buy items using coins
     - create a start screen
@@ -13,6 +12,7 @@ Today:
 possible features:
     - custom cursor + animation effect
     - suggestions? like on where to save if net loss budget or where to invest etc...
+    - create backend in python - Flask - sign in page
     - compiled resources online
     - make app "educational"
     - add an intro avatar
@@ -35,7 +35,8 @@ possible features:
     <header>
         <div id="navBar">
             <div id="navBaricon">
-                <button  id="darkModeIcon" onclick="darkMode()"><img src="../img/lightMode.png" alt="Dark Mode" width="27px" height="27px" id="drkBtnImg"></button>
+                <button class="icon" id="avatarIcon" onclick="avatarPage()"><img src="../img/avatar.png" alt="Open Avatar Menu" id="avatarImg"></button>
+                <button class="icon" id="darkModeIcon" onclick="darkMode()"><img src="../img/lightMode.png" alt="Dark Mode" id="drkBtnImg"></button>
             </div>
         </div>
         <div id="headerSect1">

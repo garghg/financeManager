@@ -1,0 +1,141 @@
+body {
+    font-family: monospace;
+    font-size: large;
+    margin-left: 1%;
+    overflow-x: hidden;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+::selection {
+    background-color: aquamarine;
+}
+
+#navBar {
+    margin: -1%;
+    margin-bottom: -2.2%;
+    padding: 10px;
+    background-color: rgb(138, 137, 137);
+    overflow: hidden;
+}
+
+#navBaricon {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
+
+.icon {
+    background-color: transparent;
+    border: none;
+    margin-right: 0.6%;
+    margin-top: 0.1%;
+    margin-bottom: -0.5%;
+    padding-top: 7px;
+    padding-bottom: 5px;
+}
+
+.icon img {
+    width: 27px;
+    height: 27px;
+}
+
+#headerSect1 {
+    margin-top: 1%;
+    display: flex;
+    flex-direction: row;
+    gap: 67%;
+    user-select: none;
+}
+
+#logo {
+    margin-top: 1%;
+    height: 50px;
+    width: 50px;
+    user-select: none;
+    margin-left: 20%;
+}
+
+#progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#xpBar {
+    margin-top: 0.5%;
+    width: 400px;
+    height: 30px;
+    background-color: #36ACA2;
+    border-radius: 7px;
+    border: solid 2px black;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+#fill {
+    width: 1%;
+    height: 26px;
+    background-color: #FFF70D;
+}
+
+#progress h3 {
+    margin: -1%;
+    margin-top: 5px;
+    transform: translate(-10%);
+}
+
+#levels {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#levels h3 {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    background-color: #FFF70D;
+    text-align: center;
+    border-radius: 5px;
+    border: solid 2px black;
+    transform: translate(0%, -10%);
+    margin-inline: -3%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+#darkModeIcon:hover,
+#avatarIcon:hover {
+    transition: ease-out 0.5s;
+    background-color: white;
+}
+
+/* Dark mode overrides */
+.darkMode {
+    background-color: black;
+    color: white;
+}
+
+.darkMode #navBar {
+    background-color: black;
+}
+
+.darkMode #darkModeIcon:hover,
+.darkMode #avatarIcon:hover {
+    transition: ease-out 0.5s;
+    background-color: grey;
+}
+
+.darkMode .icon img {
+    filter: invert(1);
+}
+
+.darkMode #logo {
+    content: url(../img/CQLogoDark.png);
+}
+
+.darkMode #levels h3 {
+    color: black;
+}

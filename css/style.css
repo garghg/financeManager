@@ -225,7 +225,7 @@ tr:nth-child(even):not(:last-child){
     justify-content: right;
 }
 
-#darkModeIcon{
+.icon{
     background-color: transparent;
     border: none;
     margin-right: 0.6%;
@@ -234,6 +234,12 @@ tr:nth-child(even):not(:last-child){
     padding-top: 7px;
     padding-bottom: 5px;
 }
+
+.icon img{
+    width: 27px;
+    height: 27px;
+}
+
 
 #sect0{
     margin-top: 0.5%;
@@ -292,7 +298,7 @@ tr:nth-child(even):not(:last-child){
     color: black;
 }
 
-#darkModeIcon:hover{
+#darkModeIcon:hover, #avatarIcon:hover{
     transition:ease-out 0.5s;
     background-color: white;
 }
@@ -306,14 +312,13 @@ tr:nth-child(even):not(:last-child){
     background-color: black;
 }
 
-
-.darkMode #darkModeIcon img{
-    content: url(../img/darkMode.png);
-}
-
-.darkMode #darkModeIcon:hover{
+.darkMode #darkModeIcon:hover, .darkMode #avatarIcon:hover{
     transition:ease-out 0.5s;
     background-color: grey;
+}
+
+.darkMode .icon img{
+    filter: invert(1);
 }
 
 .darkMode #logo {

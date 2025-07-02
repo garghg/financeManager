@@ -23,6 +23,8 @@ var coinsOverflow = 0;
 document.getElementById('coinstoNL').textContent = `${coinsLeft} coins to level ${nextLvl}`;
 var avatars = [];
 var avatarsMap = new Map();
+var avtModalDiv = document.createElement('div');
+var avatarsUnlocked = [];
 
 
 function createModal(head, string, b1_text='OK', b2_text='Cancel'){
@@ -122,7 +124,7 @@ function handleClick(ev) {
         if (taskText.includes("5 coins")) {
             coinVal = 5;
         } else if (taskText.includes("10 coins")) {
-            coinVal = 10;
+            coinVal = 20;                                                                                        // <----------------temp change for testing; change back to 10 later
         } else {
             coinVal = 1;
         }
@@ -199,7 +201,6 @@ function animateProgressChange(increment, increasing, overflowInc) {
 }
 
 
-//fix this again, it breaks past level 3 for some reason → logical error somewhere
 async function xp(coinVal){
     currentLvl = Number(document.getElementById('currentLvl').textContent);
     nextLvl = Number(document.getElementById('nextLvl').textContent);
@@ -230,6 +231,7 @@ async function xp(coinVal){
 
         currentLvl += 1;
         nextLvl += 1;
+        unlockAvts();
         document.getElementById('currentLvl').textContent = currentLvl;
         document.getElementById('nextLvl').textContent = nextLvl;
 
@@ -501,11 +503,81 @@ function createBudget(){
     addRowBtn.onclick = function(){
         addRow(budget);
     };
-    document.getElementById('sect1').appendChild(addRowBtn);
+    document.getElementById('sect1').appendChild(addRowBtn); 
 
 }
 
 function unlockAvts(){
+    // --------------------------------------------- Planner ---------------------------------------------------------------
+    if (currentLvl >= 5){
+        createModal(
+            'Character Unlocked! 🔓',
+            'Awesome! You\'ve just unlocked a new character: The Planner. Head over to the avatar menu to check it out!',
+            'Got it!',
+            'Close'
+        );
+        for (let i = 0; i < avatars.length; i++){
+            if (avatarsMap.get(avatars[i]) === "Planner"){
+                var planner = avatars[i];
+                planner.style.filter = 'none';
+            }
+        }
+    }
+
+    // --------------------------------------------- Strategist ---------------------------------------------------------------
+
+    if (currentLvl >= 10){
+        createModal(
+            'New Character Unlocked! 🎊 ',
+            'Nice! A new character is ready to join your collection. Take a look in the avatar menu!',
+            'Awesome!',
+            'Close'
+        );
+        for (let i = 0; i < avatars.length; i++){
+            if (avatarsMap.get(avatars[i]) === "Strategist"){
+                var strategist = avatars[i];
+                strategist.style.filter = 'none';
+            }
+        }
+    }
+
+    // --------------------------------------------- Analyst ---------------------------------------------------------------
+
+    if (currentLvl >= 15){
+        createModal(
+            'Character Unlocked!🚀 ',
+            'Someone special awaits you in the avatar menu. Go meet your new character!',
+            'Let\'s go!',
+            'Close'
+        );
+        for (let i = 0; i < avatars.length; i++){
+            if (avatarsMap.get(avatars[i]) === "Analyst"){
+                var analyst = avatars[i];
+                analyst.style.filter = 'none';
+            }
+        }
+    }
+
+    // --------------------------------------------- Owner ---------------------------------------------------------------
+
+    if (currentLvl >= 20){
+        createModal(
+            'Look Who’s Here! ✨',
+            'The Owner has joined the fun! Check him out in the avatar menu now!',
+            'Yay!',
+            'Close'
+        );
+        for (let i = 0; i < avatars.length; i++){
+            if (avatarsMap.get(avatars[i]) === "Owner"){
+                var owner = avatars[i];
+                owner.style.filter = 'none';
+            }
+        }
+    }
+}
+
+
+function animateAvts(){
     for (let i = 0; i < avatars.length; i++){
         avatars[i].addEventListener('mouseover', () => {avatars[i].src = `../img/${avatarsMap.get(avatars[i])}.gif`;})
         avatars[i].addEventListener('mouseout', () => {
@@ -514,28 +586,18 @@ function unlockAvts(){
             }, 1000);
         });
     }
-
-    if (currentLvl > 5){
-        for (let i = 0; i < avatars.length; i++){
-            if (avatarsMap.get(avatars[i] === "Planner")){
-                var planner = avatars[i];
-                planner.addEventListener('mouseover', () => {planner.style.filter = 'none';})
-            }
-        }
-    }
 }
 
 
-function avatarView() {
-    var modalDiv = document.createElement('div');
-    modalDiv.classList.add('modal-container');
-    modalDiv.id = 'modal-container';
-    document.body.appendChild(modalDiv);
+function avatarLoad(){
+    avtModalDiv.classList.add('modal-container');
+    avtModalDiv.id = 'modal-container';
+    document.body.appendChild(avtModalDiv);
 
     var modal = document.createElement('div');
     modal.classList.add('modal');
     modal.id = 'avatar-modal'
-    modalDiv.appendChild(modal);
+    avtModalDiv.appendChild(modal);
 
     var btnDiv = document.createElement('div');
     btnDiv.id = 'AvtBtnDiv'
@@ -635,24 +697,22 @@ function avatarView() {
     owner.appendChild(ownerDes);
 
     // ------------------------------------------------
-
-
-    var button1 = document.createElement('button');
-    button1.textContent = 'X';
-    btnDiv.appendChild(button1);
-    button1.classList.add('Btn');
-    button1.id = 'X';
-
-    modalDiv.classList.toggle('show'); //open modal
-
-    button1.addEventListener('click', () => {
-        modalDiv.classList.toggle('show'); //close modal
-        document.body.removeChild(modalDiv);
-        return true;
+    var avtClose = document.createElement('button');
+    avtClose.textContent = 'X';
+    btnDiv.appendChild(avtClose);
+    avtClose.classList.add('Btn');
+    avtClose.id = 'X';
+    
+    avtClose.addEventListener('click', () => {
+        avtModalDiv.classList.toggle('show'); //close modal
     });
 
-    unlockAvts();
+    animateAvts();
 
+}
+
+function avatarView() {
+    avtModalDiv.classList.toggle('show'); //open modal
 }
 
 

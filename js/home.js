@@ -15,9 +15,10 @@ var coinVal;
 var prevCoins; 
 var currentLvl = Number(document.getElementById('currentLvl').textContent);
 var nextLvl = Number(document.getElementById('nextLvl').textContent);
-var coinsLastlvl = Math.round(10 * Math.pow(currentLvl-1, 1.5));
-var coinsNeeded = coinsLastlvl+Math.round(10 * Math.pow(currentLvl, 1.5));
-var coinsLeft = coinsNeeded - coinsTotal;
+var coinsNeeded = Math.round(10 * Math.pow(currentLvl, 1.5));
+var coinsBefore = 0;
+var coinsEarned = coinsTotal - coinsBefore;
+var coinsLeft = coinsNeeded - coinsEarned;
 var coinsOverflow = 0;
 document.getElementById('coinstoNL').textContent = `${coinsLeft} coins to level ${nextLvl}`;
 var avatars = [];
@@ -160,7 +161,6 @@ function animateProgressChange(increment, increasing, overflowInc) {
         var currentWidth = parseFloat(fill.style.width) || 0;
         var targetWidth = increasing ? currentWidth + increment : currentWidth - increment;
         var barWidth = Math.max(0, Math.min(100, targetWidth));
-        document.getElementById('coinstoNL').textContent = `${coinsLeft} coins to level ${nextLvl}`;
 
         var step = increasing ? 1 : -1;
 
@@ -199,47 +199,59 @@ function animateProgressChange(increment, increasing, overflowInc) {
 }
 
 
+//fix this again, it breaks past level 3 for some reason → logical error somewhere
 async function xp(coinVal){
     currentLvl = Number(document.getElementById('currentLvl').textContent);
     nextLvl = Number(document.getElementById('nextLvl').textContent);
 
-    let coinsLastlvl_before = Math.round(10 * Math.pow(currentLvl-1, 1.5));
-    let coinsNeeded_before = coinsLastlvl_before + Math.round(10 * Math.pow(currentLvl, 1.5));
+    coinsNeeded = Math.round(10 * Math.pow(currentLvl, 1.5));
 
-    let coinsLeft_before = coinsNeeded_before - coinsTotal;
 
-    if (coinsLeft_before < 0){
-        coinsOverflow = Math.abs(coinsLeft_before);
-        console.log(coinsOverflow);
+
+
+    coinsBefore = 0;
+    for (let i = 1; i < currentLvl; i++){
+        var iCoins = Math.round(10 * Math.pow(i, 1.5));
+        coinsBefore += iCoins;
+    }
+    coinsEarned = coinsTotal - coinsBefore;
+   
+    coinsLeft = coinsNeeded - coinsEarned;
+
+    if (coinsEarned > coinsNeeded){
+        coinsOverflow = coinsEarned - coinsNeeded;
+        console.log('coinsOverflow: '+coinsOverflow);
     } else {
         coinsOverflow = 0;
     }
 
-    if (coinsTotal >= coinsNeeded_before){
+    if (coinsEarned >= coinsNeeded){
+        document.getElementById('fill').style.width = '100%';
+
         currentLvl += 1;
         nextLvl += 1;
         document.getElementById('currentLvl').textContent = currentLvl;
         document.getElementById('nextLvl').textContent = nextLvl;
 
+        coinsNeeded = Math.round(10 * Math.pow(currentLvl, 1.5));
+        coinsBefore = 0;
+        for (let i = 1; i < currentLvl; i++){
+        var iCoins = Math.round(10 * Math.pow(i, 1.5));
+        coinsBefore += iCoins;
+    }
+        coinsEarned = coinsTotal - coinsBefore;
+        coinsLeft = coinsNeeded - coinsEarned;
+
         var overflowInc = (coinsOverflow / coinsNeeded) * 100;
     }
 
-    coinsLastlvl = Math.round(10 * Math.pow(currentLvl-1, 1.5));
-    coinsNeeded = coinsLastlvl + Math.round(10 * Math.pow(currentLvl, 1.5));
-    coinsLeft = coinsNeeded - coinsTotal;
-
-    if (coinsTotal >= coinsNeeded_before){
-        var overflowInc = (coinsOverflow / coinsNeeded) * 100;
-    }    
-
     document.getElementById('coinstoNL').textContent = `${Math.max(0, coinsLeft)} coins to level ${nextLvl}`;
 
-    var increment = (coinVal / coinsNeeded_before) * 100;
+    var increment = (coinVal / coinsNeeded) * 100;
     var increasing = prevCoins < coinsTotal;
 
     return animateProgressChange(increment, increasing, overflowInc);
 }
-
 
 
 function addTask(){

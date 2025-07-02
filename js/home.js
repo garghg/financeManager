@@ -126,7 +126,7 @@ function handleClick(ev) {
         if (taskText.includes("5 coins")) {
             coinVal = 5;
         } else if (taskText.includes("10 coins")) {
-            coinVal = 10;
+            coinVal = 37;                                                  // <--------------------- change back to 10 later; temp value for testing
         } else {
             coinVal = 1;
         }
@@ -617,11 +617,14 @@ function animateAvts() {
                         console.log('before: '+ p.innerText)
                         p.innerText = '';
                         p.classList.toggle('avtSelected');
+                        avatarsUnlocked[j].classList.toggle('selectedImg');
+
                     }
                 }
                 if (!p.textContent.includes('Selected')){
                     p.innerText = 'Selected';
                     p.classList.toggle('avtSelected');
+                    avatars[i].classList.toggle('selectedImg');
                 }
             }
         });
@@ -658,6 +661,7 @@ function avatarLoad(){
 
     var starterImg = document.createElement('img');
     starterImg.id = 'starterImg';
+    starterImg.classList.add('selectedImg');
     starterImg.src = '../img/Starter.png';
     starter.appendChild(starterImg);
 

@@ -475,6 +475,7 @@ tr:nth-child(even):not(:last-child){
 #avatar-modal{
     width: calc(100vw - 75px);
     height: calc(100vh - 100px);
+    overflow-x: scroll;
 }
 
 #AvtBtnDiv{
@@ -532,3 +533,4 @@ tr:nth-child(even):not(:last-child){
 #projectAmt{
     width: 28.5%;
 }
+

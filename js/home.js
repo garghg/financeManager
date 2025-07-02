@@ -174,7 +174,9 @@ function animateProgressChange(increment, increasing, overflowInc) {
                 clearInterval(interval);
 
                 if (currentWidth >= 100) {
-                    createModal('Yay! You reached the next level 🪜', 'You have now reached the next level.');
+                    if (currentLvl != 5 && currentLvl != 10 && currentLvl != 15 && currentLvl != 20) {
+                            createModal('Yay! You reached the next level 🪜', 'You have now reached the next level.');
+                        }
 
                     setTimeout(() => {
                         fill.style.width = '0%';
@@ -221,7 +223,6 @@ async function xp(coinVal){
 
     if (coinsEarned > coinsNeeded){
         coinsOverflow = coinsEarned - coinsNeeded;
-        console.log('coinsOverflow: '+coinsOverflow);
     } else {
         coinsOverflow = 0;
     }
@@ -510,16 +511,20 @@ function createBudget(){
 function unlockAvts(){
     // --------------------------------------------- Planner ---------------------------------------------------------------
     if (currentLvl >= 5){
-        createModal(
-            'Character Unlocked! 🔓',
-            'Awesome! You\'ve just unlocked a new character: The Planner. Head over to the avatar menu to check it out!',
-            'Got it!',
-            'Close'
-        );
+        if (currentLvl == 5){
+            createModal(
+                'Character Unlocked! 🔓',
+                'Awesome! You\'ve just reached Level 5 and unlocked a new character: The Planner. Head over to the avatar menu to check it out!',
+                'Got it!',
+                'Close'
+            );
+        }
+        
         for (let i = 0; i < avatars.length; i++){
             if (avatarsMap.get(avatars[i]) === "Planner"){
                 var planner = avatars[i];
                 planner.style.filter = 'none';
+                avatarsUnlocked.push(avatars[i]);
             }
         }
     }
@@ -527,16 +532,20 @@ function unlockAvts(){
     // --------------------------------------------- Strategist ---------------------------------------------------------------
 
     if (currentLvl >= 10){
-        createModal(
-            'New Character Unlocked! 🎊 ',
-            'Nice! A new character is ready to join your collection. Take a look in the avatar menu!',
-            'Awesome!',
-            'Close'
-        );
+        if (currentLvl == 10){
+            createModal(
+                'New Character Unlocked! 🎊 ',
+                'Nice! As you reached level 10, a new character is ready to join your collection. Take a look in the avatar menu!',
+                'Awesome!',
+                'Close'
+            );
+        }
+        
         for (let i = 0; i < avatars.length; i++){
             if (avatarsMap.get(avatars[i]) === "Strategist"){
                 var strategist = avatars[i];
                 strategist.style.filter = 'none';
+                avatarsUnlocked.push(avatars[i]);
             }
         }
     }
@@ -544,16 +553,20 @@ function unlockAvts(){
     // --------------------------------------------- Analyst ---------------------------------------------------------------
 
     if (currentLvl >= 15){
-        createModal(
-            'Character Unlocked!🚀 ',
-            'Someone special awaits you in the avatar menu. Go meet your new character!',
-            'Let\'s go!',
-            'Close'
-        );
+        if (currentLvl == 15){
+            createModal(
+                'Character Unlocked!🚀 ',
+                'Congrats on reaching level 15. Someone special awaits you in the avatar menu. Go meet your new character!',
+                'Let\'s go!',
+                'Close'
+            );
+        }
+        
         for (let i = 0; i < avatars.length; i++){
             if (avatarsMap.get(avatars[i]) === "Analyst"){
                 var analyst = avatars[i];
                 analyst.style.filter = 'none';
+                avatarsUnlocked.push(avatars[i]);
             }
         }
     }
@@ -561,32 +574,57 @@ function unlockAvts(){
     // --------------------------------------------- Owner ---------------------------------------------------------------
 
     if (currentLvl >= 20){
-        createModal(
-            'Look Who’s Here! ✨',
-            'The Owner has joined the fun! Check him out in the avatar menu now!',
-            'Yay!',
-            'Close'
-        );
+        if (currentLvl == 20){
+            createModal(
+                'Look Who’s Here! ✨',
+                'WOW! You\'re officially level 20. And with that, The Owner has joined the fun! Check him out in the avatar menu now!',
+                'Yay!',
+                'Close'
+            );
+        }
+        
         for (let i = 0; i < avatars.length; i++){
             if (avatarsMap.get(avatars[i]) === "Owner"){
                 var owner = avatars[i];
                 owner.style.filter = 'none';
+                avatarsUnlocked.push(avatars[i]);
             }
         }
     }
 }
 
+function animateAvts() {
+    for (let i = 0; i < avatars.length; i++) {
+        avatars[i].addEventListener('mouseover', () => {
+            avatars[i].src = `../img/${avatarsMap.get(avatars[i])}.gif`;
+        });
 
-function animateAvts(){
-    for (let i = 0; i < avatars.length; i++){
-        avatars[i].addEventListener('mouseover', () => {avatars[i].src = `../img/${avatarsMap.get(avatars[i])}.gif`;})
         avatars[i].addEventListener('mouseout', () => {
             setTimeout(() => {
                 avatars[i].src = `../img/${avatarsMap.get(avatars[i])}.png`;
             }, 1000);
         });
+
+        avatars[i].addEventListener('click', () => {
+            var div = avatars[i].parentElement;
+            var p = div.childNodes[2];
+            if (avatarsUnlocked.includes(avatars[i])){
+                if (!p.textContent.includes('Selected')){
+                    p.innerText += 'Selected';
+                }
+            }
+        });
+
+        // document.addEventListener('click', function(e) {                               <----------------- this adds it to all of them, so both inside and outside detected at same time
+        //     if (!avatars[i].contains(e.target)) {
+        //         console.log('Clicked outside box');
+        //     } else {
+        //         console.log('Clicked inside the box');
+        //     }
+        // });
     }
 }
+
 
 
 function avatarLoad(){
@@ -596,11 +634,11 @@ function avatarLoad(){
 
     var modal = document.createElement('div');
     modal.classList.add('modal');
-    modal.id = 'avatar-modal'
+    modal.id = 'avatar-modal';
     avtModalDiv.appendChild(modal);
 
     var btnDiv = document.createElement('div');
-    btnDiv.id = 'AvtBtnDiv'
+    btnDiv.id = 'AvtBtnDiv';
     modal.appendChild(btnDiv);
 
     var heading = document.createElement('h2');
@@ -608,34 +646,40 @@ function avatarLoad(){
     modal.appendChild(heading);
 
     var content = document.createElement('div');
-    content.id = 'avtContent'
+    content.id = 'avtContent';
     modal.appendChild(content);
 
     // ------------------ Starter -----------------
     var starter = document.createElement('div');
-    starter.id = 'starter'
+    starter.id = 'starter';
     content.appendChild(starter);
 
-    var starterImg = document.createElement('img')
-    starterImg.id = 'starterImg'
-    starterImg.src = '../img/Starter.png'
+    var starterImg = document.createElement('img');
+    starterImg.id = 'starterImg';
+    starterImg.src = '../img/Starter.png';
     starter.appendChild(starterImg);
 
     avatars.push(starterImg);
     avatarsMap.set(starterImg, 'Starter');
+    avatarsUnlocked.push(starterImg);
 
     var starterDes = document.createElement('p');
     starterDes.innerText = 'The Starter';
     starter.appendChild(starterDes);
 
+    var starterSelected = document.createElement('p');
+    starterSelected.id = 'starterSelected';                                        // <------------- convert to class and add to all of them and style
+    starterSelected.innerText = '';
+    starter.appendChild(starterSelected);
+
     // ----------------- Planner -----------------
 
     var planner = document.createElement('div');
-    planner.id = 'planner'
+    planner.id = 'planner';
     content.appendChild(planner);
 
-    var plannerImg = document.createElement('img')
-    plannerImg.src = '../img/planner.png'
+    var plannerImg = document.createElement('img');
+    plannerImg.src = '../img/planner.png';
     planner.appendChild(plannerImg);
 
     avatars.push(plannerImg);
@@ -645,14 +689,18 @@ function avatarLoad(){
     plannerDes.innerText = 'The Planner';
     planner.appendChild(plannerDes);
 
+    var plannerSelected = document.createElement('p');
+    plannerSelected.innerText = '';
+    planner.appendChild(plannerSelected);
+
     // ----------------- Strategist -----------------
 
     var strategist = document.createElement('div');
-    strategist.id = 'strategist'
+    strategist.id = 'strategist';
     content.appendChild(strategist);
 
-    var strategistImg = document.createElement('img')
-    strategistImg.src = '../img/Strategist.png'
+    var strategistImg = document.createElement('img');
+    strategistImg.src = '../img/Strategist.png';
     strategist.appendChild(strategistImg);
 
     avatars.push(strategistImg);
@@ -662,14 +710,18 @@ function avatarLoad(){
     strategistDes.innerText = 'The Strategist';
     strategist.appendChild(strategistDes);
 
+    var strategistSelected = document.createElement('p');
+    strategistSelected.innerText = '';
+    strategist.appendChild(strategistSelected);
+
     // ----------------- Analyst -----------------
 
     var analyst = document.createElement('div');
-    analyst.id = 'analyst'
+    analyst.id = 'analyst';
     content.appendChild(analyst);
 
-    var analystImg = document.createElement('img')
-    analystImg.src = '../img/analyst.png'
+    var analystImg = document.createElement('img');
+    analystImg.src = '../img/analyst.png';
     analyst.appendChild(analystImg);
 
     avatars.push(analystImg);
@@ -679,15 +731,19 @@ function avatarLoad(){
     analystDes.innerText = 'The Analyst';
     analyst.appendChild(analystDes);
 
+    var analystSelected = document.createElement('p');
+    analystSelected.innerText = '';
+    analyst.appendChild(analystSelected);
+
     // ----------------- Owner -----------------
 
     var owner = document.createElement('div');
-    owner.id = 'owner'
+    owner.id = 'owner';
     content.appendChild(owner);
 
-    var ownerImg = document.createElement('img')
-    ownerImg.src = '../img/owner.png'
-    owner.appendChild(ownerImg)
+    var ownerImg = document.createElement('img');
+    ownerImg.src = '../img/owner.png';
+    owner.appendChild(ownerImg);
 
     avatars.push(ownerImg);
     avatarsMap.set(ownerImg, 'Owner');
@@ -695,6 +751,10 @@ function avatarLoad(){
     var ownerDes = document.createElement('p');
     ownerDes.innerText = 'The Owner';
     owner.appendChild(ownerDes);
+
+    var ownerSelected = document.createElement('p');
+    ownerSelected.innerText = '';
+    owner.appendChild(ownerSelected);
 
     // ------------------------------------------------
     var avtClose = document.createElement('button');

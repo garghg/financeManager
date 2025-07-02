@@ -474,7 +474,7 @@ tr:nth-child(even):not(:last-child){
 
 #avatar-modal{
     width: calc(100vw - 75px);
-    height: calc(100vh - 200px);
+    height: calc(100vh - 100px);
 }
 
 #AvtBtnDiv{
@@ -497,11 +497,6 @@ tr:nth-child(even):not(:last-child){
     padding: 20px;
     filter: grayscale(100%);
     transition: 0.75s ease-in-out;
-}
-
-#avtContent img:hover{
-    filter: none;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
 }
 
 #avtContent #starterImg{

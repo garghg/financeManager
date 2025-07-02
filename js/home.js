@@ -502,6 +502,15 @@ function unlockAvts(){
             }, 1000);
         });
     }
+
+    if (currentLvl > 5){
+        for (let i = 0; i < avatars.length; i++){
+            if (avatarsMap.get(avatars[i] === "Planner")){
+                var planner = avatars[i];
+                planner.addEventListener('mouseover', () => {planner.style.filter = 'none';})
+            }
+        }
+    }
 }
 
 

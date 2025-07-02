@@ -78,7 +78,7 @@ function createModal(head, string, b1_text='OK', b2_text='Cancel'){
 }
 
 function coinAnimate() {
-    i = 1;
+    let i = 1;
     var coinDiv = document.getElementById("coinImg");
     setInterval(() => {
         coinDiv.innerHTML = '';
@@ -116,15 +116,17 @@ for (i = 0; i < close.length; i++){
 var list = document.querySelector("ul");
 
 function handleClick(ev) {
-    if (ev.target.tagName === 'LI') {
+    if (ev.target.tagName === 'LI' && !ev.target.classList.contains('processed')) {
+        ev.target.classList.add('processed');
         ev.target.classList.toggle('checked');
+
         var taskText = ev.target.textContent;
         var coinVal;
 
         if (taskText.includes("5 coins")) {
             coinVal = 5;
         } else if (taskText.includes("10 coins")) {
-            coinVal = 20;                                                                                        // <----------------temp change for testing; change back to 10 later
+            coinVal = 10;
         } else {
             coinVal = 1;
         }
@@ -141,20 +143,19 @@ function handleClick(ev) {
             runXp(coinVal);
         }
 
-        ev.target.removeEventListener('click', handleClick);
         setTimeout(() => {
             ev.target.style.display = 'none';
         }, 500);
     }
 }
 
+
 list.addEventListener("click", handleClick);
 
 var xpQueue = Promise.resolve();
 
 function runXp(coinVal) {
-  xpQueue = xpQueue.then(() => xp(coinVal));
-  return xpQueue;
+    xpQueue.then(() => xp(coinVal));
 }
 
 function animateProgressChange(increment, increasing, overflowInc) {
@@ -193,7 +194,7 @@ function animateProgressChange(increment, increasing, overflowInc) {
                                 resolve();
                             }
                         }, 20);
-                    }, 1000);
+                    }, 250);
                 } else {
                     resolve();
                 }
@@ -208,8 +209,6 @@ async function xp(coinVal){
     nextLvl = Number(document.getElementById('nextLvl').textContent);
 
     coinsNeeded = Math.round(10 * Math.pow(currentLvl, 1.5));
-
-
 
 
     coinsBefore = 0;
@@ -332,6 +331,7 @@ function bgtItemAmt(table, amtVal = ''){
     var amt = document.createElement("input");
     amt.setAttribute('type', 'number');
     amt.setAttribute('min', '0');
+    amt.setAttribute('max', '9999999999999999');
     amt.setAttribute('oninput', 'validity.valid||(value=\'\'\)')
     amt.setAttribute('placeholder', 'Enter Amount Here');
     amt.id = 'bgtItemAmt';
@@ -606,25 +606,27 @@ function animateAvts() {
         });
 
         avatars[i].addEventListener('click', () => {
-            var div = avatars[i].parentElement;
-            var p = div.childNodes[2];
+            let div = avatars[i].parentElement;
+            let p = div.childNodes[2];
+
             if (avatarsUnlocked.includes(avatars[i])){
+                for (let j = 0; j < avatarsUnlocked.length; j++){
+                    let div = avatarsUnlocked[j].parentElement;
+                    let p = div.childNodes[2];
+                    if (p.textContent.includes('Selected')){
+                        console.log('before: '+ p.innerText)
+                        p.innerText = '';
+                        p.classList.toggle('avtSelected');
+                    }
+                }
                 if (!p.textContent.includes('Selected')){
-                    p.innerText += 'Selected';
+                    p.innerText = 'Selected';
+                    p.classList.toggle('avtSelected');
                 }
             }
         });
-
-        // document.addEventListener('click', function(e) {                               <----------------- this adds it to all of them, so both inside and outside detected at same time
-        //     if (!avatars[i].contains(e.target)) {
-        //         console.log('Clicked outside box');
-        //     } else {
-        //         console.log('Clicked inside the box');
-        //     }
-        // });
     }
 }
-
 
 
 function avatarLoad(){
@@ -668,8 +670,8 @@ function avatarLoad(){
     starter.appendChild(starterDes);
 
     var starterSelected = document.createElement('p');
-    starterSelected.id = 'starterSelected';                                        // <------------- convert to class and add to all of them and style
-    starterSelected.innerText = '';
+    starterSelected.classList.add('avtSelected');
+    starterSelected.innerText = 'Selected';
     starter.appendChild(starterSelected);
 
     // ----------------- Planner -----------------

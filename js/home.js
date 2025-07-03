@@ -553,7 +553,7 @@ function unlockAvts(){
             'Nice! As you reached level 10, a new character is ready to join your collection. Take a look in the avatar menu!',
             'Awesome!', 
             'Close'
-        );  
+        ); 
         
         for (let i = 0; i < avatars.length; i++){
             if (avatarsMap.get(avatars[i]) === "Strategist"){

@@ -25,6 +25,7 @@ var avatars = [];
 var avatarsMap = new Map();
 var avtModalDiv = document.createElement('div');
 var avatarsUnlocked = [];
+var coinsShown = 0;
 
 
 function createModal(head, string, b1_text='OK', b2_text='Cancel'){
@@ -135,10 +136,12 @@ function handleClick(ev) {
 
         if (ev.target.classList.contains('checked')) {
             coinsTotal += coinVal;
+            coinsShown += coinVal;
             coinNum.textContent = `${coinsTotal} coins`;
             runXp(coinVal);
         } else {
             coinsTotal -= coinVal;
+            coinsShown -= coinVal;
             coinNum.textContent = `${coinsTotal} coins`;
             runXp(coinVal);
         }
@@ -205,6 +208,7 @@ function animateProgressChange(increment, increasing, overflowInc) {
 
 
 async function xp(coinVal){
+    coinNum.textContent = `${coinsShown} coins`;
     currentLvl = Number(document.getElementById('currentLvl').textContent);
     nextLvl = Number(document.getElementById('nextLvl').textContent);
 
@@ -234,6 +238,7 @@ async function xp(coinVal){
         unlockAvts();
         document.getElementById('currentLvl').textContent = currentLvl;
         document.getElementById('nextLvl').textContent = nextLvl;
+        coinNum.textContent = `${coinsShown} coins`;
 
         coinsNeeded = Math.round(10 * Math.pow(currentLvl, 1.5));
         coinsBefore = 0;
@@ -510,63 +515,90 @@ function createBudget(){
 
 function unlockAvts(){
     // --------------------------------------------- Planner ---------------------------------------------------------------
-    if (currentLvl >= 5){
-        if (currentLvl == 5){
-            createModal(
-                'Character Unlocked! 🔓',
-                'Awesome! You\'ve just reached Level 5 and unlocked a new character: The Planner. Head over to the avatar menu to check it out!',
-                'Got it!',
-                'Close'
-            );
-        }
+    if (currentLvl == 5){
+        createModal(
+            'Character Unlocked! 🔓',
+            'Awesome! You\'ve just reached Level 5 and unlocked a new character: The Planner. Head over to the avatar menu to check it out!',
+            'Got it!',
+            'Close' 
+        );
         
         for (let i = 0; i < avatars.length; i++){
             if (avatarsMap.get(avatars[i]) === "Planner"){
                 var planner = avatars[i];
-                planner.style.filter = 'none';
-                avatarsUnlocked.push(avatars[i]);
+                document.getElementById('plannerCost').textContent = 'Click to buy with 100 coins';
+                planner.addEventListener('click', () =>{
+                    if (!avatarsUnlocked.includes(planner)){
+                        if (coinsShown > 100){
+                            coinsShown -= 100;
+                            coinNum.textContent = `${coinsShown} coins`;
+                            planner.style.filter = 'none';
+                            avatarsUnlocked.push(avatars[i]);
+                            document.getElementById('plannerCost').remove();
+                        }
+                    }
+                    
+                });
+
             }
         }
     }
 
     // --------------------------------------------- Strategist ---------------------------------------------------------------
 
-    if (currentLvl >= 10){
-        if (currentLvl == 10){
-            createModal(
-                'New Character Unlocked! 🎊 ',
-                'Nice! As you reached level 10, a new character is ready to join your collection. Take a look in the avatar menu!',
-                'Awesome!',
-                'Close'
-            );
-        }
+    if (currentLvl == 10){
+        createModal(
+            'New Character Unlocked! 🎊 ',
+            'Nice! As you reached level 10, a new character is ready to join your collection. Take a look in the avatar menu!',
+            'Awesome!', 
+            'Close'
+        );  
         
         for (let i = 0; i < avatars.length; i++){
             if (avatarsMap.get(avatars[i]) === "Strategist"){
                 var strategist = avatars[i];
-                strategist.style.filter = 'none';
-                avatarsUnlocked.push(avatars[i]);
+                document.getElementById('strategistCost').textContent = 'Click to buy with 500 coins';
+                strategist.addEventListener('click', () =>{
+                    if (!avatarsUnlocked.includes(strategist)){
+                        if (coinsShown > 500){
+                            coinsShown -= 500;
+                            coinNum.textContent = `${coinsShown} coins`;
+                            strategist.style.filter = 'none';
+                            avatarsUnlocked.push(avatars[i]);
+                            document.getElementById('strategistCost').remove();
+                        }
+                    }
+                });
+
             }
         }
     }
 
     // --------------------------------------------- Analyst ---------------------------------------------------------------
 
-    if (currentLvl >= 15){
-        if (currentLvl == 15){
-            createModal(
-                'Character Unlocked!🚀 ',
-                'Congrats on reaching level 15. Someone special awaits you in the avatar menu. Go meet your new character!',
-                'Let\'s go!',
-                'Close'
-            );
-        }
+    if (currentLvl == 15){
+        createModal(
+            'Character Unlocked!🚀 ',
+            'Congrats on reaching level 15. Someone special awaits you in the avatar menu. Go meet your new character!',
+            'Let\'s go!',
+            'Close'
+        );
         
         for (let i = 0; i < avatars.length; i++){
             if (avatarsMap.get(avatars[i]) === "Analyst"){
                 var analyst = avatars[i];
-                analyst.style.filter = 'none';
-                avatarsUnlocked.push(avatars[i]);
+                document.getElementById('analystCost').textContent = 'Click to buy with 500 coins';
+                analyst.addEventListener('click', () =>{
+                    if (!avatarsUnlocked.includes(analyst)){
+                        if (coinsShown > 1500){
+                            coinsShown -= 1500;
+                            coinNum.textContent = `${coinsShown} coins`;
+                            analyst.style.filter = 'none';
+                            avatarsUnlocked.push(avatars[i]);
+                            document.getElementById('analystCost').remove();
+                        }
+                    }
+                });
             }
         }
     }
@@ -586,8 +618,18 @@ function unlockAvts(){
         for (let i = 0; i < avatars.length; i++){
             if (avatarsMap.get(avatars[i]) === "Owner"){
                 var owner = avatars[i];
-                owner.style.filter = 'none';
-                avatarsUnlocked.push(avatars[i]);
+                document.getElementById('ownerCost').textContent = 'Click to buy with 500 coins';
+                owner.addEventListener('click', () =>{
+                    if (!avatarsUnlocked.includes(owner)){
+                        if (coinsShown > 3500){
+                            coinsShown -= 3500;
+                            coinNum.textContent = `${coinsShown} coins`;
+                            owner.style.filter = 'none';
+                            avatarsUnlocked.push(avatars[i]);
+                            document.getElementById('ownerCost').remove();
+                        }
+                    }
+                });
             }
         }
     }
@@ -625,6 +667,7 @@ function animateAvts() {
                     p.innerText = 'Selected';
                     p.classList.toggle('avtSelected');
                     avatars[i].classList.toggle('selectedImg');
+                    document.getElementById("avtShown").src = avatars[i].src;
                 }
             }
         });
@@ -695,6 +738,11 @@ function avatarLoad(){
     plannerDes.innerText = 'The Planner';
     planner.appendChild(plannerDes);
 
+    var plannerCost = document.createElement('p');
+    plannerCost.innerText = '\nReach Level 5 \n\n Cost: 100 coins';
+    plannerCost.id = 'plannerCost';
+    planner.appendChild(plannerCost);
+
     var plannerSelected = document.createElement('p');
     plannerSelected.innerText = '';
     planner.appendChild(plannerSelected);
@@ -715,6 +763,11 @@ function avatarLoad(){
     var strategistDes = document.createElement('p');
     strategistDes.innerText = 'The Strategist';
     strategist.appendChild(strategistDes);
+
+    var strategistCost = document.createElement('p');
+    strategistCost.innerText = '\nReach Level 10 \n\n Cost: 500 coins';
+    strategistCost.id = 'strategistCost';
+    strategist.appendChild(strategistCost);
 
     var strategistSelected = document.createElement('p');
     strategistSelected.innerText = '';
@@ -737,6 +790,11 @@ function avatarLoad(){
     analystDes.innerText = 'The Analyst';
     analyst.appendChild(analystDes);
 
+    var analystCost = document.createElement('p');
+    analystCost.innerText = '\n Reach Level 15 \n\n Cost: 1500 coins';
+    analystCost.id = 'analystCost';
+    analyst.appendChild(analystCost);
+
     var analystSelected = document.createElement('p');
     analystSelected.innerText = '';
     analyst.appendChild(analystSelected);
@@ -757,6 +815,11 @@ function avatarLoad(){
     var ownerDes = document.createElement('p');
     ownerDes.innerText = 'The Owner';
     owner.appendChild(ownerDes);
+
+    var ownerCost = document.createElement('p');
+    ownerCost.innerText = '\nReach Level 20 \n\n Cost: 3500 coins';
+    ownerCost.id = 'ownerCost';
+    owner.appendChild(ownerCost);
 
     var ownerSelected = document.createElement('p');
     ownerSelected.innerText = '';

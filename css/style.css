@@ -544,3 +544,17 @@ tr:nth-child(even):not(:last-child){
 .selectedImg {
     transform: scale(1.2);
 }
+
+#avtDisplayDiv{
+    width: 100px;
+    transform: translate(-100%, 0%);
+    object-fit: none;
+}
+
+#avtShown{
+    filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.6));
+}
+
+.darkMode #avtShown{
+    filter: drop-shadow(0px 0px 10px rgb(255, 255, 255));
+}

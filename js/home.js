@@ -527,6 +527,7 @@ function unlockAvts(){
             if (avatarsMap.get(avatars[i]) === "Planner"){
                 var planner = avatars[i];
                 document.getElementById('plannerCost').textContent = 'Click to buy with 100 coins';
+                console.log('Before:', coinsShown);
                 planner.addEventListener('click', () =>{
                     if (!avatarsUnlocked.includes(planner)){
                         if (coinsShown > 100){
@@ -538,7 +539,7 @@ function unlockAvts(){
                         }
                     }
                     
-                });
+                }); 
 
             }
         }
@@ -558,6 +559,7 @@ function unlockAvts(){
             if (avatarsMap.get(avatars[i]) === "Strategist"){
                 var strategist = avatars[i];
                 document.getElementById('strategistCost').textContent = 'Click to buy with 500 coins';
+                console.log('Before:', coinsShown);
                 strategist.addEventListener('click', () =>{
                     if (!avatarsUnlocked.includes(strategist)){
                         if (coinsShown > 500){

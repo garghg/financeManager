@@ -164,6 +164,7 @@ ul li .close:hover {
 #budgetBtn{
     border: none;
     font-family: monospace;
+    width: 100%;
 }
 
 #addRowBtn{
@@ -346,11 +347,12 @@ tr:nth-child(even):not(:last-child){
 
 .darkMode .itemType,
 .darkMode #bgtItemName,
-.darkMode #bgtItemAmt {
+.darkMode #bgtItemAmt,
+.darkMode .category{
     color: white;
 }
 
-.darkMode .itemType:open > option{
+.darkMode .itemType:open > option, .darkMode .category:open > option{
    background-color: #4d4d4d;
    color: white;
 }
@@ -571,11 +573,18 @@ tr:nth-child(even):not(:last-child){
   outline: none;
   font-size: 15px;
   margin-top: 2%;
+  font-family: monospace;
+  text-align: center;
+}
+
+.darkMode .collapsible{
+    background-color: #191517;
+    color: white;
 }
 
 
 .collapsible:after {
-  content: '\002B';
+  content: '\25BC';
   color: white;
   font-weight: bold;
   float: right;
@@ -583,7 +592,7 @@ tr:nth-child(even):not(:last-child){
 }
 
 .collapsible.active:after {
-  content: "\2212";
+  content: "\25B2";
 }
 
 .content {
@@ -592,6 +601,10 @@ tr:nth-child(even):not(:last-child){
   overflow: hidden;
   transition: max-height 0.2s ease-out;
   background-color: #f1f1f1;
+}
+
+.darkMode .content{
+    background-color: #191517;
 }
 
 #arthur{
@@ -604,5 +617,17 @@ tr:nth-child(even):not(:last-child){
 
 #tutorial-modal-container{
     background-color: rgba(0, 0, 0, 0.6);
+}
 
+.category{
+    font-family: monospace;
+    background-color: transparent;
+    color: black;
+    width: 50%;
+    height: 30px;
+    font-size: 16px;
+}
+
+.hidden{
+    display: none;
 }

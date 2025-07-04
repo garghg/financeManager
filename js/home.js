@@ -535,6 +535,7 @@ document.addEventListener('keydown', function(event) {
 
 function createBudget(){
     bgtCreated = true;
+    document.getElementById('colBgt').classList.toggle('hidden');
     budgetBtn.remove();
     if (contTutorial){
         createModal('2️⃣ Set Your Goals', 
@@ -546,6 +547,28 @@ function createBudget(){
         );
     }
     budget.id = "budgetTable";
+    var rowInput = document.getElementById('rowInput');
+
+    var category = document.createElement('select');
+    category.classList.add('category');
+    rowInput.appendChild(category);
+    var categories = ["Job", "Investments", "Savings", "Housing", "Food", "Transportation"]
+    categories.forEach(function(opt){
+        var option = document.createElement("option");
+        option.value = opt;
+        option.textContent = opt;
+        category.appendChild(option);
+    });
+
+    addRowBtn = document.createElement('button');
+    addRowBtn.textContent = "Add Row";
+    addRowBtn.className = 'Btn';
+    addRowBtn.id = "addRowBtn"; 
+    addRowBtn.onclick = function(){
+        addRow(budget);
+    };
+    rowInput.appendChild(addRowBtn);
+
     bgtDiv.appendChild(budget);
 
     var thead = document.createElement("thead");
@@ -571,15 +594,6 @@ function createBudget(){
     cell1.textContent = "Net Total: ";
     netCell.textContent = "0";
     cell3.textContent = "";
-    
-    addRowBtn = document.createElement('button');
-    addRowBtn.textContent = "Add Row";
-    addRowBtn.className = 'Btn';
-    addRowBtn.id = "addRowBtn"; 
-    addRowBtn.onclick = function(){
-        addRow(budget);
-    };
-    document.getElementById('sect1').appendChild(addRowBtn); 
 
 }
 
@@ -1064,7 +1078,7 @@ for (let i = 0; i < coll.length; i++) {
     button.addEventListener("click", function () {
         this.classList.toggle("active");
         if (content.style.maxHeight) {
-            content.style.padding = '0px'
+            content.style.padding = '0px';
             content.style.maxHeight = null;
         } else {
             content.style.padding = '10px';

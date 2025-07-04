@@ -559,7 +559,7 @@ tr:nth-child(even):not(:last-child){
     filter: drop-shadow(0px 0px 10px rgb(255, 255, 255));
 }
 
-
+/* 
 .collapsible {
   background-color: #777;
   color: white;
@@ -575,7 +575,7 @@ tr:nth-child(even):not(:last-child){
 
 
 .collapsible:after {
-  content: '\002B';  /* + sign */
+  content: '\002B';
   color: white;
   font-weight: bold;
   float: right;
@@ -592,4 +592,4 @@ tr:nth-child(even):not(:last-child){
   overflow: hidden;
   transition: max-height 0.2s ease-out;
   background-color: #f1f1f1;
-}
+} */

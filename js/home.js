@@ -26,6 +26,68 @@ var avatarsMap = new Map();
 var avtModalDiv = document.createElement('div');
 var avatarsUnlocked = [];
 var coinsShown = 0;
+var contTutorial;
+
+
+function tutorial(){
+    var tutorialMD = document.createElement('div');
+    tutorialMD.classList.add('modal-container');
+    tutorialMD.id = 'tutorial-modal-container';
+    document.body.appendChild(tutorialMD);
+
+    var modal = document.createElement('div');
+    modal.classList.add('modal');
+    tutorialMD.appendChild(modal);
+
+    var heading = document.createElement('h2');
+    heading.textContent = 'Welcome Adventurer!';
+    modal.appendChild(heading);
+    var content = document.createElement('p');
+    content.innerText = `
+    I'm Arthur, your ol' guide through the wild woods of personal finance.
+    Ready to take your first step toward treasure and triumph? Let\'s begin, shall we?
+
+    `;
+    modal.appendChild(content);
+
+    var arthurImg = document.createElement('img');
+    arthurImg.src = './img/arthur.gif';
+    arthurImg.id = 'arthur';
+    arthurImg.draggable = false;
+    tutorialMD.appendChild(arthurImg);
+
+    var btnDiv = document.createElement('div');
+    btnDiv.id = 'btnDiv'
+    modal.appendChild(btnDiv);
+
+    var button1 = document.createElement('button');
+    button1.textContent = `I'm Ready!`;
+    btnDiv.appendChild(button1);
+    button1.classList.add('Btn');
+    button1.id = 'confirm';
+
+    var button2 = document.createElement('button');
+    button2.textContent = 'Skip Tutorial';
+    btnDiv.appendChild(button2);
+    button2.classList.add('Btn');
+    button2.id = 'cancel';
+
+    tutorialMD.classList.toggle('show') //open modal
+
+    button1.addEventListener('click', () => {
+        tutorialMD.classList.toggle('show');
+        document.body.removeChild(tutorialMD);
+        createModal('1️⃣ It all starts with a Budget', 'Great! To unlock the rest of the amazing features, let’s set up your budget first. It’s quick and easy!');
+        contTutorial = true;
+    })
+
+    button2.addEventListener('click', () => {
+        tutorialMD.classList.toggle('show'); //close modal
+        document.body.removeChild(tutorialMD);
+        contTutorial = false;
+    })
+    
+}
 
 function createModal(head, string, b1_text='OK', b2_text='Cancel'){
     var modalDiv = document.createElement('div');
@@ -474,6 +536,15 @@ document.addEventListener('keydown', function(event) {
 function createBudget(){
     bgtCreated = true;
     budgetBtn.remove();
+    if (contTutorial){
+        createModal('2️⃣ Set Your Goals', 
+            `Awesome! Now that you’ve added some values, it’s time to set your money goals. 💪
+
+            For bigger, long-term dreams, try creating projects!
+
+            As you hit your goals, you’ll earn coins, level up, and unlock fun new characters. Let’s do this! 🚀`
+        );
+    }
     budget.id = "budgetTable";
     bgtDiv.appendChild(budget);
 

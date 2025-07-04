@@ -729,7 +729,7 @@ function avatarLoad(){
     content.appendChild(planner);
 
     var plannerImg = document.createElement('img');
-    plannerImg.src = 'img/Planner.png';
+    plannerImg.src = './img/Planner.png';
     planner.appendChild(plannerImg);
 
     avatars.push(plannerImg);

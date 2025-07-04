@@ -560,7 +560,7 @@ tr:nth-child(even):not(:last-child){
 }
 
 
-/* .collapsible {
+.collapsible {
   background-color: #777;
   color: white;
   cursor: pointer;
@@ -592,7 +592,7 @@ tr:nth-child(even):not(:last-child){
   overflow: hidden;
   transition: max-height 0.2s ease-out;
   background-color: #f1f1f1;
-} */
+}
 
 #arthur{
     width: 450px;

@@ -1055,20 +1055,32 @@ function startProj(){
 }
 
 
-
 var coll = document.getElementsByClassName("collapsible");
 
-const adjustContentHeight = (content) => {
-    if (content.style.maxHeight){
-        content.style.maxHeight = null; 
-    } else {
-        content.style.maxHeight = content.scrollHeight + "px";
-    }
-}
+for (let i = 0; i < coll.length; i++) {
+    const button = coll[i];
+    const content = button.nextElementSibling;
 
-for (i = 0; i < coll.length; i++) {
-    coll[i].addEventListener("click", function() {
+    button.addEventListener("click", function () {
         this.classList.toggle("active");
-        adjustContentHeight(this.nextElementSibling);
-    }); 
+        if (content.style.maxHeight) {
+            content.style.padding = '0px'
+            content.style.maxHeight = null;
+        } else {
+            content.style.padding = '10px';
+            content.style.maxHeight = content.scrollHeight + "px";
+        }
+    });
+
+    // Set up a MutationObserver for dynamic content changes
+    const observer = new MutationObserver(() => {
+        if (content.style.maxHeight) {
+            content.style.maxHeight = content.scrollHeight + "px";
+        }
+    });
+
+    observer.observe(content, {
+        childList: true,
+        subtree: true
+    });
 }

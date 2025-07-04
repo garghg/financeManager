@@ -3,7 +3,6 @@
 <!-- Notes to self:
 
 Today:
-    - make welcome tutorial
     - convert table to collapsible to make it more readable. (Make a doughnut chart later)
     Example:
         🏠 Housing
@@ -54,7 +53,7 @@ possible features:
     <link rel="icon" type="image/x-icon" href="./img/CQLogo.png">
     <title>Coin Quest: Home</title>
 </head>
-<body onload="tutorial(); coinAnimate(); avatarLoad()">
+<body onload="coinAnimate(); avatarLoad()">                         <!-- add tutorial(); here later -->
     <header>
         <div id="navBar">
             <div id="navBaricon">
@@ -86,17 +85,16 @@ possible features:
 
                 <div id="sect1">
                     <h2 id="budgetH2"><u>Budget</u></h2>
-                    <div id="budget">
-                        <button class="Btn" id="budgetBtn" onclick="createBudget()">Create Budget</button>
-                    </div>
-                    <!-- <div id="colTable">
+                    <div id="colTable">
                         <div id="Income">
                             <button type="button" class="collapsible">Income</button>
                             <div class="content">
-                                <p>Lorem ipsum...</p>
+                                <div id="budget">
+                                    <button class="Btn" id="budgetBtn" onclick="createBudget()">Create Budget</button>
+                                </div>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                     
                 </div>
 

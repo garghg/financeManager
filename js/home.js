@@ -27,7 +27,6 @@ var avtModalDiv = document.createElement('div');
 var avatarsUnlocked = [];
 var coinsShown = 0;
 
-
 function createModal(head, string, b1_text='OK', b2_text='Cancel'){
     var modalDiv = document.createElement('div');
     modalDiv.classList.add('modal-container');
@@ -982,4 +981,23 @@ function startProj(){
     heading.style.textDecoration = 'underline';
     project.appendChild(heading);
 
+}
+
+
+
+var coll = document.getElementsByClassName("collapsible");
+
+const adjustContentHeight = (content) => {
+    if (content.style.maxHeight){
+        content.style.maxHeight = null; 
+    } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+    }
+}
+
+for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        adjustContentHeight(this.nextElementSibling);
+    }); 
 }

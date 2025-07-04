@@ -558,3 +558,38 @@ tr:nth-child(even):not(:last-child){
 .darkMode #avtShown{
     filter: drop-shadow(0px 0px 10px rgb(255, 255, 255));
 }
+
+
+.collapsible {
+  background-color: #777;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  margin-top: 2%;
+}
+
+
+.collapsible:after {
+  content: '\002B';  /* + sign */
+  color: white;
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+}
+
+.collapsible.active:after {
+  content: "\2212";
+}
+
+.content {
+  padding: 0 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  background-color: #f1f1f1;
+}

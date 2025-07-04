@@ -729,7 +729,7 @@ function avatarLoad(){
     content.appendChild(planner);
 
     var plannerImg = document.createElement('img');
-    plannerImg.src = './img/planner.png';
+    plannerImg.src = './img/Planner.png';
     planner.appendChild(plannerImg);
 
     avatars.push(plannerImg);
@@ -781,7 +781,7 @@ function avatarLoad(){
     content.appendChild(analyst);
 
     var analystImg = document.createElement('img');
-    analystImg.src = './img/analyst.png';
+    analystImg.src = './img/Analyst.png';
     analyst.appendChild(analystImg);
 
     avatars.push(analystImg);
@@ -807,7 +807,7 @@ function avatarLoad(){
     content.appendChild(owner);
 
     var ownerImg = document.createElement('img');
-    ownerImg.src = './img/owner.png';
+    ownerImg.src = './img/Owner.png';
     owner.appendChild(ownerImg);
 
     avatars.push(ownerImg);

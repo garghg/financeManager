@@ -478,6 +478,9 @@ document.addEventListener('keydown', function(event) {
         selectedRows.forEach(index => {
             if (table.rows[index]) {
                 table.deleteRow(index);
+                console.log(Number(table.rows[index].cells[1].textContent)) // <------------- this returns the correct value but the filter in the next line doesn't remove it properly
+                // tblArray = tblArray.filter(item => item !== Number(table.rows[index].cells[1].textContent));
+                // getTableVal();
             }
         });
         selectedRows.length = 0;

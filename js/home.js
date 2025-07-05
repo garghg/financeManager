@@ -359,7 +359,8 @@ function addTask(){
         var taskName = document.createTextNode(taskType +" $" +input+` (+${addCoin} coins)`);
         newTask.appendChild(taskName);
         var rowTaskName = taskName.textContent.replace(` (+${addCoin} coins)`, "") 
-        addRow(budget, rowTaskName, input, 'Expense');
+        addRow(budget, rowTaskName, input, taskType);
+        tblArray.push(Number(-input));
         getTableVal();
     }
 
@@ -1021,7 +1022,8 @@ function startProj(){
             createModal('Just a Quick Fix 🛠️', 'Let\'s double check the project dates before moving forward.', 'Got it', 'I\'ll come back to it');
         } else if (projectName.value !== '' && dueDate.value !== '' && startDate.value !== '' && daysLeft > 0 && projectAmt.value > 0){
             addProject(projectName.value, dueDate.value, startDate.value, monthsLeft, projectAmt.value, saveMonth);
-            addRow(budget, projectName.value, saveMonth, 'Expense');
+            addRow(budget, projectName.value, saveMonth, 'Project');
+            tblArray.push(Number(-saveMonth));
             getTableVal();
             projectAmt.value = '';
             projectName.value = '';

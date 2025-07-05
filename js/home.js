@@ -28,6 +28,19 @@ var avatarsUnlocked = [];
 var coinsShown = 0;
 var contTutorial;
 var tblArray = [];
+var categories = ["Job", "Investments", "Savings", "Housing", "Food", "Transportation", "Goals", "Projects"]
+var barColors = [
+    "#ae2012",
+    "#ca6702",
+    "#ee9b00",
+    "#e9d8a6",
+    "#94d2bd",
+    "#0a9396",
+    "#005f73",
+    "#001219"
+];
+var amounts =  [0,0,0,0,0,0,0,0];
+var myChart;
 
 
 function tutorial(){
@@ -361,6 +374,8 @@ function addTask(){
         var rowTaskName = taskName.textContent.replace(` (+${addCoin} coins)`, "") 
         addRow(budget, rowTaskName, input, taskType);
         tblArray.push(Number(-input));
+        amounts[6] += input;
+        graph();
         getTableVal();
     }
 
@@ -478,6 +493,9 @@ document.addEventListener('keydown', function(event) {
         selectedRows.forEach(index => {
             if (table.rows[index]) {
                 var numIdx = tblArray.indexOf(Number(table.rows[index].cells[1].textContent));
+                var numType = table.rows[index].cells[2].textContent;
+                amounts[categories.indexOf(numType)] -= Number(table.rows[index].cells[1].textContent);
+                graph();
                 tblArray.splice(numIdx, 1);
                 table.deleteRow(index);
                 getTableVal();
@@ -513,7 +531,6 @@ function createBudget(){
     var category = document.createElement('select');
     category.classList.add('category');
     rowInput.appendChild(category);
-    var categories = ["Job", "Investments", "Savings", "Housing", "Food", "Transportation"]
     categories.forEach(function(opt){
         var option = document.createElement("option");
         option.value = opt;
@@ -526,6 +543,29 @@ function createBudget(){
     addRowBtn.className = 'Btn';
     addRowBtn.id = "addRowBtn"; 
     addRowBtn.onclick = function(){
+        
+        document.getElementById('myChart').classList.remove('hidden');
+
+        if (category.value == "Job"){
+            amounts[0] += amount.value;
+            graph()
+        } else if (category.value == "Investments"){
+            amounts[1] += amount.value;
+            graph();
+        } else if (category.value == "Savings"){
+            amounts[2] += amount.value;
+            graph();
+        } else if (category.value == "Housing"){
+            amounts[3] += amount.value;
+            graph();
+        } else if (category.value == "Food"){
+            amounts[4] += amount.value;
+            graph();
+        } else if (category.value == "Transportation"){
+            amounts[5] += amount.value;
+            graph();
+        }
+
         if (category.value != "Job" && category.value != "Investments" && category.value != "Savings"){
             amount.value = -amount.value;
         }
@@ -908,6 +948,18 @@ function avatarView() {
 function darkMode(){
     var body = document.body;
     body.classList.toggle("darkMode");
+    chartFontCol();
+}
+
+function chartFontCol(){
+    var body = document.body;
+    if (body.classList.contains("darkMode")){
+            myChart.options.plugins.legend.labels.color = 'white';
+            myChart.update();
+    } else{
+            myChart.options.plugins.legend.labels.color = 'black';
+            myChart.update();
+    }
 }
 
 
@@ -1027,6 +1079,8 @@ function startProj(){
             addProject(projectName.value, dueDate.value, startDate.value, monthsLeft, projectAmt.value, saveMonth);
             addRow(budget, projectName.value, saveMonth, 'Project');
             tblArray.push(Number(-saveMonth));
+            amounts[7] += saveMonth;
+            graph();
             getTableVal();
             projectAmt.value = '';
             projectName.value = '';
@@ -1072,4 +1126,31 @@ for (let i = 0; i < coll.length; i++) {
         childList: true,
         subtree: true
     });
+}
+
+function graph(){
+    myChart = new Chart("myChart", {
+    type: "doughnut",
+    data: {
+        labels: categories,
+        datasets: [{
+            backgroundColor: barColors,
+        data: amounts
+        }]
+    },
+
+    options: {
+        plugins: {
+            legend: {
+                labels: {
+                    font: {
+                        family: 'monospace'
+                    },
+                    color: 'black'
+                }
+            }
+        }
+    }
+    });
+    chartFontCol();
 }

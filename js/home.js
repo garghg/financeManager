@@ -28,7 +28,7 @@ var avatarsUnlocked = [];
 var coinsShown = 0;
 var contTutorial;
 var tblArray = [];
-var categories = ["Job", "Investments", "Savings", "Housing", "Food", "Transportation", "Goals", "Projects"]
+var categories = ["Job", "Assets", "Savings", "Housing", "Food", "Transportation", "Goals", "Projects"]
 var barColors = [
     "#ae2012",
     "#ca6702",
@@ -375,6 +375,7 @@ function addTask(){
         addRow(budget, rowTaskName, input, taskType);
         tblArray.push(Number(-input));
         amounts[6] += input;
+        myChart ? myChart.destroy() : {};
         graph();
         getTableVal();
     }
@@ -495,6 +496,7 @@ document.addEventListener('keydown', function(event) {
                 var numIdx = tblArray.indexOf(Number(table.rows[index].cells[1].textContent));
                 var numType = table.rows[index].cells[2].textContent;
                 amounts[categories.indexOf(numType)] -= Number(table.rows[index].cells[1].textContent);
+                myChart ? myChart.destroy() : {};
                 graph();
                 tblArray.splice(numIdx, 1);
                 table.deleteRow(index);
@@ -546,33 +548,21 @@ function createBudget(){
         
         document.getElementById('myChart').classList.remove('hidden');
 
-        if (category.value == "Job"){
-            amounts[0] += amount.value;
-            graph()
-        } else if (category.value == "Investments"){
-            amounts[1] += amount.value;
-            graph();
-        } else if (category.value == "Savings"){
-            amounts[2] += amount.value;
-            graph();
-        } else if (category.value == "Housing"){
-            amounts[3] += amount.value;
-            graph();
-        } else if (category.value == "Food"){
-            amounts[4] += amount.value;
-            graph();
-        } else if (category.value == "Transportation"){
-            amounts[5] += amount.value;
-            graph();
-        }
-
-        if (category.value != "Job" && category.value != "Investments" && category.value != "Savings"){
+        if (category.value != "Job" && category.value != "Assets" && category.value != "Savings"){
             amount.value = -amount.value;
         }
         if (name.value != '' && amount.value != ''){
             addRow(budget, name.value, Math.abs(amount.value), category.value);
             tblArray.push(Number(amount.value));
             getTableVal();
+            switch (category.value) {
+                case "Job": amounts[0] += Math.abs(amount.value); myChart ? myChart.destroy() : {}; graph(); break;
+                case "Assets": amounts[1] += Math.abs(amount.value); myChart ? myChart.destroy() : {}; graph(); break;
+                case "Savings": amounts[2] += Math.abs(amount.value); myChart ? myChart.destroy() : {}; graph(); break;
+                case "Housing": amounts[3] += Math.abs(amount.value); myChart ? myChart.destroy() : {}; graph(); break;
+                case "Food": amounts[4] += Math.abs(amount.value); myChart ? myChart.destroy() : {}; graph(); break;
+                case "Transportation": amounts[5] += Math.abs(amount.value); myChart ? myChart.destroy() : {}; graph(); break;
+            }
             name.value = '';
             amount.value = '';
         }else if (name.value == ''){
@@ -1080,6 +1070,7 @@ function startProj(){
             addRow(budget, projectName.value, saveMonth, 'Project');
             tblArray.push(Number(-saveMonth));
             amounts[7] += saveMonth;
+            myChart ? myChart.destroy() : {};
             graph();
             getTableVal();
             projectAmt.value = '';

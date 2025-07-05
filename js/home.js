@@ -41,6 +41,30 @@ var barColors = [
 ];
 var amounts =  [0,0,0,0,0,0,0,0];
 var myChart;
+var cursorBall = document.querySelector(".cursor-ball");
+var cursorOutline = document.querySelector(".cursor-outline");
+let btns = document.querySelectorAll("button");
+
+
+
+document.addEventListener("mousemove", (e) => {
+  cursorBall.style.top = e.pageY + "px";
+  cursorBall.style.left = e.pageX + "px";
+
+  cursorOutline.style.top = e.pageY + "px";
+  cursorOutline.style.left = e.pageX + "px";
+});
+
+document.addEventListener("mousedown", (e) => {
+  if (e.button === 0) {
+    cursorOutline.classList.add("cursor-mousedown");
+  }
+});
+
+document.addEventListener("mouseup", () => {
+  cursorOutline.classList.remove("cursor-mousedown");
+});
+
 
 
 function tutorial(){
@@ -202,7 +226,7 @@ function handleClick(ev) {
         if (taskText.includes("5 coins")) {
             coinVal = 5;
         } else if (taskText.includes("10 coins")) {
-            coinVal = 37;                                                  // <--------------------- change back to 10 later; temp value for testing
+            coinVal = 10;
         } else {
             coinVal = 1;
         }
@@ -515,6 +539,8 @@ function createBudget(){
     if (contTutorial){
         createModal('2️⃣ Set Your Goals', 
             `Awesome! Now that you’ve added some values, it’s time to set your money goals. 💪
+
+            Remember to maximize your incomes and assets while you minimize needless expenses.
 
             For bigger, long-term dreams, try creating projects!
 

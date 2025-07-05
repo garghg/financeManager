@@ -13,7 +13,7 @@ logo.addEventListener('click', () => {
 
         if (scale >= 300) {
             clearInterval(interval);
-            window.open("./html/main.html", "_self");
+            window.open("C:/Users/gargh/OneDrive/Documents/financeManager/index.html", "_self");
         }
     }, 10);
 });

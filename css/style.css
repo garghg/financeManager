@@ -216,10 +216,6 @@ ul li .close:hover {
     user-select: none;
 }
 
-tr:nth-child(even):not(:last-child){
-  background-color: #bebebe;
-}
-
 #navBaricon{
     display: flex;
     flex-direction: row;
@@ -292,11 +288,26 @@ tr:nth-child(even):not(:last-child){
     user-select: none;
 }
 
-.itemType, #bgtItemName, #bgtItemAmt{
+.category, .itemType, #bgtItemName, #bgtItemAmt{
     font-family: monospace;
     background-color: transparent;
-    border: none;
     color: black;
+    height: 30px;
+    font-size: 14px;
+    margin: 5px;
+    border: 1px solid;
+}
+
+#bgtItemName{
+    width: 90%;
+}
+
+#bgtItemAmt{
+    width: 25%;
+}
+
+.category{
+    width: 20%;
 }
 
 #darkModeIcon:hover, #avatarIcon:hover{
@@ -350,6 +361,7 @@ tr:nth-child(even):not(:last-child){
 .darkMode #bgtItemAmt,
 .darkMode .category{
     color: white;
+    border: solid 1px #8C8C8C;
 }
 
 .darkMode .itemType:open > option, .darkMode .category:open > option{
@@ -566,7 +578,7 @@ tr:nth-child(even):not(:last-child){
   background-color: #777;
   color: white;
   cursor: pointer;
-  padding: 18px;
+  padding: 12px;
   width: 100%;
   border: none;
   text-align: left;
@@ -575,6 +587,7 @@ tr:nth-child(even):not(:last-child){
   margin-top: 2%;
   font-family: monospace;
   text-align: center;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
 }
 
 .darkMode .collapsible{
@@ -617,15 +630,6 @@ tr:nth-child(even):not(:last-child){
 
 #tutorial-modal-container{
     background-color: rgba(0, 0, 0, 0.6);
-}
-
-.category{
-    font-family: monospace;
-    background-color: transparent;
-    color: black;
-    width: 50%;
-    height: 30px;
-    font-size: 16px;
 }
 
 .hidden{

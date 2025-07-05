@@ -27,6 +27,7 @@ var avtModalDiv = document.createElement('div');
 var avatarsUnlocked = [];
 var coinsShown = 0;
 var contTutorial;
+var tblArray = [];
 
 
 function tutorial(){
@@ -359,7 +360,7 @@ function addTask(){
         newTask.appendChild(taskName);
         var rowTaskName = taskName.textContent.replace(` (+${addCoin} coins)`, "") 
         addRow(budget, rowTaskName, input, 'Expense');
-        getTableVal(budget);
+        getTableVal();
     }
 
     document.querySelector("ul").appendChild(newTask);
@@ -402,57 +403,10 @@ function bgtItemAmt(table, amtVal = ''){
     amt.setAttribute('placeholder', 'Enter Amount Here');
     amt.id = 'bgtItemAmt';
     amt.value = amtVal;
-    amt.addEventListener('blur', function() {
-    getTableVal(table);
-    });
-
     return amt;
 }
 
-function createDropdown(table, dropdownVal = '') {
-    var select = document.createElement('select');
-    select.classList.add("itemType");
-    options.forEach(function(opt){
-        var option = document.createElement("option");
-        option.value = opt;
-        option.textContent = opt;
-        option.selected = dropdownVal;
-        select.appendChild(option);
-        select.addEventListener('blur', function() {
-            getTableVal(table);
-        });
-    });
-    return select;
-}
-
-
-function getTableVal(table) {
-    var tblArray = [];
-    var nodeList = table.querySelectorAll('input[type="number"]');
-
-    var typeArray = [];
-    var selectList = document.querySelectorAll('select');
-    for (let i = 0; i < selectList.length - 1; i++) {
-        typeArray.push(selectList[i].value);
-    }
-
-    for (let i = 0; i < nodeList.length; i++) {
-        var value = nodeList[i].value.trim();
-        if (value !== "") {
-            tblArray.push(Number(value));
-        } else {
-            tblArray.push(0);
-        }
-    }
-
-    for (let i = 0; i < tblArray.length; i++) {
-        if (typeArray[i] === "Expense") {
-            tblArray[i] = -Math.abs(tblArray[i]);
-        } else if (typeArray[i] === "Income") {
-            tblArray[i] = Math.abs(tblArray[i]);
-        }
-    }
-
+function getTableVal() {
     netCell.textContent = tblArray.reduce((accumulator, currentValue) => {
         return accumulator + currentValue
     },0);
@@ -468,13 +422,10 @@ function addRow(table, nameVal = '', amtVal = '', dropdownVal = '') {
     var cell3 = newRow.insertCell();
     cell1.style.width = '55%';
 
-    var nameInput = bgtItemName(nameVal);
-    var amtInput = bgtItemAmt(table, amtVal);
-    var dropdown = createDropdown(table, dropdownVal);
 
-    cell1.appendChild(nameInput);
-    cell2.appendChild(amtInput);
-    cell3.appendChild(dropdown);
+    cell1.textContent = nameVal;
+    cell2.textContent = amtVal;
+    cell3.textContent = dropdownVal;
 
     var clickCount = 0;
     var savedColor;
@@ -549,6 +500,12 @@ function createBudget(){
     budget.id = "budgetTable";
     var rowInput = document.getElementById('rowInput');
 
+    var name = bgtItemName();
+    var amount = bgtItemAmt();
+
+    rowInput.appendChild(name);
+    rowInput.appendChild(amount);
+    
     var category = document.createElement('select');
     category.classList.add('category');
     rowInput.appendChild(category);
@@ -565,8 +522,21 @@ function createBudget(){
     addRowBtn.className = 'Btn';
     addRowBtn.id = "addRowBtn"; 
     addRowBtn.onclick = function(){
-        addRow(budget);
-    };
+        if (category.value != "Job" && category.value != "Investments" && category.value != "Savings"){
+            amount.value = -amount.value;
+        }
+        if (name.value != '' && amount.value != ''){
+            addRow(budget, name.value, Math.abs(amount.value), category.value);
+            tblArray.push(Number(amount.value));
+            getTableVal();
+            name.value = '';
+            amount.value = '';
+        }else if (name.value == ''){
+            createModal('Budget Item Name 🤔', 'Please take a moment to add the name for this item.');
+        } else {
+            createModal('Budget Item Amount 💸', 'Could you please add the amount for this item?');
+        };
+    }
     rowInput.appendChild(addRowBtn);
 
     bgtDiv.appendChild(budget);
@@ -589,7 +559,7 @@ function createBudget(){
     var newfoot = tfoot.insertRow();
     var cell1 = newfoot.insertCell();
     netCell = newfoot.insertCell();
-    netCell.id = 'netCell'
+    netCell.id = 'netCell';
     var cell3 = newfoot.insertCell();
     cell1.textContent = "Net Total: ";
     netCell.textContent = "0";
@@ -605,7 +575,7 @@ function unlockAvts(){
             'Awesome! You\'ve just reached Level 5 and unlocked a new character: The Planner. Head over to the avatar menu to check it out!',
             'Got it!',
             'Close' 
-        );
+        ); 
         
         for (let i = 0; i < avatars.length; i++){
             if (avatarsMap.get(avatars[i]) === "Planner"){
@@ -1052,7 +1022,7 @@ function startProj(){
         } else if (projectName.value !== '' && dueDate.value !== '' && startDate.value !== '' && daysLeft > 0 && projectAmt.value > 0){
             addProject(projectName.value, dueDate.value, startDate.value, monthsLeft, projectAmt.value, saveMonth);
             addRow(budget, projectName.value, saveMonth, 'Expense');
-            getTableVal(budget);
+            getTableVal();
             projectAmt.value = '';
             projectName.value = '';
             dueDate.value = '';

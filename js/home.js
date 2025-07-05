@@ -477,10 +477,10 @@ document.addEventListener('keydown', function(event) {
         selectedRows.sort((a, b) => b - a);
         selectedRows.forEach(index => {
             if (table.rows[index]) {
+                var numIdx = tblArray.indexOf(Number(table.rows[index].cells[1].textContent));
+                tblArray.splice(numIdx, 1);
                 table.deleteRow(index);
-                console.log(Number(table.rows[index].cells[1].textContent)) // <------------- this returns the correct value but the filter in the next line doesn't remove it properly
-                // tblArray = tblArray.filter(item => item !== Number(table.rows[index].cells[1].textContent));
-                // getTableVal();
+                getTableVal();
             }
         });
         selectedRows.length = 0;

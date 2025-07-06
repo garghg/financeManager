@@ -47,6 +47,12 @@ let btns = document.querySelectorAll("button");
 
 
 
+
+
+// net total broke again! fix it.
+
+
+
 document.addEventListener("mousemove", (e) => {
   cursorBall.style.top = e.pageY + "px";
   cursorBall.style.left = e.pageX + "px";
@@ -396,9 +402,9 @@ function addTask(){
         var taskName = document.createTextNode(taskType +" $" +input+` (+${addCoin} coins)`);
         newTask.appendChild(taskName);
         var rowTaskName = taskName.textContent.replace(` (+${addCoin} coins)`, "") 
-        addRow(budget, rowTaskName, input, taskType);
+        addRow(budget, rowTaskName, input, "Goals");
         tblArray.push(Number(-input));
-        amounts[6] += input;
+        amounts[6] += Number(input);
         myChart ? myChart.destroy() : {};
         graph();
         getTableVal();
@@ -517,9 +523,13 @@ document.addEventListener('keydown', function(event) {
         selectedRows.sort((a, b) => b - a);
         selectedRows.forEach(index => {
             if (table.rows[index]) {
-                var numIdx = tblArray.indexOf(Number(table.rows[index].cells[1].textContent));
-                var numType = table.rows[index].cells[2].textContent;
-                amounts[categories.indexOf(numType)] -= Number(table.rows[index].cells[1].textContent);
+                var category = table.rows[index].cells[2].textContent;
+                amounts[categories.indexOf(category)] -= Number(table.rows[index].cells[1].textContent);
+                var cellVal = Number(table.rows[index].cells[1].textContent);
+                if (category != "Job" && category != "Assets" && category != "Savings"){
+                    cellVal = -cellVal;
+                }
+                var numIdx = tblArray.indexOf(cellVal);
                 myChart ? myChart.destroy() : {};
                 graph();
                 tblArray.splice(numIdx, 1);
@@ -1093,9 +1103,9 @@ function startProj(){
             createModal('Just a Quick Fix 🛠️', 'Let\'s double check the project dates before moving forward.', 'Got it', 'I\'ll come back to it');
         } else if (projectName.value !== '' && dueDate.value !== '' && startDate.value !== '' && daysLeft > 0 && projectAmt.value > 0){
             addProject(projectName.value, dueDate.value, startDate.value, monthsLeft, projectAmt.value, saveMonth);
-            addRow(budget, projectName.value, saveMonth, 'Project');
+            addRow(budget, projectName.value, saveMonth, "Projects");
             tblArray.push(Number(-saveMonth));
-            amounts[7] += saveMonth;
+            amounts[7] += Number(saveMonth);
             myChart ? myChart.destroy() : {};
             graph();
             getTableVal();

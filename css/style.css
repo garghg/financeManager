@@ -649,11 +649,19 @@ ul li .close:hover {
     background-color: #000;
 }
 
+.darkMode .cursor-ball{
+    background-color: white;
+}
+
 .cursor-outline {
     width: 3rem;
     height: 3rem;
     border: 1px solid #000;
     transition: all 0.3s ease;
+}
+
+.darkMode .cursor-outline{
+    border: solid 1px white;
 }
 
 .cursor-ball,
@@ -672,5 +680,8 @@ ul li .close:hover {
     background-color: #0F5B4E;
 }
 
+.darkMode .cursor-mousedown{
+    background-color: #FFF70D;
+}
 
-/* create the dark mode for the cursor and maybe hover effect as well */
+

@@ -1,8 +1,3 @@
-<!-- 
-To do:
-    - when you click logo, it should grow and transition into the home page
- -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,11 +7,41 @@ To do:
     <title>Coin Quest: Sign In</title>
 </head>
 <body>
-    <div id="wlcmHead">
-        <img src="../img/CQLogo.png" alt="CoinQuest" id="logo" draggable="false" width="70px" height="70px">
-        <h1 id="begin">Click to begin</h1>
+    <header id="headBar">
+        <div id="left">
+            <h1>Coin Quest</h1>
+        </div>
+        <div id="right">
+            <button id="darkModeIcon"><img src="../img/lightMode.png" alt="Dark Mode" width="30px" height="30px"></button>
+        </div>
+    </header>
+
+    <div id="logoDiv">
+        <img src="../img/CQLogo.png" alt="Coin Quest" width="75px" height="75px" id="logo">
     </div>
+
+    <div id="content">
+        <div id="copy">
+            <div id="text">
+                <h1>Get Started</h1>
+                <h2>Finances gamified! <br> Win at Money. Level Up Your Life.</h2>
+            </div>
+            <div id="mockups">
+                <img src="../img/Strategist.gif" alt="Strategist" id="Strategist">
+                <img src="../img/mockupLight.png" alt="Mock Up" id="chartImg">
+            </div>
+        </div>
+        <div id="signUp">
+            <div id="form">
+            </div>
+            <div id="arthur">
+                <img src="../img/arthur.gif" alt="Arthur" id="arthurImg">
+            </div>
+        </div>
+    </div>
+
     
+
 </body>
     <script src="../js/signIn.js"></script>
 </html>

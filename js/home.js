@@ -47,12 +47,6 @@ let btns = document.querySelectorAll("button");
 
 
 
-
-
-// net total broke again! fix it.
-
-
-
 document.addEventListener("mousemove", (e) => {
   cursorBall.style.top = e.pageY + "px";
   cursorBall.style.left = e.pageX + "px";
@@ -514,7 +508,6 @@ function addRow(table, nameVal = '', amtVal = '', dropdownVal = '') {
             }
         }
     });
-
 }
 
 document.addEventListener('keydown', function(event) {

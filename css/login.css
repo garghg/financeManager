@@ -116,3 +116,51 @@ body{
 #submit:hover{
     background-color: #bababa;
 }
+
+.darkMode{
+    background-color: black;
+    color: white;
+}
+
+.darkMode #headBar{
+    background-color: black;
+}
+
+.darkMode #darkModeIcon img{
+    content: url(../img/darkMode.png);
+}
+
+.darkMode #darkModeIcon img:hover{
+    background-color: #bababa;
+    box-shadow: 0 0 10px 7px #bababa;
+}
+
+.darkMode #chartImg {
+    content: url(../img/mockup-dark.png);
+    filter: drop-shadow(4px 4px 5px white);
+}
+
+.darkMode #owner{
+    filter: drop-shadow(4px 4px 5px rgba(255, 255, 255, 0.8));
+}
+
+.darkMode #formDiv{
+    background-color: #191517;
+    border: 1px solid white;
+}
+
+.darkMode a{
+    color: aquamarine;
+}
+
+.darkMode .input{
+    background-color: #191517;
+    border: solid 1px #8C8C8C;
+    color: white;
+}
+
+.darkMode #submit:hover {
+  background-color: #0F5B4E;
+  box-shadow: 0px 0px 15px 5px rgba(238, 255, 0, 0.4);
+  transition: ease 0.75s;
+}

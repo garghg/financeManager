@@ -14,7 +14,7 @@
             <h1>Coin Quest</h1>
         </div>
         <div id="right">
-            <button id="darkModeIcon"><img src="../img/lightMode.png" alt="Dark Mode" width="30px" height="30px"></button>
+            <button id="darkModeIcon" onclick="toggleDarkMode()"><img src="../img/lightMode.png" alt="Dark Mode" width="30px" height="30px"></button>
         </div>
     </header>
 
@@ -43,4 +43,17 @@
         </div>
     </div>
 </body>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        if (sessionStorage.getItem('darkMode') === 'on') {
+            document.body.classList.add('darkMode');
+        }
+    });
+
+    function toggleDarkMode() {
+        document.body.classList.toggle('darkMode');
+        const isDark = document.body.classList.contains('darkMode');
+        sessionStorage.setItem('darkMode', isDark ? 'on' : 'off');
+    }
+</script>
 </html>

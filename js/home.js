@@ -43,8 +43,6 @@ var amounts =  [0,0,0,0,0,0,0,0];
 var myChart;
 var cursorBall = document.querySelector(".cursor-ball");
 var cursorOutline = document.querySelector(".cursor-outline");
-let btns = document.querySelectorAll("button");
-
 
 
 document.addEventListener("mousemove", (e) => {
@@ -89,7 +87,7 @@ function tutorial(){
     modal.appendChild(content);
 
     var arthurImg = document.createElement('img');
-    arthurImg.src = './img/arthur.gif';
+    arthurImg.src = '../img/arthur.gif';
     arthurImg.id = 'arthur';
     arthurImg.draggable = false;
     tutorialMD.appendChild(arthurImg);
@@ -184,7 +182,7 @@ function coinAnimate() {
         coinDiv.innerHTML = '';
         var coinImg = document.createElement('img');
         coinImg.draggable = false;
-        coinImg.src = `./img/${i}.png`;
+        coinImg.src = `../img/${i}.png`;
         coinDiv.appendChild(coinImg);
         i++;
         if (i > 8){
@@ -757,12 +755,12 @@ function unlockAvts(){
 function animateAvts() {
     for (let i = 0; i < avatars.length; i++) {
         avatars[i].addEventListener('mouseover', () => {
-            avatars[i].src = `./img/${avatarsMap.get(avatars[i])}.gif`;
+            avatars[i].src = `../img/${avatarsMap.get(avatars[i])}.gif`;
         });
 
         avatars[i].addEventListener('mouseout', () => {
             setTimeout(() => {
-                avatars[i].src = `./img/${avatarsMap.get(avatars[i])}.png`;
+                avatars[i].src = `../img/${avatarsMap.get(avatars[i])}.png`;
             }, 1000);
         });
 
@@ -824,7 +822,7 @@ function avatarLoad(){
     var starterImg = document.createElement('img');
     starterImg.id = 'starterImg';
     starterImg.classList.add('selectedImg');
-    starterImg.src = './img/Starter.png';
+    starterImg.src = '../img/Starter.png';
     starter.appendChild(starterImg);
 
     avatars.push(starterImg);
@@ -847,7 +845,7 @@ function avatarLoad(){
     content.appendChild(planner);
 
     var plannerImg = document.createElement('img');
-    plannerImg.src = './img/Planner.png';
+    plannerImg.src = '../img/Planner.png';
     planner.appendChild(plannerImg);
 
     avatars.push(plannerImg);
@@ -873,7 +871,7 @@ function avatarLoad(){
     content.appendChild(strategist);
 
     var strategistImg = document.createElement('img');
-    strategistImg.src = './img/Strategist.png';
+    strategistImg.src = '../img/Strategist.png';
     strategist.appendChild(strategistImg);
 
     avatars.push(strategistImg);
@@ -899,7 +897,7 @@ function avatarLoad(){
     content.appendChild(analyst);
 
     var analystImg = document.createElement('img');
-    analystImg.src = './img/Analyst.png';
+    analystImg.src = '../img/Analyst.png';
     analyst.appendChild(analystImg);
 
     avatars.push(analystImg);
@@ -925,7 +923,7 @@ function avatarLoad(){
     content.appendChild(owner);
 
     var ownerImg = document.createElement('img');
-    ownerImg.src = './img/Owner.png';
+    ownerImg.src = '../img/Owner.png';
     owner.appendChild(ownerImg);
 
     avatars.push(ownerImg);

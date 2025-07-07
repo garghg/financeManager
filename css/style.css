@@ -501,6 +501,10 @@ ul li .close:hover {
     gap: 20px;
 }
 
+#avtBtnDiv, #actBtnDiv{
+    justify-content: left;
+}
+
 #avtContent{
     padding-top: 50px;
     display: flex;

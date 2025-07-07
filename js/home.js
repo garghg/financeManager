@@ -43,6 +43,7 @@ var amounts =  [0,0,0,0,0,0,0,0];
 var myChart;
 var cursorBall = document.querySelector(".cursor-ball");
 var cursorOutline = document.querySelector(".cursor-outline");
+var setModalDiv = document.createElement('div');
 
 
 document.addEventListener("mousemove", (e) => {
@@ -812,8 +813,14 @@ function animateavts() {
 
 
 function avatarLoad(){
+    var existingModal = document.getElementById('avatar-modal-container');
+    if (existingModal) {
+        document.body.removeChild(existingModal);
+    }
+
+    avtModalDiv = document.createElement('div');
     avtModalDiv.classList.add('modal-container');
-    avtModalDiv.id = 'modal-container';
+    avtModalDiv.id = 'avatar-modal-container';
     document.body.appendChild(avtModalDiv);
 
     var modal = document.createElement('div');
@@ -963,13 +970,14 @@ function avatarLoad(){
 
     // ------------------------------------------------
     var avtClose = document.createElement('button');
-    avtClose.textContent = 'X';
+    avtClose.textContent = '< Back';
     btnDiv.appendChild(avtClose);
     avtClose.classList.add('Btn');
-    avtClose.id = 'X';
+    avtClose.id = 'avtBack';
     
     avtClose.addEventListener('click', () => {
         avtModalDiv.classList.toggle('show'); //close modal
+        setModalDiv.classList.toggle('show');
     });
 
     animateavts();
@@ -980,10 +988,16 @@ function avatarView() {
     avtModalDiv.classList.toggle('show'); //open modal
 }
 
+window.addEventListener('DOMContentLoaded', () => {
+    if (sessionStorage.getItem('darkMode') === 'on') {
+        document.body.classList.add('darkMode');
+    }
+});
 
-function darkMode(){
-    var body = document.body;
-    body.classList.toggle("darkMode");
+function darkMode() {
+    document.body.classList.toggle('darkMode');
+    const isDark = document.body.classList.contains('darkMode');
+    sessionStorage.setItem('darkMode', isDark ? 'on' : 'off');
     chartFontCol();
 }
 
@@ -1244,39 +1258,48 @@ function account(){
 
     // --------------------------------------- delete Account -------------------------------------------------
 
-    var avtBtn = document.createElement('button');
-    avtBtn.classList.add('Btn');
-    avtBtn.id = "avtBtn";
+    var delBtn = document.createElement('button');
+    delBtn.classList.add('Btn');
+    delBtn.id = "delBtn";
 
 
     // Add text after the image without overwriting it
-    var avtbtnText = document.createTextNode('delete Account');
-    avtBtn.appendChild(avtbtnText);
+    var delbtnText = document.createTextNode('delete Account');
+    delBtn.appendChild(delbtnText);
 
-    avtBtn.addEventListener('click', () => {avtAccount(); actModalDiv.classList.toggle('show');});
+    delBtn.addEventListener('click', () => {delAccount(); actModalDiv.classList.toggle('show');});
 
-    content.appendChild(avtBtn);
+    content.appendChild(delBtn);
 
     // ------------------------------------------------------------------------------------------------------------
 
     var actClose = document.createElement('button');
-    actClose.textContent = 'X';
+    actClose.textContent = '< Back';
     btnDiv.appendChild(actClose);
     actClose.classList.add('Btn');
-    actClose.id = 'X';
+    actClose.id = 'Back';
 
     actModalDiv.classList.toggle('show');
     
     actClose.addEventListener('click', () => {
         actModalDiv.classList.toggle('show'); //close modal
+        setModalDiv.classList.toggle('show');
+        document.body.removeChild(actModalDiv);
+
     });
 }
 
 
 function openSettings(){
-    var setModalDiv = document.createElement('div');
+
+    var existingModal = document.getElementById('settings-modal-container');
+    if (existingModal) {
+        document.body.removeChild(existingModal);
+    }
+
+    setModalDiv = document.createElement('div');
     setModalDiv.classList.add('modal-container');
-    setModalDiv.id = 'account-modal-container';
+    setModalDiv.id = 'settings-modal-container';
     document.body.appendChild(setModalDiv);
 
     var modal = document.createElement('div');
@@ -1333,7 +1356,7 @@ function openSettings(){
     var avtbtnText = document.createTextNode('Open Avatar Menu');
     avtBtn.appendChild(avtbtnText);
 
-    avtBtn.addEventListener('click', () => {avatarView(); setModalDiv.classList.toggle('show');});                        // <------------ stopped working
+    avtBtn.addEventListener('click', () => {avatarView(); setModalDiv.classList.toggle('show');});
 
     content.appendChild(avtBtn);
 
@@ -1371,5 +1394,4 @@ function openSettings(){
     setClose.addEventListener('click', () => {
         setModalDiv.classList.toggle('show'); //close modal
     });
-
 }

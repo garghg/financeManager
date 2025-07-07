@@ -45,6 +45,13 @@ var cursorBall = document.querySelector(".cursor-ball");
 var cursorOutline = document.querySelector(".cursor-outline");
 var setModalDiv = document.createElement('div');
 
+var greeting = document.getElementById('greeting');
+var username = sessionStorage.getItem('username');
+if (username == null){
+    username = 'Adventurer'
+}
+greeting.textContent = `Welcome Back, ${username}!`
+
 
 document.addEventListener("mousemove", (e) => {
   cursorBall.style.top = e.pageY + "px";

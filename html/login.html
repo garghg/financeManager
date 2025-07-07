@@ -44,6 +44,12 @@
     </div>
 </body>
 <script>
+    var submit = document.getElementById('submit')
+    submit.addEventListener('click', function(){
+        var username = document.getElementById('username').value;
+        sessionStorage.setItem('username', username);
+    });
+
     window.addEventListener('DOMContentLoaded', () => {
         if (sessionStorage.getItem('darkMode') === 'on') {
             document.body.classList.add('darkMode');

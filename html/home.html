@@ -3,6 +3,10 @@
 <!-- Notes to self:
 
 Today:
+    - fix avatar menu button
+    - continue darkMode settings from login to home page
+    - add a back button to sub-settings 
+    - import username and greet user with name
     - save user data
     - create a logout system when at home page
     - change username, password, etc. → settings
@@ -14,7 +18,6 @@ Today:
 
 possible features:
     - suggestions? like on where to save if net loss budget or where to invest etc...
-    - create backend in python - Flask - sign in page
     - compiled resources online
     - make app "educational"
     - add an intro avatar
@@ -40,8 +43,7 @@ possible features:
     <header>
         <div id="navBar">
             <div id="navBaricon">
-                <button class="icon" id="avatarIcon" onclick="avatarView()"><img src="../img/avatar.png" alt="Open Avatar Menu" id="avatarImg"></button>
-                <button class="icon" id="darkModeIcon" onclick="darkMode()"><img src="../img/lightMode.png" alt="Dark Mode" id="drkBtnImg"></button>
+                <button class="icon" id="avatarIcon" onclick="openSettings()"><img src="../img/settings.png" alt="Settings" id="settingImg"></button>
             </div>
         </div>
         <div id="headerSect1">

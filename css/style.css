@@ -64,7 +64,7 @@ ul li.checked{
     margin-top: 1%;
     display: flex;
     flex-direction: row;
-    gap: 67%;
+    gap: 70%;
     user-select: none;
 }
 
@@ -492,7 +492,7 @@ ul li .close:hover {
     height: calc(100vh - 200px);
 }
 
-#AvtBtnDiv{
+#AvtBtnDiv, #setBtnDiv, #actBtnDiv{
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -670,7 +670,10 @@ ul li .close:hover {
     position: absolute;
     z-index: 100;
     pointer-events: none;
-    transform: translate(-50%, -50%)
+}
+
+.cursor-outline{
+    transform: translate(-40%, -40%)
 }
 
 .cursor-mousedown {
@@ -682,4 +685,33 @@ ul li .close:hover {
 
 .darkMode .cursor-mousedown{
     background-color: #FFF70D;
+}
+
+#setContent{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    gap: 20px;
+}
+
+.setBtn{
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;
+}
+
+.darkMode .setBtn img{
+    filter: invert(1);
+}
+
+#delBtn:hover{
+    background-color: red;
+    box-shadow: 0 0 20px red;
+}
+
+ .darkMode #delBtn:hover{
+    color: white;
 }

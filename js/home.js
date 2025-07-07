@@ -23,7 +23,7 @@ var coinsOverflow = 0;
 document.getElementById('coinstoNL').textContent = `${coinsLeft} coins to level ${nextLvl}`;
 var avatars = [];
 var avatarsMap = new Map();
-var avtModalDiv = document.createElement('div');
+var ModalDiv = document.createElement('div');
 var avatarsUnlocked = [];
 var coinsShown = 0;
 var contTutorial;
@@ -332,7 +332,7 @@ async function xp(coinVal){
 
         currentLvl += 1;
         nextLvl += 1;
-        unlockAvts();
+        unlockdels();
         document.getElementById('currentLvl').textContent = currentLvl;
         document.getElementById('nextLvl').textContent = nextLvl;
         coinNum.textContent = `${coinsShown} coins`;
@@ -545,7 +545,7 @@ function createBudget(){
 
             For bigger, long-term dreams, try creating projects!
 
-            As you hit your goals, you’ll earn coins, level up, and unlock fun new characters. Let’s do this! 🚀`
+            As you hit your goals, you’ll earn coins, level up, and unlock fun new characters (view in settings). Let’s do this! 🚀`
         );
     }
     budget.id = "budgetTable";
@@ -628,12 +628,12 @@ function createBudget(){
 
 }
 
-function unlockAvts(){
+function unlockdels(){
     // --------------------------------------------- Planner ---------------------------------------------------------------
     if (currentLvl == 5){
         createModal(
             'Character Unlocked! 🔓',
-            'Awesome! You\'ve just reached Level 5 and unlocked a new character: The Planner. Head over to the avatar menu to check it out!',
+            'Awesome! You\'ve just reached Level 5 and unlocked a new character: The Planner. Head over to the avatar menu in settings to check it out!',
             'Got it!',
             'Close' 
         ); 
@@ -752,7 +752,7 @@ function unlockAvts(){
     }
 }
 
-function animateAvts() {
+function animatedels() {
     for (let i = 0; i < avatars.length; i++) {
         avatars[i].addEventListener('mouseover', () => {
             avatars[i].src = `../img/${avatarsMap.get(avatars[i])}.gif`;
@@ -775,16 +775,16 @@ function animateAvts() {
                     if (p.textContent.includes('Selected')){
                         console.log('before: '+ p.innerText)
                         p.innerText = '';
-                        p.classList.toggle('avtSelected');
+                        p.classList.toggle('delSelected');
                         avatarsUnlocked[j].classList.toggle('selectedImg');
 
                     }
                 }
                 if (!p.textContent.includes('Selected')){
                     p.innerText = 'Selected';
-                    p.classList.toggle('avtSelected');
+                    p.classList.toggle('delSelected');
                     avatars[i].classList.toggle('selectedImg');
-                    document.getElementById("avtShown").src = avatars[i].src;
+                    document.getElementById("delShown").src = avatars[i].src;
                 }
             }
         });
@@ -793,17 +793,17 @@ function animateAvts() {
 
 
 function avatarLoad(){
-    avtModalDiv.classList.add('modal-container');
-    avtModalDiv.id = 'modal-container';
-    document.body.appendChild(avtModalDiv);
+    delModalDiv.classList.add('modal-container');
+    delModalDiv.id = 'modal-container';
+    document.body.appendChild(delModalDiv);
 
     var modal = document.createElement('div');
     modal.classList.add('modal');
     modal.id = 'avatar-modal';
-    avtModalDiv.appendChild(modal);
+    delModalDiv.appendChild(modal);
 
     var btnDiv = document.createElement('div');
-    btnDiv.id = 'AvtBtnDiv';
+    btnDiv.id = 'delBtnDiv';
     modal.appendChild(btnDiv);
 
     var heading = document.createElement('h2');
@@ -811,7 +811,7 @@ function avatarLoad(){
     modal.appendChild(heading);
 
     var content = document.createElement('div');
-    content.id = 'avtContent';
+    content.id = 'delContent';
     modal.appendChild(content);
 
     // ------------------ Starter -----------------
@@ -834,7 +834,7 @@ function avatarLoad(){
     starter.appendChild(starterDes);
 
     var starterSelected = document.createElement('p');
-    starterSelected.classList.add('avtSelected');
+    starterSelected.classList.add('delSelected');
     starterSelected.innerText = 'Selected';
     starter.appendChild(starterSelected);
 
@@ -943,22 +943,22 @@ function avatarLoad(){
     owner.appendChild(ownerSelected);
 
     // ------------------------------------------------
-    var avtClose = document.createElement('button');
-    avtClose.textContent = 'X';
-    btnDiv.appendChild(avtClose);
-    avtClose.classList.add('Btn');
-    avtClose.id = 'X';
+    var delClose = document.createElement('button');
+    delClose.textContent = 'X';
+    btnDiv.appendChild(delClose);
+    delClose.classList.add('Btn');
+    delClose.id = 'X';
     
-    avtClose.addEventListener('click', () => {
-        avtModalDiv.classList.toggle('show'); //close modal
+    delClose.addEventListener('click', () => {
+        delModalDiv.classList.toggle('show'); //close modal
     });
 
-    animateAvts();
+    animatedels();
 
 }
 
 function avatarView() {
-    avtModalDiv.classList.toggle('show'); //open modal
+    delModalDiv.classList.toggle('show'); //open modal
 }
 
 
@@ -1171,4 +1171,186 @@ function graph(){
     }
     });
     chartFontCol();
+}
+
+function account(){
+    var actModalDiv = document.createElement('div');
+    actModalDiv.classList.add('modal-container');
+    actModalDiv.id = 'account-modal-container';
+    document.body.appendChild(actModalDiv);
+
+    var modal = document.createElement('div');
+    modal.classList.add('modal');
+    modal.id = 'account-modal';
+    actModalDiv.appendChild(modal);
+
+    var btnDiv = document.createElement('div');
+    btnDiv.id = 'actBtnDiv';
+    modal.appendChild(btnDiv);
+
+    var heading = document.createElement('h2');
+    heading.textContent = 'Account Settings';
+    modal.appendChild(heading);
+
+    var content = document.createElement('div');
+    content.id = 'setContent';
+    modal.appendChild(content);
+
+    // --------------------------------------- Change Username -------------------------------------------------
+
+    var modeBtn = document.createElement('button');
+    modeBtn.classList.add('Btn');
+
+    // Add text after the image without overwriting it
+    var modebtnText = document.createTextNode('Change Username');
+    modeBtn.appendChild(modebtnText);
+
+    modeBtn.addEventListener('click', () => {changeName(); actModalDiv.classList.toggle('show');});
+
+    content.appendChild(modeBtn);
+
+
+    // --------------------------------------- Change Password -------------------------------------------------
+
+    var passBtn = document.createElement('button');
+    passBtn.classList.add('Btn');
+
+    // Add text after the image without overwriting it
+    var passbtnText = document.createTextNode('Change Password');
+    passBtn.appendChild(passbtnText);
+
+    passBtn.addEventListener('click', () => {changePass(); actModalDiv.classList.toggle('show');});
+
+    content.appendChild(passBtn);
+
+    // --------------------------------------- Delete Account -------------------------------------------------
+
+    var delBtn = document.createElement('button');
+    delBtn.classList.add('Btn');
+    delBtn.id = "delBtn";
+
+
+    // Add text after the image without overwriting it
+    var delbtnText = document.createTextNode('Delete Account');
+    delBtn.appendChild(delbtnText);
+
+    delBtn.addEventListener('click', () => {delAccount(); actModalDiv.classList.toggle('show');});
+
+    content.appendChild(delBtn);
+
+    // ------------------------------------------------------------------------------------------------------------
+
+    var actClose = document.createElement('button');
+    actClose.textContent = 'X';
+    btnDiv.appendChild(actClose);
+    actClose.classList.add('Btn');
+    actClose.id = 'X';
+
+    actModalDiv.classList.toggle('show');
+    
+    actClose.addEventListener('click', () => {
+        actModalDiv.classList.toggle('show'); //close modal
+    });
+}
+
+
+function openSettings(){
+    var setModalDiv = document.createElement('div');
+    setModalDiv.classList.add('modal-container');
+    setModalDiv.id = 'account-modal-container';
+    document.body.appendChild(setModalDiv);
+
+    var modal = document.createElement('div');
+    modal.classList.add('modal');
+    modal.id = 'settings-modal';
+    setModalDiv.appendChild(modal);
+
+    var btnDiv = document.createElement('div');
+    btnDiv.id = 'setBtnDiv';
+    modal.appendChild(btnDiv);
+
+    var heading = document.createElement('h2');
+    heading.textContent = 'Settings';
+    modal.appendChild(heading);
+
+    var content = document.createElement('div');
+    content.id = 'setContent';
+    modal.appendChild(content);
+
+    // --------------------------------------- Light/Dark Mode -------------------------------------------------
+
+    var modeBtn = document.createElement('button');
+    modeBtn.classList.add('setBtn');
+    modeBtn.classList.add('Btn');
+
+    var modeIcon = document.createElement('img');
+    modeIcon.src = '../img/lightMode.png';
+    modeIcon.style.width = '30px';
+    modeIcon.style.height = '30px';
+    modeBtn.appendChild(modeIcon);
+
+    // Add text after the image without overwriting it
+    var modebtnText = document.createTextNode('Toggle Dark Mode');
+    modeBtn.appendChild(modebtnText);
+
+    modeBtn.addEventListener('click', () => {darkMode()});
+
+    content.appendChild(modeBtn);
+
+
+    // --------------------------------------- Avatar Menu -------------------------------------------------
+
+    var delBtn = document.createElement('button');
+    delBtn.classList.add('setBtn');
+    delBtn.classList.add('Btn');
+
+    var delIcon = document.createElement('img');
+    delIcon.src = '../img/avatar.png';
+    delIcon.style.width = '30px';
+    delIcon.style.height = '30px';
+    delBtn.appendChild(delIcon);
+
+    // Add text after the image without overwriting it
+    var delbtnText = document.createTextNode('Open Avatar Menu');
+    delBtn.appendChild(delbtnText);
+
+    delBtn.addEventListener('click', () => {avatarView(); setModalDiv.classList.toggle('show');});                        // <------------ stopped working
+
+    content.appendChild(delBtn);
+
+    // --------------------------------------- Account Menu -------------------------------------------------
+
+    var actBtn = document.createElement('button');
+    actBtn.classList.add('setBtn');
+    actBtn.classList.add('Btn');
+
+    var actIcon = document.createElement('img');
+    actIcon.src = '../img/user.png';
+    actIcon.style.width = '30px';
+    actIcon.style.height = '30px';
+    actBtn.appendChild(actIcon);
+
+    // Add text after the image without overwriting it
+    var actbtnText = document.createTextNode('Manage Account');
+    actBtn.appendChild(actbtnText);
+
+    actBtn.addEventListener('click', () => {account(); setModalDiv.classList.toggle('show');});
+
+    content.appendChild(actBtn);
+
+    // ------------------------------------------------------------------------------------------------------------
+
+
+    var setClose = document.createElement('button');
+    setClose.textContent = 'X';
+    btnDiv.appendChild(setClose);
+    setClose.classList.add('Btn');
+    setClose.id = 'setX';
+
+    setModalDiv.classList.toggle('show');
+    
+    setClose.addEventListener('click', () => {
+        setModalDiv.classList.toggle('show'); //close modal
+    });
+
 }

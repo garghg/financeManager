@@ -492,7 +492,7 @@ ul li .close:hover {
     height: calc(100vh - 200px);
 }
 
-#AvtBtnDiv, #setBtnDiv, #actBtnDiv{
+#avtBtnDiv, #setBtnDiv, #actBtnDiv{
     width: 100%;
     display: flex;
     flex-direction: row;

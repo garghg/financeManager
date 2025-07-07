@@ -133,54 +133,59 @@ function tutorial(){
     
 }
 
-function createModal(head, string, b1_text='OK', b2_text='Cancel'){
-    var modalDiv = document.createElement('div');
-    modalDiv.classList.add('modal-container');
-    modalDiv.id = 'modal-container';
-    document.body.appendChild(modalDiv);
+function createModal(head, string, b1_text = 'OK', b2_text = 'Cancel') {
+    return new Promise((resolve, reject) => {
+        const modalDiv = document.createElement('div');
+        modalDiv.classList.add('modal-container');
+        modalDiv.id = 'modal-container';
+        document.body.appendChild(modalDiv);
 
-    var modal = document.createElement('div');
-    modal.classList.add('modal');
-    modalDiv.appendChild(modal);
+        const modal = document.createElement('div');
+        modal.classList.add('modal');
+        modalDiv.appendChild(modal);
 
-    var heading = document.createElement('h2');
-    heading.textContent = head;
-    modal.appendChild(heading);
-    var content = document.createElement('p');
-    content.innerText = string;
-    modal.appendChild(content);
+        const heading = document.createElement('h2');
+        heading.textContent = head;
+        modal.appendChild(heading);
 
-    var btnDiv = document.createElement('div');
-    btnDiv.id = 'btnDiv'
-    modal.appendChild(btnDiv);
+        const content = document.createElement('p');
+        content.innerText = string;
+        modal.appendChild(content);
 
-    var button1 = document.createElement('button');
-    button1.textContent = b1_text;
-    if (b1_text !== ''){
-        btnDiv.appendChild(button1);
-    }
-    button1.classList.add('Btn');
-    button1.id = 'confirm';
+        const btnDiv = document.createElement('div');
+        btnDiv.id = 'btnDiv';
+        modal.appendChild(btnDiv);
 
-    var button2 = document.createElement('button');
-    button2.textContent = b2_text;
-    if (b2_text !== ''){
-        btnDiv.appendChild(button2);
-    }
-    button2.classList.add('Btn');
-    button2.id = 'cancel';
+        const button1 = document.createElement('button');
+        button1.textContent = b1_text;
+        button1.classList.add('Btn');
+        button1.id = 'confirm';
+        if (b1_text !== '') {
+            btnDiv.appendChild(button1);
+        }
 
-    modalDiv.classList.toggle('show') //open modal
-    button2.addEventListener('click', () => {
-        modalDiv.classList.toggle('show'); //close modal
-        document.body.removeChild(modalDiv);
-        return false;
-    })
-    button1.addEventListener('click', () => {
-        modalDiv.classList.toggle('show');
-        document.body.removeChild(modalDiv);
-        return true;
-    })
+        const button2 = document.createElement('button');
+        button2.textContent = b2_text;
+        button2.classList.add('Btn');
+        button2.id = 'cancel';
+        if (b2_text !== '') {
+            btnDiv.appendChild(button2);
+        }
+
+        modalDiv.classList.add('show');
+
+        button2.addEventListener('click', () => {
+            modalDiv.classList.remove('show');
+            document.body.removeChild(modalDiv);
+            resolve(false); // User cancelled
+        });
+
+        button1.addEventListener('click', () => {
+            modalDiv.classList.remove('show');
+            document.body.removeChild(modalDiv);
+            resolve(true); // User confirmed
+        });
+    });
 }
 
 function coinAnimate() {
@@ -1213,6 +1218,16 @@ function graph(){
     chartFontCol();
 }
 
+async function logoutPrompt() {
+    
+    const confirmLO = await createModal('Log Out 🔐', 'Are you sure you would like to log out?', 'Confirm', 'Cancel');
+    if (confirmLO) {
+        console.log('logging out');
+        window.location.href = '../html/login.html';
+    }
+}
+
+
 function account(){
     var actModalDiv = document.createElement('div');
     actModalDiv.classList.add('modal-container');
@@ -1262,6 +1277,23 @@ function account(){
     passBtn.addEventListener('click', () => {changePass(); actModalDiv.classList.toggle('show');});
 
     content.appendChild(passBtn);
+
+    // --------------------------------------- Logout -------------------------------------------------
+
+    var LOBtn = document.createElement('button');
+    LOBtn.classList.add('Btn');
+    LOBtn.id = "LOBtn";
+
+
+    // Add text after the image without overwriting it
+    var LOBtnText = document.createTextNode('Logout');
+    LOBtn.appendChild(LOBtnText);
+
+    LOBtn.addEventListener('click', () => {
+        logoutPrompt();
+    });
+
+    content.appendChild(LOBtn);
 
     // --------------------------------------- delete Account -------------------------------------------------
 

@@ -23,6 +23,7 @@ submit.addEventListener('click', function(e){
     //inputs
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
+    var username = document.getElementById("username").value;
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
@@ -30,7 +31,8 @@ submit.addEventListener('click', function(e){
         })
         .catch((error) => {
             const errorCode = error.code;
-            const errorMessage = error.message;
-            alert('Oops! An error occured');
+            var errorArr = String(errorCode).split("/");
+            const errorMessage = errorArr[(errorArr.length-1)].replace(/-/g, " ").replace(/\b\w/g, (match) => match.toUpperCase());
+            alert(errorMessage);
         });
 })

@@ -30,6 +30,8 @@ submit.addEventListener('click', function(e){
       })
       .catch((error) => {
         const errorCode = error.code;
-        const errorMessage = error.message;
+        var errorArr = String(errorCode).split("/");
+        const errorMessage = errorArr[(errorArr.length-1)].replace(/-/g, " ").replace(/\b\w/g, (match) => match.toUpperCase());
+        alert(errorMessage);
       });
 })

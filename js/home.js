@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-import { getFirestore, doc, setDoc, collection } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
 // Your web app's Firebase configuration
@@ -527,9 +527,11 @@ async function addRow(table, nameVal = '', amtVal = '', dropdownVal = '') {
     cell3.textContent = dropdownVal;
 
     const userId = auth.currentUser.uid;
-    console.log(userId);
 
     const budgetRef = doc(db, "budgets", userId, "entries", String(table.rows.length-2));
+    if (dropdownVal != "Job" && dropdownVal != "Assets" && dropdownVal != "Savings"){
+        amtVal = -amtVal;
+    }
     await setDoc(budgetRef, { name: nameVal, amount: amtVal, category: dropdownVal }, { merge: true });
 
     var clickCount = 0;
@@ -598,6 +600,25 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+async function loadData(table){
+    const userId = auth.currentUser.uid;
+    const entriesRef = collection(db, "budgets", userId, "entries");
+
+    try {
+        const querySnapshot = await getDocs(entriesRef);
+        querySnapshot.forEach((docSnap) => {
+            addRow(table, docSnap.data().name, Math.abs(Number(docSnap.data().amount)), docSnap.data().category);
+            tblArray.push(Number(docSnap.data().amount))
+            myChart ? myChart.destroy() : {};
+            graph();
+            getTableVal();
+        });
+    } catch (error) {
+        console.error("Error loading documents:", error);
+    }
+}
+
+
 
 export function createBudget(){
     bgtCreated = true;
@@ -632,6 +653,8 @@ export function createBudget(){
         option.textContent = opt;
         category.appendChild(option);
     });
+
+    loadData(budget);
 
     addRowBtn = document.createElement('button');
     addRowBtn.textContent = "Add Row";
@@ -1240,7 +1263,7 @@ function graph(){
         labels: categories,
         datasets: [{
             backgroundColor: barColors,
-        data: amounts
+            data: amounts
         }]
     },
 

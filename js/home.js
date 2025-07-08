@@ -608,9 +608,17 @@ async function loadData(table){
         const querySnapshot = await getDocs(entriesRef);
         querySnapshot.forEach((docSnap) => {
             addRow(table, docSnap.data().name, Math.abs(Number(docSnap.data().amount)), docSnap.data().category);
-            tblArray.push(Number(docSnap.data().amount))
-            myChart ? myChart.destroy() : {};
-            graph();
+            tblArray.push(Number(docSnap.data().amount));
+            switch (docSnap.data().category) {
+                case "Job": amounts[0] += Math.abs(docSnap.data().amount); myChart ? myChart.destroy() : {}; graph(); break;
+                case "Assets": amounts[1] += Math.abs(docSnap.data().amount); myChart ? myChart.destroy() : {}; graph(); break;
+                case "Savings": amounts[2] += Math.abs(docSnap.data().amount); myChart ? myChart.destroy() : {}; graph(); break;
+                case "Housing": amounts[3] += Math.abs(docSnap.data().amount); myChart ? myChart.destroy() : {}; graph(); break;
+                case "Food": amounts[4] += Math.abs(docSnap.data().amount); myChart ? myChart.destroy() : {}; graph(); break;
+                case "Transportation": amounts[5] += Math.abs(docSnap.data().amount); myChart ? myChart.destroy() : {}; graph(); break;
+                case "Goals": amounts[6] += Math.abs(docSnap.data().amount); myChart ? myChart.destroy() : {}; graph(); break;
+                case "Projects": amounts[7] += Math.abs(docSnap.data().amount); myChart ? myChart.destroy() : {}; graph(); break;
+            }
             getTableVal();
         });
     } catch (error) {

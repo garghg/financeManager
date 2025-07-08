@@ -677,7 +677,7 @@ ul li .close:hover {
 }
 
 .cursor-outline{
-    transform: translate(-40%, -40%)
+    transform: translate(-40%, -40%);
 }
 
 .cursor-mousedown {

@@ -1,3 +1,23 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import { getFirestore, doc, setDoc, collection } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+apiKey: "AIzaSyAonjfvplKrZ_ySP3WwBJVWWhFCrr_rRrA",
+authDomain: "coinquest-76a5e.firebaseapp.com",
+projectId: "coinquest-76a5e",
+storageBucket: "coinquest-76a5e.firebasestorage.app",
+messagingSenderId: "484849393520",
+appId: "1:484849393520:web:f604f1f29204359a5839b5",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth();
+
+
 var goals = document.getElementsByTagName("LI");
 var i;
 var addRowBtn;
@@ -73,7 +93,7 @@ document.addEventListener("mouseup", () => {
 
 
 
-function tutorial(){
+export function tutorial(){
     var tutorialMD = document.createElement('div');
     tutorialMD.classList.add('modal-container');
     tutorialMD.id = 'tutorial-modal-container';
@@ -133,6 +153,9 @@ function tutorial(){
     
 }
 
+window.tutorial = tutorial;
+
+
 function createModal(head, string, b1_text = 'OK', b2_text = 'Cancel') {
     return new Promise((resolve, reject) => {
         const modalDiv = document.createElement('div');
@@ -188,7 +211,7 @@ function createModal(head, string, b1_text = 'OK', b2_text = 'Cancel') {
     });
 }
 
-function coinAnimate() {
+export function coinAnimate() {
     let i = 1;
     var coinDiv = document.getElementById("coinImg");
     setInterval(() => {
@@ -203,6 +226,8 @@ function coinAnimate() {
         }
     }, 250);
 }
+
+window.coinAnimate = coinAnimate;
 
 
 for (i = 0; i < goals.length; i++){
@@ -372,7 +397,7 @@ async function xp(coinVal){
 }
 
 
-function addTask(){
+export function addTask(){
     var newTask = document.createElement("li");
     var input = document.getElementById("input").value;
     var taskType = document.getElementById("taskType").value;
@@ -453,6 +478,9 @@ function addTask(){
     }
 }
 
+window.addTask = addTask;
+
+
 
 function bgtItemName(nameVal = ''){
     var name = document.createElement("input");
@@ -485,7 +513,7 @@ function getTableVal() {
 } 
 
 
-function addRow(table, nameVal = '', amtVal = '', dropdownVal = '') {
+async function addRow(table, nameVal = '', amtVal = '', dropdownVal = '') {
     var newRow = table.insertRow(table.rows.length-1);
 
     var cell1 = newRow.insertCell();
@@ -497,6 +525,12 @@ function addRow(table, nameVal = '', amtVal = '', dropdownVal = '') {
     cell1.textContent = nameVal;
     cell2.textContent = amtVal;
     cell3.textContent = dropdownVal;
+
+    const userId = auth.currentUser.uid;
+    console.log(userId);
+
+    const budgetRef = doc(db, "budgets", userId, "entries", String(table.rows.length-2));
+    await setDoc(budgetRef, { name: nameVal, amount: amtVal, category: dropdownVal }, { merge: true });
 
     var clickCount = 0;
     var savedColor;
@@ -565,7 +599,7 @@ document.addEventListener('keydown', function(event) {
 });
 
 
-function createBudget(){
+export function createBudget(){
     bgtCreated = true;
     document.getElementById('colBgt').classList.toggle('hidden');
     budgetBtn.remove();
@@ -605,12 +639,11 @@ function createBudget(){
     addRowBtn.id = "addRowBtn"; 
     addRowBtn.onclick = function(){
         
-        document.getElementById('myChart').classList.remove('hidden');
-
         if (category.value != "Job" && category.value != "Assets" && category.value != "Savings"){
             amount.value = -amount.value;
         }
         if (name.value != '' && amount.value != ''){
+            document.getElementById('myChart').classList.remove('hidden');
             addRow(budget, name.value, Math.abs(amount.value), category.value);
             tblArray.push(Number(amount.value));
             getTableVal();
@@ -659,6 +692,9 @@ function createBudget(){
     cell3.textContent = "";
 
 }
+
+window.createBudget = createBudget;
+
 
 function unlockavts(){
     // --------------------------------------------- Planner ---------------------------------------------------------------
@@ -824,7 +860,7 @@ function animateavts() {
 }
 
 
-function avatarLoad(){
+export function avatarLoad(){
     var existingModal = document.getElementById('avatar-modal-container');
     if (existingModal) {
         document.body.removeChild(existingModal);
@@ -996,6 +1032,9 @@ function avatarLoad(){
 
 }
 
+window.avatarLoad = avatarLoad;
+
+
 function avatarView() {
     avtModalDiv.classList.toggle('show'); //open modal
 }
@@ -1050,7 +1089,7 @@ function addProject(name, dueDate, startDate, monthsLeft, saveAmt, saveMonth){
 }
 
 
-function startProj(){
+export function startProj(){
     var project = document.getElementById('projects');
     document.getElementById('projectBtn').remove();
 
@@ -1159,6 +1198,9 @@ function startProj(){
     project.appendChild(heading);
 
 }
+
+window.startProj = startProj;
+
 
 
 var coll = document.getElementsByClassName("collapsible");
@@ -1329,7 +1371,7 @@ function account(){
 }
 
 
-function openSettings(){
+export function openSettings(){
 
     var existingModal = document.getElementById('settings-modal-container');
     if (existingModal) {
@@ -1434,3 +1476,5 @@ function openSettings(){
         setModalDiv.classList.toggle('show'); //close modal
     });
 }
+
+window.openSettings = openSettings;

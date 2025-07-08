@@ -9,7 +9,7 @@ authDomain: "coinquest-76a5e.firebaseapp.com",
 projectId: "coinquest-76a5e",
 storageBucket: "coinquest-76a5e.firebasestorage.app",
 messagingSenderId: "484849393520",
-appId: "1:484849393520:web:f604f1f29204359a5839b5"
+appId: "1:484849393520:web:f604f1f29204359a5839b5",
 };
 
 // Initialize Firebase

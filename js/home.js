@@ -687,6 +687,8 @@ async function loadData(table) {
         graph();
         getTableVal();
 
+                                                                                // <---------------- when you called addrow here it added another li and looped back over and over
+
     } catch (error) {
         console.error("Error loading documents:", error);
     }
@@ -1364,31 +1366,38 @@ async function logoutPrompt() {
 }
 
 async function delAccount() {
-    createModal('Are you sure?', 'Once deleted account data cannot be accessed again.', 'Delete Account', 'Cancel');
-    const user = auth.currentUser;
-    if (!user) return;
+    const confirmed = await createModal(
+        'Are you 100% sure?',
+        'Once deleted account data will be lost forever.',
+        'Delete My Account',
+        'Cancel'
+    );
+    if (confirmed){
+        const user = auth.currentUser;
+        if (!user) return;
 
-    const userId = user.uid;
+        const userId = user.uid;
 
-    try {
-        // Delete Firestore entries first
-        const entriesRef = collection(db, "budgets", userId, "entries");
-        const querySnapshot = await getDocs(entriesRef);
-        for (const entryDoc of querySnapshot.docs) {
-            await deleteDoc(entryDoc.ref);
+        try {
+            // Delete Firestore entries first
+            const entriesRef = collection(db, "budgets", userId, "entries");
+            const querySnapshot = await getDocs(entriesRef);
+            for (const entryDoc of querySnapshot.docs) {
+                await deleteDoc(entryDoc.ref);
+            }
+
+            // Then delete the user
+            await deleteUser(user);
+
+            // Optionally: show a confirmation
+            if (createModal('Account Deleted', 'Your account and data have been successfully deleted. You will now be logged out.')){
+                window.location.href = '../index.html';
+            }
+
+        } catch (error) {
+            console.error(error);
+            createModal('Could Not Delete Account', 'Sorry! We ran into an issue deleting your account. Please try again later.');
         }
-
-        // Then delete the user
-        await deleteUser(user);
-
-        // Optionally: show a confirmation
-        if (createModal('Account Deleted', 'Your account and data have been successfully deleted. You will now be logged out.')){
-            window.location.href = '../index.html';
-        }
-
-    } catch (error) {
-        console.error(error);
-        createModal('Could Not Delete Account', 'Sorry! We ran into an issue deleting your account. Please try again later.');
     }
 }
 

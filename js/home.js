@@ -403,10 +403,13 @@ async function xp(coinVal){
 }
 
 
-export function addTask(){
+export function addTask(input = '', taskType = ''){
     var newTask = document.createElement("li");
-    var input = document.getElementById("input").value;
-    var taskType = document.getElementById("taskType").value;
+    if (input == '' || taskType == ''){
+        var input = document.getElementById("input").value;
+        var taskType = document.getElementById("taskType").value;
+    }
+    
     var addCoin;
 
     if (taskType === "Default"){
@@ -508,7 +511,7 @@ function bgtItemName(nameVal = ''){
 }
 
 
-function bgtItemAmt(table, amtVal = ''){
+function bgtItemAmt(amtVal = ''){
     var amt = document.createElement("input");
     amt.setAttribute('type', 'number');
     amt.setAttribute('min', '0');
@@ -604,6 +607,24 @@ document.addEventListener('keydown', async function(event) {
 
                 if (category !== "Job" && category !== "Assets" && category !== "Savings") {
                     cellVal = -cellVal;
+                }
+
+                if (category == 'Goals'){
+                    try {
+                        var taskname = table.rows[index].cells[0].textContent;
+                        var goalsArr = document.querySelectorAll('li');
+                        console.log('taskname: '+taskname);
+                        console.log('goalsArr: '+ goalsArr[0].textContent);
+                        for (let i = 0; i < goalsArr.length; i++){
+                            var text = goalsArr[i].textContent;
+                            if (text.includes(taskname)){
+                                goalsArr[i].style.display = 'none';
+                            }
+                        }
+                    }
+                    catch{
+                        createModal('Oops! Something went wrong. 😟', 'Sorry could not delete row due to an error.');
+                    }  
                 }
 
                 var numIdx = tblArray.indexOf(cellVal);

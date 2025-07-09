@@ -459,15 +459,15 @@ export function addTask(){
     newTask.appendChild(span);
 
     for (i = 0; i < close.length; i++){
-    close[i].onclick = function() {
+        close[i].onclick = async function() {
             var div = this.parentElement;
             div.style.display = "none";
-            for (let i = 0; i < budget.rows.length; i++){
-                var currentRow = budget.rows[i];
+            for (let currentRow of budget.rows){
                 if (currentRow.cells[0].textContent == (taskType +" $" +input)){
-                    var category = currentRow.cells[2].textContent;
-                    amounts[categories.indexOf(category)] -= Number(currentRow.cells[1].textContent);
                     var cellVal = Number(currentRow.cells[1].textContent);
+                    var category = currentRow.cells[2].textContent;
+                    amounts[categories.indexOf(category)] -= cellVal;
+                    
                     if (category != "Job" && category != "Assets" && category != "Savings"){
                         cellVal = -cellVal;
                     }
@@ -475,8 +475,17 @@ export function addTask(){
                     myChart ? myChart.destroy() : {};
                     graph();
                     tblArray.splice(numIdx, 1);
-                    budget.deleteRow(i);
+                    budget.deleteRow(currentRow.rowIndex);
                     getTableVal();
+
+                    const userId = auth.currentUser.uid;
+                    const entriesRef = collection(db, "budgets", userId, "entries");
+                    const querySnapshot = await getDocs(entriesRef);
+                    querySnapshot.forEach((docSnap) => {
+                        if (docSnap.id == numIdx+1){
+                            deleteDoc(docSnap.ref);
+                        }
+                    })
                 }
             }
 
@@ -589,7 +598,6 @@ document.addEventListener('keydown', async function(event) {
 
         for (const index of selectedRows) {
             if (table.rows[index]) {
-                var itemName = table.rows[index].cells[0].textContent;
                 var category = table.rows[index].cells[2].textContent;
                 var cellVal = Number(table.rows[index].cells[1].textContent);
                 amounts[categories.indexOf(category)] -= cellVal;

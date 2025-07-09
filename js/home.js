@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-import { getFirestore, doc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -16,7 +16,6 @@ appId: "1:484849393520:web:f604f1f29204359a5839b5",
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth();
-
 
 var goals = document.getElementsByTagName("LI");
 var i;
@@ -70,7 +69,14 @@ var username = sessionStorage.getItem('username');
 if (username == null){
     username = 'Adventurer'
 }
-greeting.textContent = `Welcome Back, ${username}!`
+greeting.textContent = `Welcome, ${username}!`
+
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    loadData(budget);
+  }
+});
 
 
 document.addEventListener("mousemove", (e) => {
@@ -576,51 +582,82 @@ async function addRow(table, nameVal = '', amtVal = '', dropdownVal = '') {
     });
 }
 
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', async function(event) {
     if ((event.key === "Delete" || event.key === "Backspace") && selectedRows.length > 0) {
         const table = document.getElementById("budgetTable");
         selectedRows.sort((a, b) => b - a);
-        selectedRows.forEach(index => {
+
+        for (const index of selectedRows) {
             if (table.rows[index]) {
+                var itemName = table.rows[index].cells[0].textContent;
                 var category = table.rows[index].cells[2].textContent;
-                amounts[categories.indexOf(category)] -= Number(table.rows[index].cells[1].textContent);
                 var cellVal = Number(table.rows[index].cells[1].textContent);
-                if (category != "Job" && category != "Assets" && category != "Savings"){
+                amounts[categories.indexOf(category)] -= cellVal;
+
+                if (category !== "Job" && category !== "Assets" && category !== "Savings") {
                     cellVal = -cellVal;
                 }
+
                 var numIdx = tblArray.indexOf(cellVal);
                 myChart ? myChart.destroy() : {};
                 graph();
                 tblArray.splice(numIdx, 1);
                 table.deleteRow(index);
                 getTableVal();
+
+                const userId = auth.currentUser.uid;
+                const entriesRef = collection(db, "budgets", userId, "entries");
+                const querySnapshot = await getDocs(entriesRef);
+                querySnapshot.forEach((docSnap) => {
+                    if (docSnap.id == numIdx+1){
+                        deleteDoc(docSnap.ref);
+                    }
+                })
             }
-        });
+        }
+
         selectedRows.length = 0;
     }
 });
 
-async function loadData(table){
+
+async function loadData(table) {
     const userId = auth.currentUser.uid;
     const entriesRef = collection(db, "budgets", userId, "entries");
 
     try {
         const querySnapshot = await getDocs(entriesRef);
+        if (querySnapshot.size === 0) return;
+
+        createBudget();
+
         querySnapshot.forEach((docSnap) => {
-            addRow(table, docSnap.data().name, Math.abs(Number(docSnap.data().amount)), docSnap.data().category);
-            tblArray.push(Number(docSnap.data().amount));
-            switch (docSnap.data().category) {
-                case "Job": amounts[0] += Math.abs(docSnap.data().amount); myChart ? myChart.destroy() : {}; graph(); break;
-                case "Assets": amounts[1] += Math.abs(docSnap.data().amount); myChart ? myChart.destroy() : {}; graph(); break;
-                case "Savings": amounts[2] += Math.abs(docSnap.data().amount); myChart ? myChart.destroy() : {}; graph(); break;
-                case "Housing": amounts[3] += Math.abs(docSnap.data().amount); myChart ? myChart.destroy() : {}; graph(); break;
-                case "Food": amounts[4] += Math.abs(docSnap.data().amount); myChart ? myChart.destroy() : {}; graph(); break;
-                case "Transportation": amounts[5] += Math.abs(docSnap.data().amount); myChart ? myChart.destroy() : {}; graph(); break;
-                case "Goals": amounts[6] += Math.abs(docSnap.data().amount); myChart ? myChart.destroy() : {}; graph(); break;
-                case "Projects": amounts[7] += Math.abs(docSnap.data().amount); myChart ? myChart.destroy() : {}; graph(); break;
+            const data = docSnap.data();
+            var amount = Number(data.amount);
+            const category = data.category;
+
+            tblArray.push(amount);
+            amount = Math.abs(amount);
+            addRow(table, data.name, amount, category);
+            
+
+            switch (category) {
+                case "Job": amounts[0] += amount; break;
+                case "Assets": amounts[1] += amount; break;
+                case "Savings": amounts[2] += amount; break;
+                case "Housing": amounts[3] += amount; break;
+                case "Food": amounts[4] += amount; break;
+                case "Transportation": amounts[5] += amount; break;
+                case "Goals": amounts[6] += amount; break;
+                case "Projects": amounts[7] += amount; break;
             }
-            getTableVal();
         });
+
+        // Update the chart and table value once at the end
+        if (myChart) myChart.destroy();
+        graph();
+        getTableVal();
+
     } catch (error) {
         console.error("Error loading documents:", error);
     }
@@ -661,8 +698,6 @@ export function createBudget(){
         option.textContent = opt;
         category.appendChild(option);
     });
-
-    loadData(budget);
 
     addRowBtn = document.createElement('button');
     addRowBtn.textContent = "Add Row";
@@ -1292,11 +1327,39 @@ function graph(){
 }
 
 async function logoutPrompt() {
-    
     const confirmLO = await createModal('Log Out 🔐', 'Are you sure you would like to log out?', 'Confirm', 'Cancel');
     if (confirmLO) {
         console.log('logging out');
         window.location.href = '../html/login.html';
+    }
+}
+
+async function delAccount() {
+    createModal('Are you sure?', 'Once deleted account data cannot be accessed again.', 'Delete Account', 'Cancel');
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const userId = user.uid;
+
+    try {
+        // Delete Firestore entries first
+        const entriesRef = collection(db, "budgets", userId, "entries");
+        const querySnapshot = await getDocs(entriesRef);
+        for (const entryDoc of querySnapshot.docs) {
+            await deleteDoc(entryDoc.ref);
+        }
+
+        // Then delete the user
+        await deleteUser(user);
+
+        // Optionally: show a confirmation
+        if (createModal('Account Deleted', 'Your account and data have been successfully deleted. You will now be logged out.')){
+            window.location.href = '../index.html';
+        }
+
+    } catch (error) {
+        console.error(error);
+        createModal('Could Not Delete Account', 'Sorry! We ran into an issue deleting your account. Please try again later.');
     }
 }
 
@@ -1350,23 +1413,6 @@ function account(){
     passBtn.addEventListener('click', () => {changePass(); actModalDiv.classList.toggle('show');});
 
     content.appendChild(passBtn);
-
-    // --------------------------------------- Logout -------------------------------------------------
-
-    var LOBtn = document.createElement('button');
-    LOBtn.classList.add('Btn');
-    LOBtn.id = "LOBtn";
-
-
-    // Add text after the image without overwriting it
-    var LOBtnText = document.createTextNode('Logout');
-    LOBtn.appendChild(LOBtnText);
-
-    LOBtn.addEventListener('click', () => {
-        logoutPrompt();
-    });
-
-    content.appendChild(LOBtn);
 
     // --------------------------------------- delete Account -------------------------------------------------
 
@@ -1471,6 +1517,29 @@ export function openSettings(){
     avtBtn.addEventListener('click', () => {avatarView(); setModalDiv.classList.toggle('show');});
 
     content.appendChild(avtBtn);
+
+    // --------------------------------------- Logout -------------------------------------------------
+
+    var LOBtn = document.createElement('button');
+    LOBtn.classList.add('setBtn');
+    LOBtn.classList.add('Btn');
+
+    var LOIcon = document.createElement('img');
+    LOIcon.src = '../img/logout.png';
+    LOIcon.style.width = '30px';
+    LOIcon.style.height = '30px';
+    LOBtn.appendChild(LOIcon);
+
+
+    // Add text after the image without overwriting it
+    var LOBtnText = document.createTextNode('Logout');
+    LOBtn.appendChild(LOBtnText);
+
+    LOBtn.addEventListener('click', () => {
+        logoutPrompt();
+    });
+
+    content.appendChild(LOBtn);
 
     // --------------------------------------- Account Menu -------------------------------------------------
 

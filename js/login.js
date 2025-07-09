@@ -19,6 +19,10 @@ const auth = getAuth();
 //submit button
 var submit = document.getElementById('submit')
 submit.addEventListener('click', function(e){
+    var username = document.getElementById('username');
+    // if (!username.value.includes(/^[a-z]+$/i)){                 // <------------------ verify username requirement (save it?)
+    //   alert('invalid username');
+    // }
     e.preventDefault();
     //inputs
     var email = document.getElementById("email").value;
@@ -33,5 +37,5 @@ submit.addEventListener('click', function(e){
         var errorArr = String(errorCode).split("/");
         const errorMessage = errorArr[(errorArr.length-1)].replace(/-/g, " ").replace(/\b\w/g, (match) => match.toUpperCase());
         alert(errorMessage);
-      });
+    });
 })

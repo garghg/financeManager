@@ -1,15 +1,16 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-import { getFirestore, doc, setDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { getFirestore, doc, query, orderBy, setDoc, collection, getDocs, deleteDoc, addDoc, serverTimestamp  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import { v4 as uuidv4 } from 'https://unpkg.com/uuid@latest/dist/esm-browser/index.js';
 
-// Your web app's Firebase configuration
+
 const firebaseConfig = {
-apiKey: "AIzaSyAonjfvplKrZ_ySP3WwBJVWWhFCrr_rRrA",
-authDomain: "coinquest-76a5e.firebaseapp.com",
-projectId: "coinquest-76a5e",
-storageBucket: "coinquest-76a5e.firebasestorage.app",
-messagingSenderId: "484849393520",
-appId: "1:484849393520:web:f604f1f29204359a5839b5",
+  apiKey: "AIzaSyAkyVCMwmUvpSzT_FrnkhHNGvXrqvQRp8s",
+  authDomain: "coinquest-d01e1.firebaseapp.com",
+  projectId: "coinquest-d01e1",
+  storageBucket: "coinquest-d01e1.firebasestorage.app",
+  messagingSenderId: "858259555984",
+  appId: "1:858259555984:web:fed3c7cdc0616962147a15"
 };
 
 // Initialize Firebase
@@ -403,7 +404,7 @@ async function xp(coinVal){
 }
 
 
-export function addTask(input = '', taskType = ''){
+export function addTask(input = '', taskType = '', addToTable=true){
     var newTask = document.createElement("li");
     if (input == '' || taskType == ''){
         var input = document.getElementById("input").value;
@@ -423,7 +424,7 @@ export function addTask(input = '', taskType = ''){
     } else{
         addCoin = 1;
     }
-    
+
     if (!bgtCreated){
         createModal("Just a heads-up 👋", "You'll need to set a budget before creating your goals.", "Make a Budget", "Maybe Later"); 
         return;
@@ -439,15 +440,21 @@ export function addTask(input = '', taskType = ''){
         );
         return;
     } else if (bgtCreated && Number(netCell.textContent) > 0){
-        var taskName = document.createTextNode(taskType +" $" +input+` (+${addCoin} coins)`);
+        if (taskType != 'Other goal'){
+            var taskName = document.createTextNode(taskType +" $" +input+` (+${addCoin} coins)`);
+        } else{
+            var taskName = document.createTextNode(taskType +" for $" +input+` (+${addCoin} coins)`);
+        }
         newTask.appendChild(taskName);
-        var rowTaskName = taskName.textContent.replace(` (+${addCoin} coins)`, "") 
-        addRow(budget, rowTaskName, input, "Goals");
-        tblArray.push(Number(-input));
-        amounts[6] += Number(input);
-        myChart ? myChart.destroy() : {};
-        graph();
-        getTableVal();
+        if (addToTable){
+            var rowTaskName = taskName.textContent.replace(` (+${addCoin} coins)`, "") 
+            addRow(budget, rowTaskName, input, taskType);
+            tblArray.push(-Number(input));
+            amounts[6] += Number(input);
+            myChart ? myChart.destroy() : {};
+            graph();
+            getTableVal();
+        }  
     }
 
     document.querySelector("ul").appendChild(newTask);
@@ -463,32 +470,38 @@ export function addTask(input = '', taskType = ''){
 
     for (i = 0; i < close.length; i++){
         close[i].onclick = async function() {
+            var count = 1;
             var div = this.parentElement;
             div.style.display = "none";
             for (let currentRow of budget.rows){
-                if (currentRow.cells[0].textContent == (taskType +" $" +input)){
+                var checkText;
+                if (taskType == 'Other goal'){
+                    checkText = (taskType +" for $" +input);
+                } else{
+                    checkText = (taskType +" $" +input);
+                }
+                if (currentRow.cells[0].textContent == checkText && count > 0){
                     var cellVal = Number(currentRow.cells[1].textContent);
                     var category = currentRow.cells[2].textContent;
+                    const docId = currentRow.getAttribute("id");
                     amounts[categories.indexOf(category)] -= cellVal;
                     
                     if (category != "Job" && category != "Assets" && category != "Savings"){
                         cellVal = -cellVal;
                     }
                     var numIdx = tblArray.indexOf(cellVal);
+                    tblArray.splice(numIdx, 1);
+                    amounts[6] += cellVal;
                     myChart ? myChart.destroy() : {};
                     graph();
-                    tblArray.splice(numIdx, 1);
                     budget.deleteRow(currentRow.rowIndex);
+                    count --;
                     getTableVal();
 
                     const userId = auth.currentUser.uid;
-                    const entriesRef = collection(db, "budgets", userId, "entries");
-                    const querySnapshot = await getDocs(entriesRef);
-                    querySnapshot.forEach((docSnap) => {
-                        if (docSnap.id == numIdx+1){
-                            deleteDoc(docSnap.ref);
-                        }
-                    })
+                    const docRef = doc(db, "budgets", userId, "entries", docId);
+                    console.log("Trying to delete doc with ID:", docId);
+                    await deleteDoc(docRef);
                 }
             }
 
@@ -531,7 +544,7 @@ function getTableVal() {
 } 
 
 
-async function addRow(table, nameVal = '', amtVal = '', dropdownVal = '') {
+async function addRow(table, nameVal = '', amtVal = '', dropdownVal = '', loading = false) {
     var newRow = table.insertRow(table.rows.length-1);
 
     var cell1 = newRow.insertCell();
@@ -544,13 +557,22 @@ async function addRow(table, nameVal = '', amtVal = '', dropdownVal = '') {
     cell2.textContent = amtVal;
     cell3.textContent = dropdownVal;
 
-    const userId = auth.currentUser.uid;
-
-    const budgetRef = doc(db, "budgets", userId, "entries", String(table.rows.length-2));
     if (dropdownVal != "Job" && dropdownVal != "Assets" && dropdownVal != "Savings"){
-        amtVal = -amtVal;
+            amtVal = Number(-amtVal);
     }
-    await setDoc(budgetRef, { name: nameVal, amount: amtVal, category: dropdownVal }, { merge: true });
+
+    const userId = auth.currentUser.uid;
+    const customId = uuidv4();
+    newRow.setAttribute('id', customId);
+
+    if (!loading){
+        await setDoc(doc(db, "budgets", userId, "entries", customId), {
+            name: nameVal,
+            amount: amtVal,
+            category: dropdownVal,
+            createdAt: serverTimestamp()
+        }, { merge: true });
+    }
 
     var clickCount = 0;
     var savedColor;
@@ -609,23 +631,18 @@ document.addEventListener('keydown', async function(event) {
                     cellVal = -cellVal;
                 }
 
-                if (category == 'Goals'){
-                    try {
-                        var taskname = table.rows[index].cells[0].textContent;
-                        var goalsArr = document.querySelectorAll('li');
-                        console.log('taskname: '+taskname);
-                        console.log('goalsArr: '+ goalsArr[0].textContent);
-                        for (let i = 0; i < goalsArr.length; i++){
-                            var text = goalsArr[i].textContent;
-                            if (text.includes(taskname)){
-                                goalsArr[i].style.display = 'none';
-                            }
-                        }
-                    }
-                    catch{
-                        createModal('Oops! Something went wrong. 😟', 'Sorry could not delete row due to an error.');
-                    }  
-                }
+                // if (category == 'Save' || category == 'Invest' || category == 'Other goal'){
+                //     var taskname = table.rows[index].cells[0].textContent;
+                //     var goalsArr = document.querySelectorAll('li');
+                //     console.log('taskname: '+taskname);
+                //     console.log('goalsArr: '+ goalsArr[0].textContent);
+                //     for (let i = 0; i < goalsArr.length; i++){
+                //         var text = goalsArr[i].textContent;
+                //         if (text.includes(taskname)){
+                //             goalsArr[i].style.display = 'none';
+                //         }
+                //     }
+                // }
 
                 var numIdx = tblArray.indexOf(cellVal);
                 myChart ? myChart.destroy() : {};
@@ -638,7 +655,7 @@ document.addEventListener('keydown', async function(event) {
                 const entriesRef = collection(db, "budgets", userId, "entries");
                 const querySnapshot = await getDocs(entriesRef);
                 querySnapshot.forEach((docSnap) => {
-                    if (docSnap.id == numIdx+1){
+                    if (docSnap.id == numIdx+1){                                 // <------------  reference doc id somehow and use that to delete
                         deleteDoc(docSnap.ref);
                     }
                 })
@@ -653,9 +670,11 @@ document.addEventListener('keydown', async function(event) {
 async function loadData(table) {
     const userId = auth.currentUser.uid;
     const entriesRef = collection(db, "budgets", userId, "entries");
+    const entriesQuery = query(entriesRef, orderBy("createdAt"));
+
 
     try {
-        const querySnapshot = await getDocs(entriesRef);
+        const querySnapshot = await getDocs(entriesQuery);
         if (querySnapshot.size === 0) return;
 
         createBudget();
@@ -663,11 +682,15 @@ async function loadData(table) {
         querySnapshot.forEach((docSnap) => {
             const data = docSnap.data();
             var amount = Number(data.amount);
-            const category = data.category;
+            var category = data.category;
 
             tblArray.push(amount);
             amount = Math.abs(amount);
-            addRow(table, data.name, amount, category);
+            addRow(table, data.name, amount, category, true);
+            getTableVal();
+            if (category == 'Save' || category == 'Invest' || category == 'Other goal'){
+                addTask(amount, category, false);
+            }
             
 
             switch (category) {
@@ -677,17 +700,15 @@ async function loadData(table) {
                 case "Housing": amounts[3] += amount; break;
                 case "Food": amounts[4] += amount; break;
                 case "Transportation": amounts[5] += amount; break;
-                case "Goals": amounts[6] += amount; break;
+                case "Save": amounts[6] += amount; break;
+                case "Invest": amounts[6] += amount; break;
+                case "Other goal": amounts[6] += amount; break;
                 case "Projects": amounts[7] += amount; break;
             }
         });
 
-        // Update the chart and table value once at the end
         if (myChart) myChart.destroy();
         graph();
-        getTableVal();
-
-                                                                                // <---------------- when you called addrow here it added another li and looped back over and over
 
     } catch (error) {
         console.error("Error loading documents:", error);

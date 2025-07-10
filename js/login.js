@@ -2,14 +2,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/fireba
 // Find needed libraries here: https://firebase.google.com/docs/web/setup#available-libraries
 import { getAuth, signInWithEmailAndPassword  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
-apiKey: "AIzaSyAonjfvplKrZ_ySP3WwBJVWWhFCrr_rRrA",
-authDomain: "coinquest-76a5e.firebaseapp.com",
-projectId: "coinquest-76a5e",
-storageBucket: "coinquest-76a5e.firebasestorage.app",
-messagingSenderId: "484849393520",
-appId: "1:484849393520:web:f604f1f29204359a5839b5"
+  apiKey: "AIzaSyAkyVCMwmUvpSzT_FrnkhHNGvXrqvQRp8s",
+  authDomain: "coinquest-d01e1.firebaseapp.com",
+  projectId: "coinquest-d01e1",
+  storageBucket: "coinquest-d01e1.firebasestorage.app",
+  messagingSenderId: "858259555984",
+  appId: "1:858259555984:web:fed3c7cdc0616962147a15"
 };
 
 // Initialize Firebase

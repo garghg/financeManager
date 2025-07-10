@@ -544,7 +544,7 @@ function getTableVal() {
 } 
 
 
-async function addRow(table, nameVal = '', amtVal = '', dropdownVal = '', loading = false) {
+async function addRow(table, nameVal = '', amtVal = '', dropdownVal = '', loading = false, existingId = null) {
     var newRow = table.insertRow(table.rows.length-1);
 
     var cell1 = newRow.insertCell();
@@ -562,7 +562,7 @@ async function addRow(table, nameVal = '', amtVal = '', dropdownVal = '', loadin
     }
 
     const userId = auth.currentUser.uid;
-    const customId = uuidv4();
+    const customId = existingId || uuidv4();
     newRow.setAttribute('id', customId);
 
     if (!loading){
@@ -623,6 +623,7 @@ document.addEventListener('keydown', async function(event) {
 
         for (const index of selectedRows) {
             if (table.rows[index]) {
+                const docId = table.rows[index].getAttribute("id");
                 var category = table.rows[index].cells[2].textContent;
                 var cellVal = Number(table.rows[index].cells[1].textContent);
                 amounts[categories.indexOf(category)] -= cellVal;
@@ -652,13 +653,9 @@ document.addEventListener('keydown', async function(event) {
                 getTableVal();
 
                 const userId = auth.currentUser.uid;
-                const entriesRef = collection(db, "budgets", userId, "entries");
-                const querySnapshot = await getDocs(entriesRef);
-                querySnapshot.forEach((docSnap) => {
-                    if (docSnap.id == numIdx+1){                                 // <------------  reference doc id somehow and use that to delete
-                        deleteDoc(docSnap.ref);
-                    }
-                })
+                const docRef = doc(db, "budgets", userId, "entries", docId);
+                console.log("Trying to delete doc with ID:", docId);
+                await deleteDoc(docRef);
             }
         }
 
@@ -686,7 +683,7 @@ async function loadData(table) {
 
             tblArray.push(amount);
             amount = Math.abs(amount);
-            addRow(table, data.name, amount, category, true);
+            addRow(table, data.name, amount, category, true, docSnap.id);
             getTableVal();
             if (category == 'Save' || category == 'Invest' || category == 'Other goal'){
                 addTask(amount, category, false);

@@ -39,8 +39,12 @@ submit.addEventListener('click', async function(e){
         const docRef = doc(db, "budgets", userId);
         const docSnap = await getDoc(docRef);
         if (docSnap) {
-          console.log(docRef.id);
-          window.location.href = '../html/home.html';
+          const data = docSnap.data();
+          if (username == data.username){
+            window.location.href = '../html/home.html';
+          }else{
+            alert('Incorrect Username')
+          }
         } else {
           console.log("Couldn't find the doc.");
         }

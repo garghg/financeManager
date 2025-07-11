@@ -73,8 +73,6 @@ if (username == null){
 greeting.textContent = `Welcome, ${username}!`
 
 
-
-
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     loadData(budget);

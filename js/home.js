@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-import { getFirestore, doc, query, orderBy, setDoc, collection, getDocs, deleteDoc, addDoc, serverTimestamp  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { getFirestore, doc, updateDoc, query, orderBy, setDoc, collection, getDocs, deleteDoc, addDoc, serverTimestamp  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 import { v4 as uuidv4 } from 'https://unpkg.com/uuid@latest/dist/esm-browser/index.js';
 
@@ -259,9 +259,15 @@ for (i = 0; i < close.length; i++){
 
 var list = document.querySelector("ul");
 
-function handleClick(ev) {
+async function handleClick(ev) {
     if (ev.target.tagName === 'LI' && !ev.target.classList.contains('processed')) {
         ev.target.classList.add('processed');
+        const userId = auth.currentUser.uid;
+        const docRef = doc(db, "budgets", userId, "entries", ev.target.getAttribute('id'));
+        await updateDoc(docRef, {
+            processed: true
+        });
+
         ev.target.classList.toggle('checked');
 
         var taskText = ev.target.textContent;
@@ -404,8 +410,10 @@ async function xp(coinVal){
 }
 
 
-export function addTask(input = '', taskType = '', addToTable=true){
+export function addTask(input = '', taskType = '', addToTable=true, rowId = ''){
     var newTask = document.createElement("li");
+    newTask.setAttribute('id', rowId);
+    
     if (input == '' || taskType == ''){
         var input = document.getElementById("input").value;
         var taskType = document.getElementById("taskType").value;
@@ -431,15 +439,7 @@ export function addTask(input = '', taskType = '', addToTable=true){
     } else if (input === ''){
         createModal("Oops 💲", "Looks like you forgot to enter an amount. Let\'s enter that in, shall we?", "Enter Amount", 'I\'ll do it later');
         return;
-    } else if (Number(input) > Number(netCell.textContent)){
-        createModal(
-        'Almost There 🚩',
-        "You're a little short on funds for this goal.\nWant to kick off a project to help make it happen?",
-        'Start a project',
-        'Not Now'
-        );
-        return;
-    } else if (bgtCreated && Number(netCell.textContent) > 0){
+    } else {
         if (taskType != 'Other goal'){
             var taskName = document.createTextNode(taskType +" $" +input+` (+${addCoin} coins)`);
         } else{
@@ -686,7 +686,7 @@ async function loadData(table) {
             addRow(table, data.name, amount, category, true, docSnap.id);
             getTableVal();
             if (category == 'Save' || category == 'Invest' || category == 'Other goal'){
-                addTask(amount, category, false);
+                if (!data.processed) {addTask(amount, category, false, docSnap.id)};
             }
             
 

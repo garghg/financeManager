@@ -1435,90 +1435,6 @@ async function delAccount() {
 }
 
 
-function account(){
-    var actModalDiv = document.createElement('div');
-    actModalDiv.classList.add('modal-container');
-    actModalDiv.id = 'account-modal-container';
-    document.body.appendChild(actModalDiv);
-
-    var modal = document.createElement('div');
-    modal.classList.add('modal');
-    modal.id = 'account-modal';
-    actModalDiv.appendChild(modal);
-
-    var btnDiv = document.createElement('div');
-    btnDiv.id = 'actBtnDiv';
-    modal.appendChild(btnDiv);
-
-    var heading = document.createElement('h2');
-    heading.textContent = 'Account Settings';
-    modal.appendChild(heading);
-
-    var content = document.createElement('div');
-    content.id = 'setContent';
-    modal.appendChild(content);
-
-    // --------------------------------------- Change Username -------------------------------------------------
-
-    var modeBtn = document.createElement('button');
-    modeBtn.classList.add('Btn');
-
-    // Add text after the image without overwriting it
-    var modebtnText = document.createTextNode('Change Username');
-    modeBtn.appendChild(modebtnText);
-
-    modeBtn.addEventListener('click', () => {changeName(); actModalDiv.classList.toggle('show');});
-
-    content.appendChild(modeBtn);
-
-
-    // --------------------------------------- Change Password -------------------------------------------------
-
-    var passBtn = document.createElement('button');
-    passBtn.classList.add('Btn');
-
-    // Add text after the image without overwriting it
-    var passbtnText = document.createTextNode('Change Password');
-    passBtn.appendChild(passbtnText);
-
-    passBtn.addEventListener('click', () => {changePass(); actModalDiv.classList.toggle('show');});
-
-    content.appendChild(passBtn);
-
-    // --------------------------------------- delete Account -------------------------------------------------
-
-    var delBtn = document.createElement('button');
-    delBtn.classList.add('Btn');
-    delBtn.id = "delBtn";
-
-
-    // Add text after the image without overwriting it
-    var delbtnText = document.createTextNode('delete Account');
-    delBtn.appendChild(delbtnText);
-
-    delBtn.addEventListener('click', () => {delAccount(); actModalDiv.classList.toggle('show');});
-
-    content.appendChild(delBtn);
-
-    // ------------------------------------------------------------------------------------------------------------
-
-    var actClose = document.createElement('button');
-    actClose.textContent = '< Back';
-    btnDiv.appendChild(actClose);
-    actClose.classList.add('Btn');
-    actClose.id = 'Back';
-
-    actModalDiv.classList.toggle('show');
-    
-    actClose.addEventListener('click', () => {
-        actModalDiv.classList.toggle('show'); //close modal
-        setModalDiv.classList.toggle('show');
-        document.body.removeChild(actModalDiv);
-
-    });
-}
-
-
 export function openSettings(){
 
     var existingModal = document.getElementById('settings-modal-container');
@@ -1612,25 +1528,27 @@ export function openSettings(){
 
     content.appendChild(LOBtn);
 
-    // --------------------------------------- Account Menu -------------------------------------------------
+    // --------------------------------------- delete Account -------------------------------------------------
 
-    var actBtn = document.createElement('button');
-    actBtn.classList.add('setBtn');
-    actBtn.classList.add('Btn');
+    var delBtn = document.createElement('button');
+    delBtn.classList.add('setBtn');
+    delBtn.classList.add('Btn');
+    delBtn.id = "delBtn";
 
-    var actIcon = document.createElement('img');
-    actIcon.src = '../img/user.png';
-    actIcon.style.width = '30px';
-    actIcon.style.height = '30px';
-    actBtn.appendChild(actIcon);
+    var delIcon = document.createElement('img');
+    delIcon.src = '../img/delete.png';
+    delIcon.style.width = '30px';
+    delIcon.style.height = '30px';
+    delBtn.appendChild(delIcon);
+
 
     // Add text after the image without overwriting it
-    var actbtnText = document.createTextNode('Manage Account');
-    actBtn.appendChild(actbtnText);
+    var delbtnText = document.createTextNode('delete Account');
+    delBtn.appendChild(delbtnText);
 
-    actBtn.addEventListener('click', () => {account(); setModalDiv.classList.toggle('show');});
+    delBtn.addEventListener('click', () => {delAccount()});
 
-    content.appendChild(actBtn);
+    content.appendChild(delBtn);
 
     // ------------------------------------------------------------------------------------------------------------
 

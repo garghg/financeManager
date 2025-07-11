@@ -27,6 +27,7 @@ submit.addEventListener('click', function(e){
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
+            sessionStorage.setItem('register', true);
             window.location.href = './html/home.html';
         })
         .catch((error) => {

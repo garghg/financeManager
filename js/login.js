@@ -1,6 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
 // Find needed libraries here: https://firebase.google.com/docs/web/setup#available-libraries
 import { getAuth, signInWithEmailAndPassword  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import { getFirestore, doc, updateDoc, setDoc, collection, getDoc, deleteDoc, addDoc} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyAkyVCMwmUvpSzT_FrnkhHNGvXrqvQRp8s",
@@ -13,23 +15,35 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 const auth = getAuth();
 
 //submit button
 var submit = document.getElementById('submit')
-submit.addEventListener('click', function(e){
-    var username = document.getElementById('username');
-    // if (!username.value.includes(/^[a-z]+$/i)){                 // <------------------ verify username requirement (save it?)
-    //   alert('invalid username');
-    // }
+submit.addEventListener('click', async function(e){
+    var username = document.getElementById('username').value;
+    var allowedChars = /^[a-z0-9_.]+$/gi.test(username.value);
+    if (!allowedChars) {
+      alert('Invalid username. Only letters, numbers, and "_" or "." allowed.');
+      return;
+    }
+
     e.preventDefault();
     //inputs
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         const user = userCredential.user;
-        window.location.href = '../html/home.html';
+        const userId = user.uid;
+        const docRef = doc(db, "budgets", userId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap) {
+          console.log(docRef.id);
+          window.location.href = '../html/home.html';
+        } else {
+          console.log("Couldn't find the doc.");
+        }
       })
       .catch((error) => {
         const errorCode = error.code;

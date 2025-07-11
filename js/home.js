@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-import { getFirestore, doc, updateDoc, query, orderBy, setDoc, collection, getDocs, deleteDoc, addDoc, serverTimestamp  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { getFirestore, doc, updateDoc, query, orderBy, setDoc, collection, getDocs, deleteDoc, serverTimestamp  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 import { v4 as uuidv4 } from 'https://unpkg.com/uuid@latest/dist/esm-browser/index.js';
 
@@ -27,7 +27,6 @@ var netCell;
 var budgetBtn = document.getElementById("budgetBtn");
 var bgtDiv = document.getElementById("budget");
 var selectedRows = [];
-var options = ["Income", "Expense"];
 var budget = document.createElement("table");
 var coinNum = document.getElementById('coinNum');
 var coinsTotal = 0;
@@ -67,15 +66,24 @@ var setModalDiv = document.createElement('div');
 
 var greeting = document.getElementById('greeting');
 var username = sessionStorage.getItem('username');
+
 if (username == null){
     username = 'Adventurer'
 }
 greeting.textContent = `Welcome, ${username}!`
 
 
-onAuthStateChanged(auth, (user) => {
+
+
+onAuthStateChanged(auth, async (user) => {
   if (user) {
     loadData(budget);
+
+    if (sessionStorage.getItem('register')){
+    const userId = auth.currentUser.uid;
+    const docRef = doc(db, "budgets", userId);
+    const docSnap = await setDoc(docRef, {username: username}, {merge:true});
+}
   }
 });
 
@@ -164,7 +172,7 @@ window.tutorial = tutorial;
 
 
 function createModal(head, string, b1_text = 'OK', b2_text = 'Cancel') {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const modalDiv = document.createElement('div');
         modalDiv.classList.add('modal-container');
         modalDiv.id = 'modal-container';
@@ -412,8 +420,11 @@ async function xp(coinVal){
 
 export function addTask(input = '', taskType = '', addToTable=true, rowId = ''){
     var newTask = document.createElement("li");
-    newTask.setAttribute('id', rowId);
-    
+
+    if (rowId != ''){
+        newTask.setAttribute('id', rowId);
+    }
+
     if (input == '' || taskType == ''){
         var input = document.getElementById("input").value;
         var taskType = document.getElementById("taskType").value;
@@ -448,7 +459,7 @@ export function addTask(input = '', taskType = '', addToTable=true, rowId = ''){
         newTask.appendChild(taskName);
         if (addToTable){
             var rowTaskName = taskName.textContent.replace(` (+${addCoin} coins)`, "") 
-            addRow(budget, rowTaskName, input, taskType);
+            addRow(budget, rowTaskName, input, taskType, false, null, newTask);
             tblArray.push(-Number(input));
             amounts[6] += Number(input);
             myChart ? myChart.destroy() : {};
@@ -544,7 +555,7 @@ function getTableVal() {
 } 
 
 
-async function addRow(table, nameVal = '', amtVal = '', dropdownVal = '', loading = false, existingId = null) {
+async function addRow(table, nameVal = '', amtVal = '', dropdownVal = '', loading = false, existingId = null, newTask = null) {
     var newRow = table.insertRow(table.rows.length-1);
 
     var cell1 = newRow.insertCell();
@@ -564,6 +575,9 @@ async function addRow(table, nameVal = '', amtVal = '', dropdownVal = '', loadin
     const userId = auth.currentUser.uid;
     const customId = existingId || uuidv4();
     newRow.setAttribute('id', customId);
+    if (newTask != null){
+        newTask.setAttribute('id', customId);
+    }
 
     if (!loading){
         await setDoc(doc(db, "budgets", userId, "entries", customId), {
@@ -626,24 +640,31 @@ document.addEventListener('keydown', async function(event) {
                 const docId = table.rows[index].getAttribute("id");
                 var category = table.rows[index].cells[2].textContent;
                 var cellVal = Number(table.rows[index].cells[1].textContent);
-                amounts[categories.indexOf(category)] -= cellVal;
+
+                const userId = auth.currentUser.uid;
+                const docRef = doc(db, "budgets", userId, "entries", docId);
+                await deleteDoc(docRef);
+
+                if (category == 'Save' || category == 'Invest' || category == 'Other goal'){
+                    category = 'Goals'
+                    console.log('goalArr')
+                    var goalsArr = document.querySelectorAll('li');
+                    for (let i = 0; i < goalsArr.length; i++){
+                        var id = goalsArr[i].getAttribute('id');
+                        if (id == docId){
+                            goalsArr[i].style.display = 'none';
+                        }
+                    }
+                }
 
                 if (category !== "Job" && category !== "Assets" && category !== "Savings") {
                     cellVal = -cellVal;
                 }
-
-                // if (category == 'Save' || category == 'Invest' || category == 'Other goal'){
-                //     var taskname = table.rows[index].cells[0].textContent;
-                //     var goalsArr = document.querySelectorAll('li');
-                //     console.log('taskname: '+taskname);
-                //     console.log('goalsArr: '+ goalsArr[0].textContent);
-                //     for (let i = 0; i < goalsArr.length; i++){
-                //         var text = goalsArr[i].textContent;
-                //         if (text.includes(taskname)){
-                //             goalsArr[i].style.display = 'none';
-                //         }
-                //     }
-                // }
+                if (cellVal > 0){
+                    amounts[categories.indexOf(category)] -= cellVal;
+                } else{
+                    amounts[categories.indexOf(category)] += cellVal;
+                }
 
                 var numIdx = tblArray.indexOf(cellVal);
                 myChart ? myChart.destroy() : {};
@@ -652,10 +673,7 @@ document.addEventListener('keydown', async function(event) {
                 table.deleteRow(index);
                 getTableVal();
 
-                const userId = auth.currentUser.uid;
-                const docRef = doc(db, "budgets", userId, "entries", docId);
-                console.log("Trying to delete doc with ID:", docId);
-                await deleteDoc(docRef);
+                
             }
         }
 
@@ -687,8 +705,7 @@ async function loadData(table) {
             getTableVal();
             if (category == 'Save' || category == 'Invest' || category == 'Other goal'){
                 if (!data.processed) {addTask(amount, category, false, docSnap.id)};
-            }
-            
+            }       
 
             switch (category) {
                 case "Job": amounts[0] += amount; break;

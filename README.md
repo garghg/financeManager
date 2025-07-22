@@ -6,5 +6,5 @@ My first full stack application in JavaScript and Firebase built completely from
 Find the live website [here](https://garghg.github.io/financeManager/).
 
 
-<img width="1919" height="961" alt="Screenshot 2025-07-06 200709" src="https://github.com/user-attachments/assets/ea5ab535-5bd5-48ce-9098-8090b4e87f80" />
+<img width="1919" height="961" alt="Screenshot 2025-07-06 200709" src="https://github.com/user-attachments/assets/ea5ab535-5bd5-48ce-9098-8090b4e87f80" />  
 <img width="1918" height="959" alt="Screenshot 2025-07-05 181024" src="https://github.com/user-attachments/assets/09ff37d5-5911-4751-8012-c20018d73533" />
